@@ -56,7 +56,7 @@ class Sistema {
                     break;
         
                 case "3":
-                    return console.log("\nSaiu do programa com exito.\n";)//encerra o loop e termina o sistema
+                    return console.log("\nSaiu do programa com exito.\n");//encerra o loop e termina o sistema
                     
                 default:
                     console.log("\nPor favor, digite uma opcao valida.");//ate o usuario inserir uma opcao valida o loop eh repetido
