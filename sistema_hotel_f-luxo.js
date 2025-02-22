@@ -56,7 +56,15 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
 
             switch(escolha){
                 case "1":
-                    console.log("entrou no fazer login");
+
+                    let tipo_login = sistema.fazer_login();
+
+                    if (tipo_login == "Usuario Funcionario"){
+                        console.log("func");
+
+                    } else {
+                        console.log("cliente");
+                    }
                     break
         
                 case "2":
@@ -72,6 +80,43 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             }
         }
     }
+    fazer_login() { //metodo para fazer o login
+        let manter_login = true;
+        while(manter_login){
+            console.log("\n-------------------------- Login --------------------------\n");
+            let email = requisicao.question("Digite seu e-mail de login: "); //pede ao usuario o email e senha
+            let senha = requisicao.question("Digite sua senha: ");
+            let confirmacao_email = false;
+            for (let i = 0; i < (this.lista_clientes.length); i++){ //passa pela lista de clientes para ver se o email esta cadastrado la
+                if (email == this.lista_clientes[i].email){
+                    confirmacao_email = true;
+                    if (senha == this.lista_clientes[i].senha){ //caso o email esteja cadastrado, ve se a senha esta correta
+                        console.log("\nSua conta foi acessada com exito!")
+                        manter_login = false;
+                        return "Usuario Cliente" //retorna essa string para ser utilizada em outro metodo para identificacao de usuario (cliente ou funconario)
+                    }
+                }
+            }
+            for (let i = 0; i < (this.lista_funcionarios.length); i++){ //passa pela lista de funcionarios para ver se o email esta cadastrado la
+                if (email == this.lista_funcionarios[i].email){
+                    confirmacao_email = true;
+                    if (senha == this.lista_funcionarios[i].senha){ //caso o email esteja cadastrado, ve se a senha esta correta
+                        console.log("\nSua conta foi acessada com exito!") 
+                        manter_login = false;
+                        return "Usuario Funcionario" //retorna essa string para ser utilizada em outro metodo para identificacao de usuario (cliente ou funconario)
+                    }
+                }
+            }
+            //este bloco de condicional so sera lida caso o email nao tenha sido encontrado ou a senha esteja incorreta
+            if (confirmacao_email == false){ //caso nao encontre nenhum email, confirmacao_email continua false e informa que o email nao foi encontrado
+                console.log("O e-mail digitado não esta cadastrado, tente novamente.");
+            } else { //caso o email tenha sido encontrado mas a senha esta incorreta informa ao usuario
+                console.log("Senha incorreta."); 
+                
+            }
+        }
+    }
+
     fazer_cadastro(){//metodo para fazer o cadastro
         while(true){
             console.log("\n-------------------------- Cadastramento --------------------------\n");
