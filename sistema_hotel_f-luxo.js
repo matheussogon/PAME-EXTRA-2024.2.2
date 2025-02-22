@@ -265,6 +265,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
 
                 case "5":
                     console.log("\nAlterar status de reserva:\n");
+                    sistema.mudar_status();
                     break;
 
                 case "6":
@@ -433,7 +434,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 console.log("\nNome do quarto digitado nao foi encontrado.\n")
             }
         }
-        this.lista_reservas.push(new Reserva(this.reserva_id, usuario_cliente.cliente_id, "realizado", data_checkin, data_checkout, nome_quarto)); //armazena os dados da reserva em um banco dedados local (lista)
+        this.lista_reservas.push(new Reserva(this.reserva_id, usuario_cliente.cliente_id, "REALIZADA", data_checkin, data_checkout, nome_quarto)); //armazena os dados da reserva em um banco dedados local (lista)
         this.reserva_id++; // atualiza o id de reserva
         console.log("\nReserva realizada com sucesso!");
     }
@@ -465,10 +466,37 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         for (let i = 0; i < (this.lista_reservas.length); i++){
             if (usuario_cliente.cliente_id == this.lista_reservas[i].cliente_id){// faz uma busca no banco de dados para encontrar o id do cliente
                 if (escolha == this.lista_reservas[i].reserva_id.toString()){ // sabendo que o usuario tem a reserva, agora analisa se o id digitado dessa reserva eh o msm que ele digitou para cancelar
-                    this.lista_reservas[i].status = "cancelada"; // se encontrar, muda o status da reserva para cancelada        
+                    this.lista_reservas[i].status = "CANCELADA"; // se encontrar, muda o status da reserva para cancelada        
                     console.log("\nReserva cancelada com sucesso!\n");
                     contagem++;
                 }
+            }
+        }
+        if (contagem == 0){ // condicional: se o id do cliente nao for encontrado na lista de reservas
+            console.log("\nReserva nao encontrada.\n")
+        }
+    }
+
+    mudar_status(){
+        let escolha = requisicao.question("\nDigite o ID da reserva que deseja alterar o status: ")
+        let contagem = 0; // variavel de contagem para contabilizar as vezes que o id do cliente sera encontrado na lista de reservas
+        for (let i = 0; i < (this.lista_reservas.length); i++){
+            if (escolha == this.lista_reservas[i].reserva_id.toString()){ // sabendo que o usuario tem a reserva, agora analisa se o id digitado dessa reserva eh o msm que ele digitou para cancelar
+                while (true){
+                    let alteracao_status = requisicao.question("\nDigite o status que deseja atribuir (pendente, adiada, realizada, cancelada): ")
+                    if (alteracao_status.toUpperCase() !== "PENDENTE" && 
+                        alteracao_status.toUpperCase() !== "ADIADA" && 
+                        alteracao_status.toUpperCase() !== "REALIZADA" && 
+                        alteracao_status.toUpperCase() !== "CANCELADA") {
+                        console.log("\nStatus invalido, por favor digite novamente.");
+
+                    } else {
+                        this.lista_reservas[i].status = alteracao_status.toUpperCase(); // se encontrar, muda o status da reserva para cancelada        
+                        console.log("\nStatus alterado com sucesso!\n");
+                        break;
+                    }   
+                }
+                contagem++;
             }
         }
         if (contagem == 0){ // condicional: se o id do cliente nao for encontrado na lista de reservas
