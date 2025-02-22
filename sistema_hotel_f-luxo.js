@@ -59,11 +59,11 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
 
                     let tipo_login = sistema.fazer_login();
 
-                    if (tipo_login == "Usuario Funcionario"){
-                        sistema.funcionario_logado();
+                    if (tipo_login[0] == "Usuario Funcionario"){
+                        sistema.funcionario_logado(tipo_login[1]);
 
                     } else {
-                        sistema.cliente_logado();
+                        sistema.cliente_logado(tipo_login[1]);
                     }
                     break
         
@@ -93,7 +93,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     if (senha == this.lista_clientes[i].senha){ //caso o email esteja cadastrado, ve se a senha esta correta
                         console.log("\nSua conta foi acessada com exito!")
                         manter_login = false;
-                        return "Usuario Cliente" //retorna essa string para ser utilizada em outro metodo para identificacao de usuario (cliente ou funconario)
+                        return ["Usuario Cliente", this.lista_clientes[i]] //retorna uma lista para ser utilizada em outro metodo para identificacao de usuario e utilizacao no sistema (cliente ou funconario)
                     }
                 }
             }
@@ -103,7 +103,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     if (senha == this.lista_funcionarios[i].senha){ //caso o email esteja cadastrado, ve se a senha esta correta
                         console.log("\nSua conta foi acessada com exito!") 
                         manter_login = false;
-                        return "Usuario Funcionario" //retorna essa string para ser utilizada em outro metodo para identificacao de usuario (cliente ou funconario)
+                        return ["Usuario Funcionario", this.lista_funcionarios[i]] //retorna uma lista para ser utilizada em outro metodo para identificacao de usuario ou utilizacao no sistema(cliente ou funconario)
                     }
                 }
             }
@@ -222,7 +222,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         }
     }
 
-    funcionario_logado() { //metodo para o usuario interagir com o sistema estando logado como funcionario
+    funcionario_logado(funcionario) { //metodo para o usuario interagir com o sistema estando logado como funcionario
         while(true) {
             console.log("\n-------------------------- Sua conta (Funcionario) --------------------------\n");
             console.log("1 - Ver meus Dados\n2 - Ver lista de Reservas\n3 - Ver lista de Quartos\n4 - Ver lista de Clientes\n5 - Mudar status da reserva (pendente, adiada, realizada, cancelada)\n6 - Adicionar Quarto\n7 - Sair da Conta")
@@ -231,6 +231,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             switch(escolha){
                 case "1":
                     console.log("\nSeus dados:\n");
+                    sistema.ver_dados(this.lista_funcionarios, funcionario);
                     break;
     
                 case "2":
@@ -264,7 +265,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         }
     }
 
-    cliente_logado() { //metodo para o usuario interagir com o sistema estando logado como cliente
+    cliente_logado(cliente) { //metodo para o usuario interagir com o sistema estando logado como cliente
         while(true){
             console.log("\n-------------------------- Sua conta (Cliente) --------------------------\n");
             console.log("1 - Ver meus Dados\n2 - Ver lista de Quartos\n3 - Fazer reserva\n4 - Cancelar reserva\n5 - Ver minhas reservas\n6 - Sair da Conta")
@@ -273,6 +274,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             switch(escolha){
                 case "1":
                     console.log("\nSeus dados:\n");
+                    sistema.ver_dados(this.lista_clientes, cliente);
                     break;
     
                 case "2":
@@ -325,6 +327,20 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         function formatar_nome(nome) { // funcao para formatar o nome da classe
             if (!nome) return null;
             return nome.charAt(0).toUpperCase() + nome.slice(1) + "s";
+        }
+    }
+
+    ver_dados(lista,usuario){ // metodo para mostrar dados do usuario
+        for (let i = 0; i < (lista.length); i++){
+            if (usuario.email == lista[i].email){ // faz uma busca no banco de dados para encontrar o email
+                for (let chave in usuario) { // itera sobre os atributos do objeto usuário e imprime de maneira formatada
+                    if (usuario.hasOwnProperty(chave)) {
+                        const valor = usuario[chave];
+                        const nome_bonito = this.formatar_atributo(chave); // chama a função formatar_atributo para formatar o nome do atributo
+                        console.log(`  ${nome_bonito}: ${valor}`);
+                    }
+                }
+            }
         }
     }
 
