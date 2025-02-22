@@ -42,6 +42,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         //listas para armazenar dados
         this.lista_funcionarios = [];
         this.lista_clientes = [];
+        this.lista_quartos = [];
 
         //variaveis para definir os id's unicos
         this.func_id = 1000;
@@ -214,7 +215,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                             console.log("Senha invalida, por favor digite novamente.");
                         }
                     }
-                    this.lista_clientes.push(new Cliente(this.cliente_id, nome_cliente, data_cliente, cpf_cliente, email_cliente, senha_cliente)); //armazena os dados do funcionario em um banco dedados local (lista)
+                    this.lista_clientes.push(new Cliente(this.cliente_id, nome_cliente, data_cliente, cpf_cliente, email_cliente, senha_cliente)); //armazena os dados do cliente em um banco dedados local (lista)
                     this.cliente_id++; //atualiza o valor do id somando mais 1, para que no proximo cadastramento o id seja diferente
                     console.log("\nCadastro realizado com sucesso!\n");
                     console.log("Voce sera redirecionado ao menu de cadastramento.");
@@ -260,7 +261,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     break;
 
                 case "6":
-                    console.log("\nAdicionar Quartos:\n");
+                    sistema.adicionar_quarto();
                     break;
     
                 case "7":
@@ -350,6 +351,41 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 }
             }
         }
+    }
+
+    adicionar_quarto(){
+        console.log("-------------------------- Adicionar Quarto --------------------------\n");
+        while(true){
+            var qtd_camas = requisicao.question("Digite a quantidade de camas do quarto: ");
+            if (this.validar_quantidade_inteira(qtd_camas) == true){ // chama a funcao de validar a quantidadede camas com a digitada como parametro
+                break //caso a senha seja valida o loop se encerra
+            } else {
+                console.log("Quantidade invalida, por favor digite novamente.");
+            }
+        }
+        while(true){
+            var preco_noite = requisicao.question("Digite o preco por noite (Ex: xxx.xx): ");
+            if (this.validar_preco(preco_noite) == true){ // chama a funcao de validar o preco com o digitado como parametro
+                break //caso a senha seja valida o loop se encerra
+            } else {
+                console.log("Valor invalido, por favor digite novamente.");
+            }
+        }
+        while(true){
+            var nome_quarto = requisicao.question("Digite o nome do quarto: ");
+            for (let i = 0; i < (this.lista_quartos.length); i++){
+                if (nome_quarto == this.lista_quartos[i].nome){ // faz uma busca no banco de dados para ver se existe o nome de quarto digitado
+                    console.log("Nome de quarto ja cadastrado, por favor tente outro.");
+                    contagem = true;
+                }
+            }
+            if (contagem == false){ //caso nao encontre, o loop se encerra
+                break
+            }
+        }
+        let descricao = requisicao.question("Digite a descricao do quarto: ")
+        this.lista_quartos.push(new Quartos(qtd_camas, preco_noite, nome_quarto, descricao)); //armazena os dados do quarto em um banco dedados local (lista)
+            console.log("\nQuarto adicionado com sucesso!\n");
     }
 
     formatar_atributo(atributo) { // metodo para formatar os atributos e utilizar nos prints de dados
