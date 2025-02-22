@@ -52,6 +52,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         this.reserva_id = 1000;
 
     }
+
     iniciar_sistema(){ //metodo para inicializacao do sistema
         while (true){
             console.log("\n-------------------------- Bem vindo ao Hotel F-Luxo --------------------------\n\nO que deseja fazer?\n");
@@ -84,6 +85,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             }
         }
     }
+
     fazer_login() { //metodo para fazer o login
         let manter_login = true;
         while(manter_login){
@@ -303,6 +305,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
 
                 case "4":
                     console.log("\nCancelar reserva:\n");
+                    sistema.cancelar_reserva(cliente);
                     break;
 
                 case "5":
@@ -319,6 +322,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             }
         }
     }
+
     ver_lista(lista) { // metodo para imprimir dados de uma lista ao usuario
         if (!Array.isArray(lista) || lista.length === 0) { // verifica se a lista eh valida (array nao vazio)
             console.log("Não ha."); //informa que nao ha lista
@@ -433,6 +437,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         this.reserva_id++; // atualiza o id de reserva
         console.log("\nReserva realizada com sucesso!");
     }
+
     ver_minha_reserva(lista, usuario_cliente){ // metodo para o cliente ver suas reservas
         let contagem = 0; // variavel de contagem para contabilizar as vezes que o id do cliente sera encontrado na lista de reservas
         for (let i = 0; i < (lista.length); i++){
@@ -451,6 +456,23 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         }
         if (contagem == 0){ // condicional: se o id do cliente nao for encontrado na lista de reservas
             console.log("\nVoce nao tem reservas.\n")
+        }
+    }
+
+    cancelar_reserva(usuario_cliente){
+        let escolha = requisicao.question("\nDigite o ID da reserva que deseja cancelar: ")
+        let contagem = 0; // variavel de contagem para contabilizar as vezes que o id do cliente sera encontrado na lista de reservas
+        for (let i = 0; i < (this.lista_reservas.length); i++){
+            if (usuario_cliente.cliente_id == this.lista_reservas[i].cliente_id){// faz uma busca no banco de dados para encontrar o id do cliente
+                if (escolha == this.lista_reservas[i].reserva_id.toString()){ // sabendo que o usuario tem a reserva, agora analisa se o id digitado dessa reserva eh o msm que ele digitou para cancelar
+                    this.lista_reservas[i].status = "cancelada"; // se encontrar, muda o status da reserva para cancelada        
+                    console.log("\nReserva cancelada com sucesso!\n");
+                    contagem++;
+                }
+            }
+        }
+        if (contagem == 0){ // condicional: se o id do cliente nao for encontrado na lista de reservas
+            console.log("\nReserva nao encontrada.\n")
         }
     }
 
@@ -522,6 +544,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             return false; // Número inválido
         }
     }
+
     validar_data(data){ //metodo para validar datas
         const formatacao_correta = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/([12][0-9]{3})$/; //expressao regular para o formato dd/mm/aaaa
         if (!formatacao_correta.test(data)) { //verifica se a data está no formato correto
