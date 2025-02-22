@@ -43,10 +43,12 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         this.lista_funcionarios = [];
         this.lista_clientes = [];
         this.lista_quartos = [];
+        this.lista_reservas = [];
 
         //variaveis para definir os id's unicos
         this.func_id = 1000;
         this.cliente_id = 1000;
+        this.reserva_id = 1000;
 
     }
     iniciar_sistema(){ //metodo para inicializacao do sistema
@@ -245,6 +247,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
     
                 case "2":
                     console.log("\nLista de Reservas:\n");
+                    sistema.ver_lista(this.lista_reservas);
                     break;
 
                 case "3":
@@ -289,10 +292,12 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
     
                 case "2":
                     console.log("\nLista de Quartos:\n");
+                    sistema.ver_lista(this.lista_quartos);
                     break;
                 
                 case "3":
                     console.log("\nFazer reserva:\n");
+                    sistema.fazer_reserva(cliente);
                     break;
 
                 case "4":
@@ -387,7 +392,29 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         }
         let descricao = requisicao.question("Digite a descricao do quarto: ")
         this.lista_quartos.push(new Quartos(qtd_camas, preco_noite, nome_quarto, descricao)); //armazena os dados do quarto em um banco dedados local (lista)
-            console.log("\nQuarto adicionado com sucesso!\n");
+        console.log("\nQuarto adicionado com sucesso!\n");
+    }
+
+    fazer_reserva(usuario_cliente){
+        while(true){
+            var data_checkin = requisicao.question("Digite a data de Check-in: ");
+            if (this.validar_data(data_checkin) == true){ // chama a funcao de validar a data com a data digitada como parametro
+                break //caso a data seja valida o loop se encerra
+            } else{
+                console.log("Data invalida, por favor digite novamente.");
+            }
+        }
+        while(true){
+            var data_checkout = requisicao.question("Digite a data de Check-out: ");
+            if (this.validar_data(data_checkout) == true){ // chama a funcao de validar a data com a data digitada como parametro
+                break //caso a data seja valida o loop se encerra
+            } else{
+                console.log("Data invalida, por favor digite novamente.");
+            }
+        }
+        this.lista_reservas.push(new Reserva(this.reserva_id, usuario_cliente.cliente_id, "realizado", data_checkin, data_checkout)); //armazena os dados da reserva em um banco dedados local (lista)
+        this.reserva_id++; // atualiza o id de reserva
+        console.log("\nReserva realizada com sucesso!\n");
     }
 
     formatar_atributo(atributo) { // metodo para formatar os atributos e utilizar nos prints de dados
