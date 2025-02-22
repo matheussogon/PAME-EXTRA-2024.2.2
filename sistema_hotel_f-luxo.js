@@ -1,6 +1,6 @@
 const requisicao = require('readline-sync'); //comando necessario para simular um input em js
 
-class Reserva {
+class Reserva { //criando a classe Reserva
     constructor(reserva_id, cliente_id, status, check_in, check_out) {
         this.reserva_id = reserva_id;
         this.cliente_id = cliente_id;
@@ -9,7 +9,7 @@ class Reserva {
         this.check_out = check_out;
     }
 }
-class Funcionario {
+class Funcionario { //criando a classe Funcionario
     constructor(func_id, nome_usuario, cpf, email, senha) {
         this.func_id = func_id;
         this.nome_usuario = nome_usuario;
@@ -18,7 +18,7 @@ class Funcionario {
         this.senha = senha;
     }
 }
-class Cliente {
+class Cliente { //criando a classe Cliente
     constructor(cliente_id, nome, data_nascimento, cpf, email, senha) {
         this.cliente_id = cliente_id;
         this.nome = nome;
@@ -28,7 +28,7 @@ class Cliente {
         this.senha = senha;
     }
 }
-class Quartos {
+class Quartos { //criando a classe Quartos
     constructor(quantidade_camas, preco_noite, nome, descricao) {
         this.quantidade_camas = quantidade_camas;
         this.preco_noite = preco_noite; 
@@ -36,7 +36,7 @@ class Quartos {
         this.descricao = descricao;
     }
 }
-class Sistema {
+class Sistema { //criando a classe Sistema, que sera a classe principal do codigo, onde estara todos os metodos a serem utilizados
     constructor(){
 
         //listas para armazenar dados
@@ -51,7 +51,7 @@ class Sistema {
         while (true){
             console.log("\n-------------------------- Bem vindo ao Hotel F-Luxo --------------------------\n\nO que deseja fazer?\n");
             console.log("1 - Fazer Login\n2 - Fazer Cadastro\n3 - Sair do Programa\n");
-            let escolha = requisicao.question("Selecione uma das opcoes acima: ");
+            let escolha = requisicao.question("Selecione uma das opcoes acima: "); //mostra as opcoes e faz o usuario escolher uma dentre elas
 
             switch(escolha){
                 case "1":
@@ -71,48 +71,48 @@ class Sistema {
             }
         }
     }
-    fazer_cadastro(){//metodo para fazer o lcadastro
+    fazer_cadastro(){//metodo para fazer o cadastro
         while(true){
             console.log("\n-------------------------- Cadastramento --------------------------\n");
             console.log("1 - Cadastrar como funcionario\n2 - Cadastrar como cliente\n3 - Voltar ao menu principal.\n");
-            let escolha = requisicao.question("Selecione uma das opcoes acima: ");
+            let escolha = requisicao.question("Selecione uma das opcoes acima: "); //mostra as opcoes e faz o usuario escolher uma dentre elas
 
             switch(escolha){
                 case "1":
                     console.log("\n-------------------------- Cadastro - Funcionario --------------------------\n");
-                    while (true){
+                    while (true){ // loop para garantir que o usuario digite um nome de usuario nao existente
                         var nome_usuario_func = requisicao.question("Digite o nome de usuario desejado: ");
                         let contagem = false;
                         for (let i = 0; i < (this.lista_funcionarios.length); i++){
-                            if (nome_usuario_func == this.lista_funcionarios[i].nome_usuario){
+                            if (nome_usuario_func == this.lista_funcionarios[i].nome_usuario){ // faz uma busca no banco de dados para ver se existe o usuario digitado
                                 console.log("Nome de usuario ja cadastrado, por favor tente outro.");
                                 contagem = true;
                             }
                         }
-                        if (contagem == false){
+                        if (contagem == false){ //caso nao encontre, o loop se encerra
                             break
                         }
                     }
-                    while (true){
+                    while (true){// loop para garantir que o usuario digite um cpf valido
                         var cpf_func = requisicao.question("Digite o seu cpf (xxx.xxx.xxx-xx): ");
-                        if (this.validar_cpf(cpf_func) == true){
-                            break
+                        if (this.validar_cpf(cpf_func) == true){ // chama a funcao de validar o cpf com o cpf digitado como parametro
+                            break //caso o cpf seja valido o loop se encerra
                         } else{
                             console.log("Cpf invalido, por favor digite novamente");
                         }
                     }
-                    while (true){
-                        var email_func = requisicao.question("Digite o seu email: ");
+                    while (true){ // loop para garantir que o usuario digite um email valido
+                        var email_func = requisicao.question("Digite o seu email: "); // chama a funcao de validar o email com o email digitado como parametro
                         if (this.validar_email(email_func) == true){
-                            break
+                            break //caso o email seja valido o loop se encerra
                         } else{
                             console.log("Email invalido, por favor digite novamente");
                         }
                     }
-                    while (true){
+                    while (true){ // loop para garantir que o usuario digite uma senha valida
                         var senha_func = requisicao.question("Digite a senha desejada (6 caracteres ou mais): ");
-                        if (this.validar_senha(senha_func) == true){
-                            break
+                        if (this.validar_senha(senha_func) == true){ // chama a funcao de validar a senha com a senha digitada como parametro
+                            break //caso a senha seja valida o loop se encerra
                         } else{
                             console.log("Senha invalida, por favor digite novamente");
                         }
