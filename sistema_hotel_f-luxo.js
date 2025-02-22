@@ -354,7 +354,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
     }
 
     adicionar_quarto(){
-        console.log("-------------------------- Adicionar Quarto --------------------------\n");
+        console.log("\n------------------------- Adicionar Quarto --------------------------\n");
         while(true){
             var qtd_camas = requisicao.question("Digite a quantidade de camas do quarto: ");
             if (this.validar_quantidade_inteira(qtd_camas) == true){ // chama a funcao de validar a quantidadede camas com a digitada como parametro
@@ -373,6 +373,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         }
         while(true){
             var nome_quarto = requisicao.question("Digite o nome do quarto: ");
+            let contagem = false;
             for (let i = 0; i < (this.lista_quartos.length); i++){
                 if (nome_quarto == this.lista_quartos[i].nome){ // faz uma busca no banco de dados para ver se existe o nome de quarto digitado
                     console.log("Nome de quarto ja cadastrado, por favor tente outro.");
@@ -444,11 +445,17 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         return senha.length >= 6; //considerou-se senha invalida aquelas tem menos de 6 caracteres, true em caso afirmativo, false caso contrario
     }
 
-    validar_quantidade_inteira(quantidade){ //metodo para validar um numero inteiro
-        const formatacao_correta = /^-?\d+$/; //expressão regular para verificar o formato de um numero inteiro
-        return formatacao_correta.test(quantidade); //retorna true se o numero for valido, false caso contrario
-    }
+    validar_quantidade_inteira(numeroStr) { //metodo para validar um numero inteiro
+        // Converte a string para número
+        const numero = Number(numeroStr);
 
+        // Verifica se é um número, se é inteiro e se é positivo
+        if (!isNaN(numero) && Number.isInteger(numero) && numero > 0) {
+            return true;  // Número válido
+        } else {
+            return false; // Número inválido
+        }
+    }
     validar_data(data){ //metodo para validar datas
         const formatacao_correta = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/([12][0-9]{3})$/; //expressao regular para o formato dd/mm/aaaa
         if (!formatacao_correta.test(data)) { //verifica se a data está no formato correto
