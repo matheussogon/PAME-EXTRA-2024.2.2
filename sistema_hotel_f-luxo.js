@@ -31,7 +31,7 @@ class Cliente {
 class Quartos {
     constructor(quantidade_camas, preco_noite, nome, descricao) {
         this.quantidade_camas = quantidade_camas;
-        this.preco_noite = preco_noite;
+        this.preco_noite = preco_noite; 
         this.nome = nome;
         this.descricao = descricao;
     }
@@ -39,12 +39,19 @@ class Quartos {
 class Sistema {
     constructor(){
 
+        //listas para armazenar dados
+        this.lista_funcionarios = [];
+
+        //variaveis para definir os id's unicos
+        this.func_id = 1000;
+        this.cliente_id = 1000;
+
     }
     iniciar_sistema(){ //metodo para inicializacao do sistema
         while (true){
             console.log("\n-------------------------- Bem vindo ao Hotel F-Luxo --------------------------\n\nO que deseja fazer?\n");
             console.log("1 - Fazer Login\n2 - Fazer Cadastro\n3 - Sair do Programa\n");
-            var escolha = requisicao.question("Selecione uma das opcoes acima: ");
+            let escolha = requisicao.question("Selecione uma das opcoes acima: ");
 
             switch(escolha){
                 case "1":
@@ -52,7 +59,7 @@ class Sistema {
                     break
         
                 case "2":
-                    console.log("entrou no cadastro");
+                    sistema.fazer_cadastro(); //abre o menu de cadastro
                     break;
         
                 case "3":
@@ -64,6 +71,72 @@ class Sistema {
             }
         }
     }
+    fazer_cadastro(){//metodo para fazer o lcadastro
+        while(true){
+            console.log("\n-------------------------- Cadastramento --------------------------\n");
+            console.log("1 - Cadastrar como funcionario\n2 - Cadastrar como cliente\n3 - Voltar ao menu principal.\n");
+            let escolha = requisicao.question("Selecione uma das opcoes acima: ");
+
+            switch(escolha){
+                case "1":
+                    console.log("\n-------------------------- Cadastro - Funcionario --------------------------\n");
+                    while (true){
+                        var nome_usuario_func = requisicao.question("Digite o nome de usuario desejado: ");
+                        let contagem = false;
+                        for (let i = 0; i < (this.lista_funcionarios.length); i++){
+                            if (nome_usuario_func == this.lista_funcionarios[i].nome_usuario){
+                                console.log("Nome de usuario ja cadastrado, por favor tente outro.");
+                                contagem = true;
+                            }
+                        }
+                        if (contagem == false){
+                            break
+                        }
+                    }
+                    while (true){
+                        var cpf_func = requisicao.question("Digite o seu cpf (xxx.xxx.xxx-xx): ");
+                        if (this.validar_cpf(cpf_func) == true){
+                            break
+                        } else{
+                            console.log("Cpf invalido, por favor digite novamente");
+                        }
+                    }
+                    while (true){
+                        var email_func = requisicao.question("Digite o seu email: ");
+                        if (this.validar_email(email_func) == true){
+                            break
+                        } else{
+                            console.log("Email invalido, por favor digite novamente");
+                        }
+                    }
+                    while (true){
+                        var senha_func = requisicao.question("Digite a senha desejada (6 caracteres ou mais): ");
+                        if (this.validar_senha(senha_func) == true){
+                            break
+                        } else{
+                            console.log("Senha invalida, por favor digite novamente");
+                        }
+                    }
+                    this.lista_funcionarios.push(new Funcionario(this.func_id, nome_usuario_func, cpf_func, email_func, senha_func)); //armazena os dados do funcionario em um banco dedados local (lista)
+                    this.func_id++; //atualiza o valor do id somando mais 1, para que no proximo cadastramento o id seja diferente
+                    console.log("\nCadastro realizado com sucesso!\n");
+                    console.log("Voce sera redirecionado ao menu de cadastramento.");
+                    break
+        
+                case "2":
+                    console.log("entrou no 2");
+                    break;
+        
+                case "3":
+                    return console.log("\nVoltou ao menu principal com exito.\n");//encerra o loop e volta ao menu principal
+                    
+                default:
+                    console.log("\nPor favor, digite uma opcao valida.");//ate o usuario inserir uma opcao valida o loop eh repetido
+                    break
+            }
+        }
+    }
+
     validar_email(email){ //metodo para validacao dos emails
         const formatacao_correta = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; //expressão regular para verificar o formato de um email
         return formatacao_correta.test(email); //retorna true se o email for valido, false caso contrario
