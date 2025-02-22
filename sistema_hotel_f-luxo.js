@@ -312,7 +312,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             console.log(`${tipo.slice(0, -1)} ${index + 1}:`);
       
             Object.entries(obj).forEach(([chave, valor]) => { // itera pelos atributos de cada objeto
-                const nomeBonito = formatar_atributo(chave);
+                const nomeBonito = sistema.formatar_atributo(chave);
 
                 if (chave.toLowerCase() === "senha") { // se for senha substitui os caracteres por asteriscos
                     valor = "*".repeat(valor.length); 
@@ -326,8 +326,9 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             if (!nome) return null;
             return nome.charAt(0).toUpperCase() + nome.slice(1) + "s";
         }
+    }
 
-        function formatar_atributo(atributo) { // funcao para formatar os atributos
+    formatar_atributo(atributo) { // metodo para formatar os atributos
             const nomes_bonitos = {
                 reserva_id: "ID da Reserva",
                 cliente_id: "ID do Cliente",
@@ -347,8 +348,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             };
       
             return nomes_bonitos[atributo] || atributo.replace(/([A-Z])/g, " $1").trim().replace(/^./, str => str.toUpperCase());
-        }
-      }
+    }
 
     validar_email(email){ //metodo para validacao dos emails
         const formatacao_correta = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; //expressão regular para verificar o formato de um email
