@@ -60,10 +60,10 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     let tipo_login = sistema.fazer_login();
 
                     if (tipo_login == "Usuario Funcionario"){
-                        console.log("func");
+                        sistema.funcionario_logado();
 
                     } else {
-                        console.log("cliente");
+                        sistema.cliente_logado();
                     }
                     break
         
@@ -218,6 +218,84 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 default: //ate o usuario inserir uma opcao valida o loop eh repetido
                     console.log("\nPor favor, digite uma opcao valida.");
                     break
+            }
+        }
+    }
+
+    funcionario_logado() { //metodo para o usuario interagir com o sistema estando logado como funcionario
+        while(true) {
+            console.log("\n-------------------------- Sua conta (Funcionario) --------------------------\n");
+            console.log("1 - Ver meus Dados\n2 - Ver lista de Reservas\n3 - Ver lista de Quartos\n4 - Ver lista de Clientes\n5 - Mudar status da reserva (pendente, adiada, realizada, cancelada)\n6 - Adicionar Quarto\n7 - Sair da Conta")
+            let escolha = requisicao.question("\nSelecione uma das opcoes acima: "); //mostra as opcoes e faz o usuario escolher uma dentre elas
+            
+            switch(escolha){
+                case "1":
+                    console.log("\nSeus dados:\n");
+                    break;
+    
+                case "2":
+                    console.log("\nLista de Reservas:\n");
+                    break;
+
+                case "3":
+                    console.log("\nLista de Quartos:\n");
+                    break;
+                
+                case "4":
+                    console.log("\nLista de Clientes:\n");
+                    break;
+
+                case "5":
+                    console.log("\nAlterar status de reserva:\n");
+                    break;
+
+                case "6":
+                    console.log("\nAdicionar Quartos:\n");
+                    break;
+    
+                case "7":
+                    return console.log("\nSaiu da conta com exito.\n");//encerra o loop e sai da interface de usuario logado
+                
+                default:
+                    console.log("\nPor favor, digite uma opcao valida.");//ate o usuario inserir uma opcao valida o loop eh repetido
+                    break;
+            }
+        }
+    }
+
+    cliente_logado() { //metodo para o usuario interagir com o sistema estando logado como cliente
+        while(true){
+            console.log("\n-------------------------- Sua conta (Cliente) --------------------------\n");
+            console.log("1 - Ver meus Dados\n2 - Ver lista de Quartos\n3 - Fazer reserva\n4 - Cancelar reserva\n5 - Ver minhas reservas\n6 - Sair da Conta")
+            let escolha = requisicao.question("\nSelecione uma das opcoes acima: "); //mostra as opcoes e faz o usuario escolher uma dentre elas
+            
+            switch(escolha){
+                case "1":
+                    console.log("\nSeus dados:\n");
+                    break;
+    
+                case "2":
+                    console.log("\nLista de Quartos:\n");
+                    break;
+                
+                case "3":
+                    console.log("\nFazer reserva:\n");
+                    break;
+
+                case "4":
+                    console.log("\nCancelar reserva:\n");
+                    break;
+
+                case "5":
+                    console.log("\nSuas reservas:\n");
+                    break;
+    
+                case "6":
+                    return console.log("\nSaiu da conta com exito.\n");//encerra o loop e sai da interface de usuario logado
+                
+                default:
+                    console.log("\nPor favor, digite uma opcao valida.");//ate o usuario inserir uma opcao valida o loop eh repetido
+                    break;
             }
         }
     }
