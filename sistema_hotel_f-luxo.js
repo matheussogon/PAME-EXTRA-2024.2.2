@@ -249,6 +249,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
 
                 case "3":
                     console.log("\nLista de Quartos:\n");
+                    sistema.ver_lista(this.lista_quartos);
                     break;
                 
                 case "4":
