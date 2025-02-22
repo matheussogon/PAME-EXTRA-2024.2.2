@@ -1,12 +1,13 @@
 const requisicao = require('readline-sync'); //comando necessario para simular um input em js
 
 class Reserva { //criando a classe Reserva
-    constructor(reserva_id, cliente_id, status, check_in, check_out) {
+    constructor(reserva_id, cliente_id, status, check_in, check_out,nome_quarto) {
         this.reserva_id = reserva_id;
         this.cliente_id = cliente_id;
         this.status = status;
         this.check_in = check_in;
         this.check_out = check_out;
+        this.nome_quarto = nome_quarto; //atributo criado para facilitar o uso do sistema pelo usuario
     }
 }
 class Funcionario { //criando a classe Funcionario
@@ -396,7 +397,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         console.log("\nQuarto adicionado com sucesso!\n");
     }
 
-    fazer_reserva(usuario_cliente){
+    fazer_reserva(usuario_cliente){ //metodo para o usuario realizar uma reserva
         while(true){
             var data_checkin = requisicao.question("Digite a data de Check-in: ");
             if (this.validar_data(data_checkin) == true){ // chama a funcao de validar a data com a data digitada como parametro
@@ -413,9 +414,24 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 console.log("Data invalida, por favor digite novamente.");
             }
         }
-        this.lista_reservas.push(new Reserva(this.reserva_id, usuario_cliente.cliente_id, "realizado", data_checkin, data_checkout)); //armazena os dados da reserva em um banco dedados local (lista)
+        while(true){
+            let contagem = 0;
+            var nome_quarto = requisicao.question("Digite o nome do quarto que deseja fazer a reserva: ");
+            for (let i = 0; i < (this.lista_quartos.length); i++){
+                if (nome_quarto == this.lista_quartos[i].nome){
+                    contagem++;
+                }
+            }
+            if (contagem != 0){
+                break
+
+            } else {
+                console.log("\nNome do quarto digitado nao foi encontrado.\n")
+            }
+        }
+        this.lista_reservas.push(new Reserva(this.reserva_id, usuario_cliente.cliente_id, "realizado", data_checkin, data_checkout, nome_quarto)); //armazena os dados da reserva em um banco dedados local (lista)
         this.reserva_id++; // atualiza o id de reserva
-        console.log("\nReserva realizada com sucesso!\n");
+        console.log("\nReserva realizada com sucesso!");
     }
     ver_minha_reserva(lista, usuario_cliente){ // metodo para o cliente ver suas reservas
         let contagem = 0; // variavel de contagem para contabilizar as vezes que o id do cliente sera encontrado na lista de reservas
@@ -454,7 +470,8 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 data_nascimento: "Data de Nascimento",
                 quantidade_camas: "Quantidade de Camas",
                 preco_noite: "Preço por Noite",
-                descricao: "Descrição do Quarto"
+                descricao: "Descrição do Quarto",
+                nome_quarto: "Nome do Quarto"
             };
       
             return nomes_bonitos[atributo] || atributo.replace(/([A-Z])/g, " $1").trim().replace(/^./, str => str.toUpperCase());
