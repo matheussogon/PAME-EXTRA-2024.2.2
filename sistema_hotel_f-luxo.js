@@ -57,7 +57,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             switch(escolha){
                 case "1":
 
-                    let tipo_login = sistema.fazer_login();
+                    let tipo_login = sistema.fazer_login(); //
 
                     if (tipo_login[0] == "Usuario Funcionario"){
                         sistema.funcionario_logado(tipo_login[1]);
@@ -142,16 +142,20 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     }
                     while (true){// loop para garantir que o usuario digite um cpf valido
                         var cpf_func = requisicao.question("Digite o seu cpf (xxx.xxx.xxx-xx): ");
-                        if (this.validar_cpf(cpf_func) == true){ // chama a funcao de validar o cpf com o cpf digitado como parametro
+                        if (this.validar_cpf(cpf_func, this.lista_clientes, this.lista_funcionarios) == true){
                             break //caso o cpf seja valido o loop se encerra
+                        } else if (this.validar_cpf(cpf_func, this.lista_clientes, this.lista_funcionarios) == "cpf existente") { //verifica se ja existe o cpf digitado
+                            console.log("CPF ja esta cadastrado, tente outro por favor.")
                         } else{
-                            console.log("Cpf invalido, por favor digite novamente.");
+                            console.log("CPF invalido, por favor digite novamente.");
                         }
                     }
                     while (true){ // loop para garantir que o usuario digite um email valido
                         var email_func = requisicao.question("Digite o seu email: "); // chama a funcao de validar o email com o email digitado como parametro
-                        if (this.validar_email(email_func) == true){
+                        if (this.validar_email(email_func, this.lista_clientes, this.lista_funcionarios) == true){
                             break //caso o email seja valido o loop se encerra
+                        } else if (this.validar_email(email_func, this.lista_clientes, this.lista_funcionarios) == "email existente") { //verifica se ja existe o email digitado
+                            console.log("Email ja esta cadastrado, tente outro por favor.")
                         } else{
                             console.log("Email invalido, por favor digite novamente.");
                         }
@@ -160,7 +164,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                         var senha_func = requisicao.question("Digite a senha desejada (6 caracteres ou mais): ");
                         if (this.validar_senha(senha_func) == true){ // chama a funcao de validar a senha com a senha digitada como parametro
                             break //caso a senha seja valida o loop se encerra
-                        } else{
+                        } else {
                             console.log("Senha invalida, por favor digite novamente.");
                         }
                     }
@@ -184,16 +188,20 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     }
                     while (true){// loop para garantir que o usuario digite um cpf valido
                         var cpf_cliente = requisicao.question("Digite o seu cpf (xxx.xxx.xxx-xx): ");
-                        if (this.validar_cpf(cpf_cliente) == true){ // chama a funcao de validar o cpf com o cpf digitado como parametro
+                        if (this.validar_cpf(cpf_cliente, this.lista_clientes, this.lista_funcionarios) == true){
                             break //caso o cpf seja valido o loop se encerra
+                        } else if (this.validar_cpf(cpf_cliente, this.lista_clientes, this.lista_funcionarios) == "cpf existente") { //verifica se ja existe o cpf digitado
+                            console.log("CPF ja esta cadastrado, tente outro por favor.")
                         } else{
-                            console.log("Cpf invalido, por favor digite novamente.");
+                            console.log("CPF invalido, por favor digite novamente.");
                         }
                     }
                     while (true){ // loop para garantir que o usuario digite um email valido
                         var email_cliente = requisicao.question("Digite o seu email: "); // chama a funcao de validar o email com o email digitado como parametro
-                        if (this.validar_email(email_cliente) == true){
+                        if (this.validar_email(email_cliente, this.lista_clientes, this.lista_funcionarios) == true){
                             break //caso o email seja valido o loop se encerra
+                        } else if (this.validar_email(email_cliente, this.lista_clientes, this.lista_funcionarios) == "email existente") { //verifica se ja existe o email digitado
+                            console.log("Email ja esta cadastrado, tente outro por favor.")
                         } else{
                             console.log("Email invalido, por favor digite novamente.");
                         }
@@ -332,7 +340,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
 
     ver_dados(lista,usuario){ // metodo para mostrar dados do usuario
         for (let i = 0; i < (lista.length); i++){
-            if (usuario.email == lista[i].email){ // faz uma busca no banco de dados para encontrar o email
+            if (usuario.email == lista[i].email){ // faz uma busca no banco de dados para encontrar o email (utiliza o email como diferenciacao de usuario)
                 for (let chave in usuario) { // itera sobre os atributos do objeto usuário e imprime de maneira formatada
                     if (usuario.hasOwnProperty(chave)) {
                         const valor = usuario[chave];
@@ -344,7 +352,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         }
     }
 
-    formatar_atributo(atributo) { // metodo para formatar os atributos
+    formatar_atributo(atributo) { // metodo para formatar os atributos e utilizar nos prints de dados
             const nomes_bonitos = {
                 reserva_id: "ID da Reserva",
                 cliente_id: "ID do Cliente",
@@ -366,12 +374,32 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             return nomes_bonitos[atributo] || atributo.replace(/([A-Z])/g, " $1").trim().replace(/^./, str => str.toUpperCase());
     }
 
-    validar_email(email){ //metodo para validacao dos emails
+    validar_email(email, lista1, lista2){ //metodo para validacao dos emails
+        for (let i = 0; i < (lista1.length); i++){
+            if (email == lista1[i].email){ // faz uma busca no banco de dados para ver se existe o usuario digitado de acordo com o email
+                return "email existente"
+            }
+        }
+        for (let i = 0; i < (lista2.length); i++){
+            if (email == lista2[i].email){ // faz uma busca no banco de dados para ver se existe o usuario digitado de acordo com o email
+                return "email existente"
+            }
+        }
         const formatacao_correta = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; //expressão regular para verificar o formato de um email
-        return formatacao_correta.test(email); //retorna true se o email for valido, false caso contrario
+        return formatacao_correta.test(email); //retorna true se o email for valido, false caso contrario  
     } 
 
-    validar_cpf(cpf){ //metodo para validacao dos cpfs
+    validar_cpf(cpf, lista1, lista2){ //metodo para validacao dos cpfs
+        for (let i = 0; i < (lista1.length); i++){
+            if (cpf == lista1[i].cpf){ // faz uma busca no banco de dados para ver se existe o usuario digitado de acordo com o email
+                return "cpf existente"
+            }
+        }
+        for (let i = 0; i < (lista2.length); i++){
+            if (cpf == lista2[i].cpf){ // faz uma busca no banco de dados para ver se existe o usuario digitado de acordo com o email
+                return "cpf existente"
+            }
+        }
         const formatacao_correta = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/; //expressão regular para verificar o formato de um cpf
         return formatacao_correta.test(cpf); //retorna true se o cpf for valido, false caso contrario
     }
