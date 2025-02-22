@@ -243,6 +243,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 
                 case "4":
                     console.log("\nLista de Clientes:\n");
+                    sistema.ver_lista(this.lista_clientes);
                     break;
 
                 case "5":
@@ -299,6 +300,55 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             }
         }
     }
+    ver_lista(lista) { // metodo para imprimir dados de uma lista ao usuario
+        if (!Array.isArray(lista) || lista.length === 0) { // verifica se a lista eh valida (array nao vazio)
+            console.log("Não ha."); //informa que nao ha lista
+            return;
+        }
+      
+        const tipo = formatar_nome(lista[0].constructor.name); // determina o tipo (classe) do primeiro objeto na lista
+       
+        lista.forEach((obj, index) => { // para cada objeto na lista imprime os atributos com seus valores
+            console.log(`${tipo.slice(0, -1)} ${index + 1}:`);
+      
+            Object.entries(obj).forEach(([chave, valor]) => { // itera pelos atributos de cada objeto
+                const nomeBonito = formatar_atributo(chave);
+
+                if (chave.toLowerCase() === "senha") { // se for senha substitui os caracteres por asteriscos
+                    valor = "*".repeat(valor.length); 
+                }
+                console.log(`  ${nomeBonito}: ${valor}`);
+            });
+            console.log("-".repeat(30));
+        });
+
+        function formatar_nome(nome) { // funcao para formatar o nome da classe
+            if (!nome) return null;
+            return nome.charAt(0).toUpperCase() + nome.slice(1) + "s";
+        }
+
+        function formatar_atributo(atributo) { // funcao para formatar os atributos
+            const nomes_bonitos = {
+                reserva_id: "ID da Reserva",
+                cliente_id: "ID do Cliente",
+                status: "Status da Reserva",
+                check_in: "Data de Check-in",
+                check_out: "Data de Check-out",
+                func_id: "ID do Funcionário",
+                nome_usuario: "Nome de Usuário",
+                cpf: "CPF",
+                email: "E-mail",
+                senha: "Senha",
+                nome: "Nome",
+                data_nascimento: "Data de Nascimento",
+                quantidade_camas: "Quantidade de Camas",
+                preco_noite: "Preço por Noite",
+                descricao: "Descrição do Quarto"
+            };
+      
+            return nomes_bonitos[atributo] || atributo.replace(/([A-Z])/g, " $1").trim().replace(/^./, str => str.toUpperCase());
+        }
+      }
 
     validar_email(email){ //metodo para validacao dos emails
         const formatacao_correta = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; //expressão regular para verificar o formato de um email
