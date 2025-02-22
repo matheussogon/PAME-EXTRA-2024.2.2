@@ -306,6 +306,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
 
                 case "5":
                     console.log("\nSuas reservas:\n");
+                    sistema.ver_minha_reserva(this.lista_reservas, cliente);
                     break;
     
                 case "6":
@@ -415,6 +416,26 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         this.lista_reservas.push(new Reserva(this.reserva_id, usuario_cliente.cliente_id, "realizado", data_checkin, data_checkout)); //armazena os dados da reserva em um banco dedados local (lista)
         this.reserva_id++; // atualiza o id de reserva
         console.log("\nReserva realizada com sucesso!\n");
+    }
+    ver_minha_reserva(lista, usuario_cliente){ // metodo para o cliente ver suas reservas
+        let contagem = 0; // variavel de contagem para contabilizar as vezes que o id do cliente sera encontrado na lista de reservas
+        for (let i = 0; i < (lista.length); i++){
+            if (usuario_cliente.cliente_id == lista[i].cliente_id){// faz uma busca no banco de dados para encontrar o id do cliente
+                console.log("Reserva" + ` ${contagem+1}:\n`);
+                for (let chave in lista[i]) { // itera sobre os atributos do objeto usuário e imprime de maneira formatada
+                    if (lista[i].hasOwnProperty(chave)) {
+                        const valor = lista[i][chave];
+                        const nome_bonito = this.formatar_atributo(chave); // chama a função formatar_atributo para formatar o nome do atributo
+                        console.log(`  ${nome_bonito}: ${valor}`);
+                        contagem++;
+                    }
+                }
+            console.log("-----------------------------");
+            }
+        }
+        if (contagem == 0){ // condicional: se o id do cliente nao for encontrado na lista de reservas
+            console.log("\nVoce nao tem reservas.\n")
+        }
     }
 
     formatar_atributo(atributo) { // metodo para formatar os atributos e utilizar nos prints de dados
