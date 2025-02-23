@@ -286,6 +286,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     break;
                 
                 case "10":
+                    sistema.visualizar_avaliacoes();
                     break;
     
                 case "11":
@@ -335,10 +336,11 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     break;
                 
                 case "7":
-                    sistema.avaliar_estadia();
+                    sistema.avaliar_estadia(cliente);
                     break;
                 
                 case "8":
+                    sistema.visualizar_avaliacoes();
                     break;
     
                 case "9":
@@ -812,7 +814,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         }
     }
 
-    avaliar_estadia(){ // metodo para avaliar a estadia
+    avaliar_estadia(cliente){ // metodo para avaliar a estadia
         console.log("\n-------------------------- Avaliar Estadia --------------------------\n");
         while (true){ // loop para garantir que o usuario digite uma avaliacao valida
             console.log("5 - Excelente\n4- Bom\n3 - Mediano\n2 - Ruim\n1 - Pessimo\n") // imprime as avaliacoes
@@ -823,11 +825,11 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     let resposta = requisicao.question("Deseja adicionar um comentario? (sim/nao)");
                     if (resposta.toUpperCase() == "SIM"){ //se for sim pede para inserir o comentario
                         comentario = requisicao.question("Digite o comentario: ");
-                        this.lista_avaliacoes.push([avaliacao, comentario]); //salva a avaliacao e o comentario na lista_avaliacos (lista de listas)
+                        this.lista_avaliacoes.push([avaliacao, comentario, cliente.nome]); //salva a avaliacao, o comentario e o nome do cliente avaliante na lista_avaliacos (lista de listas)
                         break;
                     } else if (resposta.toUpperCase() == "NAO"){ // se nao, adiciona um comentario vazio
                         comentario = " ";
-                        this.lista_avaliacoes.push([avaliacao, comentario]);
+                        this.lista_avaliacoes.push([avaliacao, comentario, cliente.nome]); //salva a avaliacao, o comentario e o nome do cliente avaliante na lista_avaliacos (lista de listas)
                         break
                     }else {
                         console.log("\nResposta invalida.");
@@ -837,6 +839,19 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             } else {
                 console.log("\nAvaliacao invalida, por favor tente novamente.");
             }
+        }
+    }
+
+    visualizar_avaliacoes(){ // metodo para visualizacao das avaliacoes
+        for (let i = 0; i < this.lista_avaliacoes.length; i++){
+            let avaliacao = this.lista_avaliacoes[i][0];  //avaliação (primeiro item da lista interna)
+            let comentario = this.lista_avaliacoes[i][1]; //comentário (segundo item da lista interna)
+            let nome_cliente = this.lista_avaliacoes[i][2]; //nome do cliente (terceiro item da lista interna)
+            //imprime a avaliação, o comentário e o nome do cliente
+            console.log(`Cliente: ${nome_cliente}`);
+            console.log(`Avaliação: ${avaliacao}`);
+            console.log(`Comentário: ${comentario}`);
+            console.log('------------------------');
         }
     }
     
