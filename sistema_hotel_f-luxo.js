@@ -71,7 +71,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     } else {
                         sistema.cliente_logado(tipo_login[1]);
                     }
-                    break
+                    break;
         
                 case "2":
                     sistema.fazer_cadastro(); //abre o menu de cadastro
@@ -82,7 +82,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     
                 default:
                     console.log("\nPor favor, digite uma opcao valida.");//ate o usuario inserir uma opcao valida o loop eh repetido
-                    break
+                    break;
             }
         }
     }
@@ -91,12 +91,12 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         let manter_login = true;
         while(manter_login){
             console.log("\n-------------------------- Login --------------------------\n");
-            let email = requisicao.question("Digite seu e-mail de login: "); //pede ao usuario o email e senha
+            let conta_usuario = requisicao.question("Digite seu nome de usuario ou e-mail de login: "); //pede ao usuario o email e senha
             let senha = requisicao.question("Digite sua senha: ");
-            let confirmacao_email = false;
+            let confirmacao_conta = false;
             for (let i = 0; i < (this.lista_clientes.length); i++){ //passa pela lista de clientes para ver se o email esta cadastrado la
-                if (email == this.lista_clientes[i].email){
-                    confirmacao_email = true;
+                if (conta_usuario == this.lista_clientes[i].email){
+                    confirmacao_conta = true;
                     if (senha == this.lista_clientes[i].senha){ //caso o email esteja cadastrado, ve se a senha esta correta
                         console.log("\nSua conta foi acessada com exito!")
                         manter_login = false;
@@ -105,8 +105,8 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 }
             }
             for (let i = 0; i < (this.lista_funcionarios.length); i++){ //passa pela lista de funcionarios para ver se o email esta cadastrado la
-                if (email == this.lista_funcionarios[i].email){
-                    confirmacao_email = true;
+                if (conta_usuario == this.lista_funcionarios[i].email || conta_usuario == this.lista_funcionarios[i].nome_usuario){
+                    confirmacao_conta = true;
                     if (senha == this.lista_funcionarios[i].senha){ //caso o email esteja cadastrado, ve se a senha esta correta
                         console.log("\nSua conta foi acessada com exito!") 
                         manter_login = false;
