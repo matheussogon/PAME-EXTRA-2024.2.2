@@ -45,6 +45,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         this.lista_clientes = [];
         this.lista_quartos = [];
         this.lista_reservas = [];
+        this.lista_avaliacoes = [];
 
         //variaveis para definir os id's unicos
         this.func_id = 1000;
@@ -239,7 +240,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
     funcionario_logado(funcionario) { //metodo para o usuario interagir com o sistema estando logado como funcionario
         while(true) {
             console.log("\n-------------------------- Sua conta (Funcionario) --------------------------\n");
-            console.log("1 - Ver meus Dados\n2 - Ver lista de Reservas\n3 - Ver lista de Quartos\n4 - Ver lista de Clientes\n5 - Mudar status da reserva (pendente, adiada, realizada, cancelada)\n6 - Adicionar Quarto\n7 - Editar Quarto\n8 - Excluir Quarto\n9 - Modificar Dados\n10 - Sair da Conta");
+            console.log("1 - Ver meus Dados\n2 - Ver lista de Reservas\n3 - Ver lista de Quartos\n4 - Ver lista de Clientes\n5 - Mudar status da reserva (pendente, adiada, realizada, cancelada)\n6 - Adicionar Quarto\n7 - Editar Quarto\n8 - Excluir Quarto\n9 - Modificar Dados\n10 - Visualizar Avaliacoes\n10 - Sair da Conta");
             let escolha = requisicao.question("\nSelecione uma das opcoes acima: "); //mostra as opcoes e faz o usuario escolher uma dentre elas
             
             switch(escolha){
@@ -283,8 +284,11 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 case "9":
                     sistema.modificar_funcionario(funcionario);
                     break;
-    
+                
                 case "10":
+                    break;
+    
+                case "11":
                     return console.log("\nSaiu da conta com exito.\n");//encerra o loop e sai da interface de usuario logado
                 
                 default:
@@ -297,7 +301,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
     cliente_logado(cliente) { //metodo para o usuario interagir com o sistema estando logado como cliente
         while(true){
             console.log("\n-------------------------- Sua conta (Cliente) --------------------------\n");
-            console.log("1 - Ver meus Dados\n2 - Ver lista de Quartos\n3 - Fazer reserva\n4 - Cancelar reserva\n5 - Ver minhas reservas\n6 - Modificar Dados\n7 - Sair da Conta")
+            console.log("1 - Ver meus Dados\n2 - Ver lista de Quartos\n3 - Fazer reserva\n4 - Cancelar reserva\n5 - Ver minhas reservas\n6 - Modificar Dados\n7 - Avaliar Estadia\n8 - Visualizar Avaliacoes\n9 - Sair da Conta");
             let escolha = requisicao.question("\nSelecione uma das opcoes acima: "); //mostra as opcoes e faz o usuario escolher uma dentre elas
             
             switch(escolha){
@@ -329,8 +333,15 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 case "6":
                     sistema.modificar_cliente(cliente);
                     break;
-    
+                
                 case "7":
+                    sistema.avaliar_estadia();
+                    break;
+                
+                case "8":
+                    break;
+    
+                case "9":
                     return console.log("\nSaiu da conta com exito.\n");//encerra o loop e sai da interface de usuario logado
                 
                 default:
@@ -797,6 +808,34 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 return console.log("\nQuarto encontrado e removido com sucesso!");
             } else {
                 console.log("\nNome de quarto não encontrado.");
+            }
+        }
+    }
+
+    avaliar_estadia(){ // metodo para avaliar a estadia
+        console.log("\n-------------------------- Avaliar Estadia --------------------------\n");
+        while (true){ // loop para garantir que o usuario digite uma avaliacao valida
+            console.log("5 - Excelente\n4- Bom\n3 - Mediano\n2 - Ruim\n1 - Pessimo\n") // imprime as avaliacoes
+            let avaliacao = requisicao.question("Digite a opcao da avaliacao da sua estadia: ");
+            let comentario;
+            if (["1", "2", "3", "4", "5"].includes(avaliacao)){ //condicional para identificar se o usuario avaliou corretamente
+                while (true){ // loop para garantir que o usuario digite a resposta corretamente
+                    let resposta = requisicao.question("Deseja adicionar um comentario? (sim/nao)");
+                    if (resposta.toUpperCase() == "SIM"){ //se for sim pede para inserir o comentario
+                        comentario = requisicao.question("Digite o comentario: ");
+                        this.lista_avaliacoes.push([avaliacao, comentario]); //salva a avaliacao e o comentario na lista_avaliacos (lista de listas)
+                        break;
+                    } else if (resposta.toUpperCase() == "NAO"){ // se nao, adiciona um comentario vazio
+                        comentario = " ";
+                        this.lista_avaliacoes.push([avaliacao, comentario]);
+                        break
+                    }else {
+                        console.log("\nResposta invalida.");
+                    }
+                }
+                break;
+            } else {
+                console.log("\nAvaliacao invalida, por favor tente novamente.");
             }
         }
     }
