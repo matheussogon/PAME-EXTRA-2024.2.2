@@ -239,7 +239,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
     funcionario_logado(funcionario) { //metodo para o usuario interagir com o sistema estando logado como funcionario
         while(true) {
             console.log("\n-------------------------- Sua conta (Funcionario) --------------------------\n");
-            console.log("1 - Ver meus Dados\n2 - Ver lista de Reservas\n3 - Ver lista de Quartos\n4 - Ver lista de Clientes\n5 - Mudar status da reserva (pendente, adiada, realizada, cancelada)\n6 - Adicionar Quarto\n7 - Sair da Conta")
+            console.log("1 - Ver meus Dados\n2 - Ver lista de Reservas\n3 - Ver lista de Quartos\n4 - Ver lista de Clientes\n5 - Mudar status da reserva (pendente, adiada, realizada, cancelada)\n6 - Adicionar Quarto\n7 - Modificar Dados\n8 - Sair da Conta")
             let escolha = requisicao.question("\nSelecione uma das opcoes acima: "); //mostra as opcoes e faz o usuario escolher uma dentre elas
             
             switch(escolha){
@@ -271,8 +271,12 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 case "6":
                     sistema.adicionar_quarto();
                     break;
-    
+                
                 case "7":
+                    sistema.modificar_funcionario(funcionario);
+                    break;
+    
+                case "8":
                     return console.log("\nSaiu da conta com exito.\n");//encerra o loop e sai da interface de usuario logado
                 
                 default:
@@ -285,7 +289,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
     cliente_logado(cliente) { //metodo para o usuario interagir com o sistema estando logado como cliente
         while(true){
             console.log("\n-------------------------- Sua conta (Cliente) --------------------------\n");
-            console.log("1 - Ver meus Dados\n2 - Ver lista de Quartos\n3 - Fazer reserva\n4 - Cancelar reserva\n5 - Ver minhas reservas\n6 - Sair da Conta")
+            console.log("1 - Ver meus Dados\n2 - Ver lista de Quartos\n3 - Fazer reserva\n4 - Cancelar reserva\n5 - Ver minhas reservas\n6 - Modificar Dados\n7 - Sair da Conta")
             let escolha = requisicao.question("\nSelecione uma das opcoes acima: "); //mostra as opcoes e faz o usuario escolher uma dentre elas
             
             switch(escolha){
@@ -313,8 +317,12 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     console.log("\nSuas reservas:\n");
                     sistema.ver_minha_reserva(this.lista_reservas, cliente);
                     break;
-    
+                
                 case "6":
+                    sistema.modificar_cliente(cliente);
+                    break;
+    
+                case "7":
                     return console.log("\nSaiu da conta com exito.\n");//encerra o loop e sai da interface de usuario logado
                 
                 default:
@@ -501,6 +509,179 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         }
         if (contagem == 0){ // condicional: se o id do cliente nao for encontrado na lista de reservas
             console.log("\nReserva nao encontrada.\n")
+        }
+    }
+
+    modificar_funcionario(funcionario){ // metodo para modificar os dados do funcionario
+        let posicao_funcionario;
+        for (let i = 0; i < (this.lista_funcionarios.length); i++){ //encontra a posicao do usuario na lista de funcionarios de acordo com o nome de usuario
+            if (funcionario.nome_usuario == this.lista_funcionarios[i].nome_usuario){
+                posicao_funcionario = i;
+                break
+            }
+        }
+        while (true){
+            console.log("\n-------------------------- Alterar Dados --------------------------\n");
+            console.log("1 - Alterar Nome de Usuario\n2 - Alterar CPF\n3 - Alterar e-mail\n4 - Alterar Senha\n5 - Sair do menu de alteracao\n");
+            let escolha = requisicao.question("Escolha a opcao que deseja alterar: ");
+
+            switch(escolha){
+
+                case "1":
+                    while (true){ // loop para garantir que o usuario digite um nome de usuario nao existente
+                        let nome_usuario_func = requisicao.question("Digite o nome de usuario desejado: ");
+                        let contagem = false;
+                        for (let i = 0; i < (this.lista_funcionarios.length); i++){
+                            if (nome_usuario_func == this.lista_funcionarios[i].nome_usuario){ // faz uma busca no banco de dados para ver se existe o usuario digitado
+                                console.log("Nome de usuario ja cadastrado, por favor tente outro.");
+                                contagem = true;
+                            }
+                        }
+                        if (contagem == false){ //caso nao encontre, o loop se encerra e altera o usuario
+                            this.lista_funcionarios[posicao_funcionario].nome_usuario = nome_usuario_func;
+                            console.log("Nome de usuario alterado com sucesso!");
+                            break
+                        }
+                    }
+                    break;
+
+                case "2":
+                    while (true){// loop para garantir que o usuario digite um cpf valido
+                        let cpf_func = requisicao.question("Digite o seu cpf (xxx.xxx.xxx-xx): ");
+                        if (this.validar_cpf(cpf_func, this.lista_clientes, this.lista_funcionarios) == true){
+                            this.lista_funcionarios[posicao_funcionario].cpf = cpf_func;
+                            console.log("CPF alterado com sucesso!");
+                            break //caso o cpf seja valido o loop se encerra e o cpf eh alterado
+                        } else if (this.validar_cpf(cpf_func, this.lista_clientes, this.lista_funcionarios) == "cpf existente") { //verifica se ja existe o cpf digitado
+                            console.log("CPF ja esta cadastrado, tente outro por favor.")
+                        } else{
+                            console.log("CPF invalido, por favor digite novamente.");
+                        }
+                    }
+                    break;
+                
+                case "3":
+                    while (true){ // loop para garantir que o usuario digite um email valido
+                        let email_func = requisicao.question("Digite o seu email: "); // chama a funcao de validar o email com o email digitado como parametro
+                        if (this.validar_email(email_func, this.lista_clientes, this.lista_funcionarios) == true){
+                            this.lista_funcionarios[posicao_funcionario].email = email_func;
+                            console.log("Email alterado com sucesso!");
+                            break //caso o email seja valido o loop se encerra e o email eh alterado
+                        } else if (this.validar_email(email_func, this.lista_clientes, this.lista_funcionarios) == "email existente") { //verifica se ja existe o email digitado
+                            console.log("Email ja esta cadastrado, tente outro por favor.")
+                        } else{
+                            console.log("Email invalido, por favor digite novamente.");
+                        }
+                    }
+                    break;
+                
+                case "4":
+                    while (true){ // loop para garantir que o usuario digite uma senha valida
+                        var senha_func = requisicao.question("Digite a senha desejada (6 caracteres ou mais): ");
+                        if (this.validar_senha(senha_func) == true){ // chama a funcao de validar a senha com a senha digitada como parametro
+                            this.lista_funcionarios[posicao_funcionario].senha = senha_func;
+                            console.log("Senha alterada com sucesso!");
+                            break //caso a senha seja valida o loop se encerra e a senha eh alterada
+                        } else {
+                            console.log("Senha invalida, por favor digite novamente.");
+                        }
+                    }
+                    break;
+
+                case "5":
+                    return console.log("\nSaiu do menu de alteracao com exito.\n");//encerra o loop e sai da interface
+                    
+                default:
+                    console.log("\nPor favor, digite uma opcao valida.");//ate o usuario inserir uma opcao valida o loop eh repetido
+                    break;
+            }
+        }
+    }
+
+    modificar_cliente(cliente){ // metodo para modificar os dados do cliente
+        let posicao_cliente;
+        for (let i = 0; i < (this.lista_clientes.length); i++){ //encontra a posicao do usuario na lista de clientes de acordo com o email
+            if (cliente.email == this.lista_clientes[i].email){
+                posicao_cliente = i;
+                break
+            }
+        }
+        while (true){
+            console.log("\n-------------------------- Alterar Dados --------------------------\n");
+            console.log("1 - Alterar Nome\n2 - Alterar Data de Nascimento\n3 - Alterar CPF\n4 - Alterar e-mail\n5 - Alterar Senha\n6 - Sair do menu de alteracao\n");
+            let escolha = requisicao.question("Escolha a opcao que deseja alterar: ");
+
+            switch(escolha){
+
+                case "1":
+                    let nome_cliente = requisicao.question("Digite o seu nome: ");
+                    this.lista_clientes[posicao_cliente].nome = nome_cliente;
+                    console.log("Nome alterado com sucesso!");
+                    break;
+                
+                case "2":
+                    while (true){// loop para garantir que o usuario digite uma data valida
+                        let data_cliente = requisicao.question("Digite a sua data de nascimento (dd/mm/aaaa): ");
+                        if (this.validar_data(data_cliente) == true){ // chama a funcao de validar a data com a data digitada como parametro
+                            this.lista_clientes[posicao_cliente].data_nascimento = data_cliente;
+                            console.log("Data de nascimento alterada com sucesso!");
+                            break //caso a data seja valida o loop se encerra e a data eh alterada
+                        } else{
+                            console.log("Data invalida, por favor digite novamente.");
+                        }
+                    }
+                    break;
+                    
+                case "3":
+                    while (true){// loop para garantir que o usuario digite um cpf valido
+                        let cpf_cliente = requisicao.question("Digite o seu cpf (xxx.xxx.xxx-xx): ");
+                        if (this.validar_cpf(cpf_cliente, this.lista_clientes, this.lista_funcionarios) == true){
+                            this.lista_clientes[posicao_cliente].cpf = cpf_cliente;
+                            console.log("CPF alterado com sucesso!");
+                            break //caso o cpf seja valido o loop se encerra e o cpf eh alterado
+                        } else if (this.validar_cpf(cpf_cliente, this.lista_clientes, this.lista_funcionarios) == "cpf existente") { //verifica se ja existe o cpf digitado
+                            console.log("CPF ja esta cadastrado, tente outro por favor.")
+                        } else{
+                            console.log("CPF invalido, por favor digite novamente.");
+                        }
+                    }
+                    break;
+                
+                case "4":
+                    while (true){ // loop para garantir que o usuario digite um email valido
+                        let email_cliente = requisicao.question("Digite o seu email: "); // chama a funcao de validar o email com o email digitado como parametro
+                        if (this.validar_email(email_cliente, this.lista_clientes, this.lista_funcionarios) == true){
+                            this.lista_clientes[posicao_cliente].email = email_cliente;
+                            console.log("Email alterado com sucesso!");
+                            break //caso o email seja valido o loop se encerra e o email eh alterado
+                        } else if (this.validar_email(email_cliente, this.lista_clientes, this.lista_funcionarios) == "email existente") { //verifica se ja existe o email digitado
+                            console.log("Email ja esta cadastrado, tente outro por favor.")
+                        } else{
+                            console.log("Email invalido, por favor digite novamente.");
+                        }
+                    }
+                    break;
+
+                case "5":
+                    while (true){ // loop para garantir que o usuario digite uma senha valida
+                        var senha_cliente = requisicao.question("Digite a senha desejada (6 caracteres ou mais): ");
+                        if (this.validar_senha(senha_cliente) == true){ // chama a funcao de validar a senha com a senha digitada como parametro
+                            this.lista_clientes[posicao_cliente].senha = senha_cliente;
+                            console.log("Senha alterada com sucesso!");
+                            break //caso a senha seja valida o loop se encerra e a senha eh alterada
+                        } else {
+                            console.log("Senha invalida, por favor digite novamente.");
+                        }
+                    }
+                    break;
+
+                case "6":
+                    return console.log("\nSaiu do menu de alteracao com exito.\n");//encerra o loop e sai da interface
+                    
+                default:
+                    console.log("\nPor favor, digite uma opcao valida.");//ate o usuario inserir uma opcao valida o loop eh repetido
+                    break;
+            }
         }
     }
 
