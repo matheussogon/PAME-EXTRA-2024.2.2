@@ -239,7 +239,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
     funcionario_logado(funcionario) { //metodo para o usuario interagir com o sistema estando logado como funcionario
         while(true) {
             console.log("\n-------------------------- Sua conta (Funcionario) --------------------------\n");
-            console.log("1 - Ver meus Dados\n2 - Ver lista de Reservas\n3 - Ver lista de Quartos\n4 - Ver lista de Clientes\n5 - Mudar status da reserva (pendente, adiada, realizada, cancelada)\n6 - Adicionar Quarto\n7 - Modificar Dados\n8 - Sair da Conta")
+            console.log("1 - Ver meus Dados\n2 - Ver lista de Reservas\n3 - Ver lista de Quartos\n4 - Ver lista de Clientes\n5 - Mudar status da reserva (pendente, adiada, realizada, cancelada)\n6 - Adicionar Quarto\n7 - Editar Quarto\n8 - Excluir Quarto\n9 - Modificar Dados\n10 - Sair da Conta");
             let escolha = requisicao.question("\nSelecione uma das opcoes acima: "); //mostra as opcoes e faz o usuario escolher uma dentre elas
             
             switch(escolha){
@@ -273,10 +273,17 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     break;
                 
                 case "7":
+                    sistema.editar_quarto();
+                    break;
+
+                case "8":
+                    break;
+
+                case "9":
                     sistema.modificar_funcionario(funcionario);
                     break;
     
-                case "8":
+                case "10":
                     return console.log("\nSaiu da conta com exito.\n");//encerra o loop e sai da interface de usuario logado
                 
                 default:
@@ -379,7 +386,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         while(true){
             var qtd_camas = requisicao.question("Digite a quantidade de camas do quarto: ");
             if (this.validar_quantidade_inteira(qtd_camas) == true){ // chama a funcao de validar a quantidadede camas com a digitada como parametro
-                break //caso a senha seja valida o loop se encerra
+                break //caso a qtd de camas seja valida o loop se encerra
             } else {
                 console.log("Quantidade invalida, por favor digite novamente.");
             }
@@ -685,6 +692,97 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         }
     }
 
+    editar_quarto(){ // metodo para editar quartos
+        if (this.lista_quartos.length == 0){ // caso nao haja quarto imprime a informacao para o usuario
+            return console.log("\nNao ha quartos para serem editados.\n")
+        }
+        while (true){ // loop para garantir que o usuario digite nome de um quarto cadastrado
+            let escolha = requisicao.question("\nDigite o nome do quarto que deseja editar: ");
+            let resultado = sistema.encontrar_quarto(escolha);
+            let posicao_quarto;
+            for (let i = 0; i < (this.lista_quartos.length); i++){ //encontra a posicao do quarto na lista de quartos de acordo com o nome 
+                if (escolha == this.lista_quartos[i].nome){
+                    posicao_quarto = i;
+                    break
+                }
+            }
+            if (resultado == true){ // se o quarto for encontrado ele podera ser editado
+                console.log("\n Quarto encontrado!");
+                while (true){
+                    console.log("\n-------------------------- Editar Quartos --------------------------\n");
+                    console.log("1 - Editar quantidade de camas\n2 - Editar preco por noite\n3 - Editar nome\n4 - Editar descrição\n5 - Sair do menu de edicao\n");
+                    let escolha = requisicao.question("Escolha a opcao que deseja editar: ");
+                    switch(escolha){
+                        case "1":
+                            while(true){
+                                let qtd_camas = requisicao.question("Digite a quantidade de camas do quarto: ");
+                                if (this.validar_quantidade_inteira(qtd_camas) == true){ // chama a funcao de validar a quantidadede camas com a digitada como parametro
+                                    this.lista_quartos[posicao_quarto].quantidade_camas = qtd_camas;
+                                    console.log("\nQuantidade de camas editada com sucesso!");
+                                    break //caso a qtd de camas seja valida o loop se encerra a quantidade eh alterada
+                                } else {
+                                    console.log("Quantidade invalida, por favor digite novamente.");
+                                }
+                            }
+                            break;
+                        case "2":
+                            while(true){
+                                let preco = requisicao.question("Digite o preco por noite (Ex: xxx.xx): ");
+                                if (this.validar_preco(preco) == true){ // chama a funcao de validar o preco com o digitado como parametro
+                                    this.lista_quartos[posicao_quarto].preco_noite = preco;
+                                    console.log("\nPreco por noite editado com sucesso!");
+                                    break //caso a senha seja valida o loop se encerra e o preco eh alterado
+                                } else {
+                                    console.log("Valor invalido, por favor digite novamente.");
+                                }
+                            }
+                            break;
+                        case "3":
+                            while(true){
+                                let nome_quarto = requisicao.question("Digite o nome do quarto: ");
+                                let contagem = false;
+                                for (let i = 0; i < (this.lista_quartos.length); i++){
+                                    if (nome_quarto == this.lista_quartos[i].nome){ // faz uma busca no banco de dados para ver se existe o nome de quarto digitado
+                                        console.log("Nome de quarto ja cadastrado, por favor tente outro.");
+                                        contagem = true;
+                                    }
+                                }
+                                if (contagem == false){ //caso nao encontre, o novo nome pode ser inserido
+                                    this.lista_quartos[posicao_quarto].nome = nome_quarto;
+                                    console.log("\nNome do quarto editado com sucesso!");
+                                    break
+                                }
+                            }
+                            break;
+                        case "4":
+                            let descricao_quarto = requisicao.question("Digite a descricao do quarto: ")
+                            this.lista_quartos[posicao_quarto].descricao = descricao_quarto;
+                            console.log("\nDescricao do quarto editada com sucesso!");
+                            break;
+
+                        case "5":
+                            return console.log("\nSaiu do menu de edicao com exito.\n");//encerra o loop e sai da interface
+                    
+                        default:
+                            console.log("\nPor favor, digite uma opcao valida.");//ate o usuario inserir uma opcao valida o loop eh repetido
+                            break;
+                    }
+                }
+            } else {
+                console.log("\nNome de quarto não encontrado.");
+            }
+        }
+    }
+    
+    encontrar_quarto(nome_quarto){ // metodo para encontrar nome de quarto na lista de quarto
+        for (let i = 0; i < (this.lista_quartos.length); i++){
+            if (nome_quarto == this.lista_quartos[i].nome){ // faz uma busca no banco de dados para ver se existe o nome de quarto digitado
+                return true
+            }
+        }
+        return false
+    }
+
     formatar_atributo(atributo) { // metodo para formatar os atributos e utilizar nos prints de dados
             const nomes_bonitos = {
                 reserva_id: "ID da Reserva",
@@ -769,7 +867,6 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         if (dia < 1 || dia > diasPorMes[mes - 1]) {
             return false;
         }
-
         return true; 
     }
 
