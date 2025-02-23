@@ -493,6 +493,9 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
     }
 
     mudar_status(){
+        if (this.lista_clientes.length == 0){
+            return console.log("\nNao ha reservas realizadas.");
+        }
         let escolha = requisicao.question("\nDigite o ID da reserva que deseja alterar o status: ")
         let contagem = 0; // variavel de contagem para contabilizar as vezes que o id do cliente sera encontrado na lista de reservas
         for (let i = 0; i < (this.lista_reservas.length); i++){
