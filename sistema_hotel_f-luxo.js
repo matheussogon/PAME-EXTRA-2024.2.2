@@ -277,6 +277,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     break;
 
                 case "8":
+                    sistema.excluir_quarto();
                     break;
 
                 case "9":
@@ -697,7 +698,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
 
     editar_quarto(){ // metodo para editar quartos
         if (this.lista_quartos.length == 0){ // caso nao haja quarto imprime a informacao para o usuario
-            return console.log("\nNao ha quartos para serem editados.\n")
+            return console.log("\nNao ha quartos para serem editados.\n");
         }
         while (true){ // loop para garantir que o usuario digite nome de um quarto cadastrado
             let escolha = requisicao.question("\nDigite o nome do quarto que deseja editar: ");
@@ -710,7 +711,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 }
             }
             if (resultado == true){ // se o quarto for encontrado ele podera ser editado
-                console.log("\n Quarto encontrado!");
+                console.log("\nQuarto encontrado!");
                 while (true){
                     console.log("\n-------------------------- Editar Quartos --------------------------\n");
                     console.log("1 - Editar quantidade de camas\n2 - Editar preco por noite\n3 - Editar nome\n4 - Editar descrição\n5 - Sair do menu de edicao\n");
@@ -771,6 +772,29 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                             break;
                     }
                 }
+            } else {
+                console.log("\nNome de quarto não encontrado.");
+            }
+        }
+    }
+    
+    excluir_quarto(){
+        if (this.lista_quartos.length == 0){ // caso nao haja quarto imprime a informacao para o usuario
+            return console.log("\nNao ha quartos para serem excluidos.\n");
+        }     
+        while (true){ // loop para garantir que o usuario digite nome de um quarto cadastrado
+            let escolha = requisicao.question("\nDigite o nome do quarto que deseja excluir: ");
+            let resultado = sistema.encontrar_quarto(escolha);
+            let posicao_quarto;
+            for (let i = 0; i < (this.lista_quartos.length); i++){ //encontra a posicao do quarto na lista de quartos de acordo com o nome 
+                if (escolha == this.lista_quartos[i].nome){
+                    posicao_quarto = i;
+                    break
+                }
+            }
+            if (resultado == true){ // se o quarto for encontrado ele podera ser editado
+                this.lista_quartos.splice(posicao_quarto,1);
+                return console.log("\nQuarto encontrado e removido com sucesso!");
             } else {
                 console.log("\nNome de quarto não encontrado.");
             }
