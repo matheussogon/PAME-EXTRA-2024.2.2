@@ -495,7 +495,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         for (let i = 0; i < (this.lista_reservas.length); i++){
             if (usuario_cliente.cliente_id == this.lista_reservas[i].cliente_id){// faz uma busca no banco de dados para encontrar o id do cliente
                 if (escolha == this.lista_reservas[i].reserva_id.toString()){ // sabendo que o usuario tem a reserva, agora analisa se o id digitado dessa reserva eh o msm que ele digitou para cancelar
-                    this.lista_reservas[i].status = "CANCELADA"; // se encontrar, muda o status da reserva para cancelada        
+                    this.lista_reservas.splice(i,1); // se encontrar, muda o status da reserva para cancelada        
                     console.log("\nReserva cancelada com sucesso!\n");
                     contagem++;
                 }
@@ -522,11 +522,15 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                         alteracao_status.toUpperCase() !== "CANCELADA") {
                         console.log("\nStatus invalido, por favor digite novamente.");
 
+                    } else if (alteracao_status.toUpperCase() == "CANCELADA") {
+                        this.lista_reservas.splice(i,1); // se for cancelada, exclui a reserva      
+                        console.log("\nStatus alterado para cancelada, a reserva sera excluida.\n");
+                        break;
                     } else {
-                        this.lista_reservas[i].status = alteracao_status.toUpperCase(); // se encontrar, muda o status da reserva para cancelada        
+                        this.lista_reservas[i].status = alteracao_status.toUpperCase(); // muda o status da reserva       
                         console.log("\nStatus alterado com sucesso!\n");
                         break;
-                    }   
+                    }
                 }
                 contagem++;
             }
