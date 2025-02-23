@@ -240,7 +240,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
     funcionario_logado(funcionario) { //metodo para o usuario interagir com o sistema estando logado como funcionario
         while(true) {
             console.log("\n-------------------------- Sua conta (Funcionario) --------------------------\n");
-            console.log("1 - Ver meus Dados\n2 - Ver lista de Reservas\n3 - Ver lista de Quartos\n4 - Ver lista de Clientes\n5 - Mudar status da reserva (pendente, adiada, realizada, cancelada)\n6 - Adicionar Quarto\n7 - Editar Quarto\n8 - Excluir Quarto\n9 - Modificar Dados\n10 - Visualizar Avaliacoes\n10 - Sair da Conta");
+            console.log("1 - Ver meus Dados\n2 - Ver lista de Reservas\n3 - Ver lista de Quartos\n4 - Ver lista de Clientes\n5 - Mudar status da reserva (pendente, adiada, realizada, cancelada)\n6 - Adicionar Quarto\n7 - Editar Quarto\n8 - Excluir Quarto\n9 - Modificar Dados\n10 - Visualizar Avaliacoes\n11 - Sair da Conta");
             let escolha = requisicao.question("\nSelecione uma das opcoes acima: "); //mostra as opcoes e faz o usuario escolher uma dentre elas
             
             switch(escolha){
@@ -432,6 +432,9 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
     }
 
     fazer_reserva(usuario_cliente){ //metodo para o usuario realizar uma reserva
+        if (this.lista_quartos.length == 0){
+            return console.log("Nao ha quartos disponiveis para fazer reserva.");
+        }
         while(true){
             var data_checkin = requisicao.question("Digite a data de Check-in: ");
             if (this.validar_data(data_checkin) == true){ // chama a funcao de validar a data com a data digitada como parametro
@@ -473,36 +476,36 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         for (let i = 0; i < (lista.length); i++){
             if (usuario_cliente.cliente_id == lista[i].cliente_id){// faz uma busca no banco de dados para encontrar o id do cliente
                 console.log("Reserva" + ` ${contagem+1}:\n`);
+                contagem++;
                 for (let chave in lista[i]) { // itera sobre os atributos do objeto usuário e imprime de maneira formatada
                     if (lista[i].hasOwnProperty(chave)) {
                         const valor = lista[i][chave];
                         const nome_bonito = this.formatar_atributo(chave); // chama a função formatar_atributo para formatar o nome do atributo
                         console.log(`  ${nome_bonito}: ${valor}`);
-                        contagem++;
                     }
                 }
             console.log("-----------------------------");
             }
         }
         if (contagem == 0){ // condicional: se o id do cliente nao for encontrado na lista de reservas
-            console.log("\nVoce nao tem reservas.\n")
+            console.log("Voce nao tem reservas.");
         }
     }
 
     cancelar_reserva(usuario_cliente){
-        let escolha = requisicao.question("\nDigite o ID da reserva que deseja cancelar: ")
+        let escolha = requisicao.question("Digite o ID da reserva que deseja cancelar: ")
         let contagem = 0; // variavel de contagem para contabilizar as vezes que o id do cliente sera encontrado na lista de reservas
         for (let i = 0; i < (this.lista_reservas.length); i++){
             if (usuario_cliente.cliente_id == this.lista_reservas[i].cliente_id){// faz uma busca no banco de dados para encontrar o id do cliente
                 if (escolha == this.lista_reservas[i].reserva_id.toString()){ // sabendo que o usuario tem a reserva, agora analisa se o id digitado dessa reserva eh o msm que ele digitou para cancelar
                     this.lista_reservas.splice(i,1); // se encontrar, muda o status da reserva para cancelada        
-                    console.log("\nReserva cancelada com sucesso!\n");
+                    console.log("\nReserva cancelada com sucesso!");
                     contagem++;
                 }
             }
         }
         if (contagem == 0){ // condicional: se o id do cliente nao for encontrado na lista de reservas
-            console.log("\nReserva nao encontrada.\n")
+            console.log("\nReserva nao encontrada.")
         }
     }
 
@@ -510,7 +513,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         if (this.lista_clientes.length == 0){
             return console.log("\nNao ha reservas realizadas.");
         }
-        let escolha = requisicao.question("\nDigite o ID da reserva que deseja alterar o status: ")
+        let escolha = requisicao.question("Digite o ID da reserva que deseja alterar o status: ")
         let contagem = 0; // variavel de contagem para contabilizar as vezes que o id do cliente sera encontrado na lista de reservas
         for (let i = 0; i < (this.lista_reservas.length); i++){
             if (escolha == this.lista_reservas[i].reserva_id.toString()){ // sabendo que o usuario tem a reserva, agora analisa se o id digitado dessa reserva eh o msm que ele digitou para cancelar
@@ -536,7 +539,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             }
         }
         if (contagem == 0){ // condicional: se o id do cliente nao for encontrado na lista de reservas
-            console.log("\nReserva nao encontrada.\n")
+            console.log("\nReserva nao encontrada.")
         }
     }
 
