@@ -844,12 +844,13 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
 
     visualizar_avaliacoes(){ // metodo para visualizacao das avaliacoes
         for (let i = 0; i < this.lista_avaliacoes.length; i++){
-            let avaliacao = this.lista_avaliacoes[i][0];  //avaliação (primeiro item da lista interna)
+            let avaliacao_int = parseInt(this.lista_avaliacoes[i][0]);  //avaliação (primeiro item da lista interna) em inteiro
             let comentario = this.lista_avaliacoes[i][1]; //comentário (segundo item da lista interna)
             let nome_cliente = this.lista_avaliacoes[i][2]; //nome do cliente (terceiro item da lista interna)
-            //imprime a avaliação, o comentário e o nome do cliente
+            let estrelas = '★'.repeat(avaliacao_int) + '☆'.repeat(5 - avaliacao_int); // variacel para gerar estrelas de avaliacao (cheias e vazias)
+            //imprime a avaliação em estrelas, o comentário e o nome do cliente
             console.log(`Cliente: ${nome_cliente}`);
-            console.log(`Avaliação: ${avaliacao}`);
+            console.log(`Avaliação: ${estrelas}`);
             console.log(`Comentário: ${comentario}`);
             console.log('------------------------');
         }
