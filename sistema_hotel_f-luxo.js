@@ -815,29 +815,31 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
     }
 
     avaliar_estadia(cliente){ // metodo para avaliar a estadia
-        console.log("\n-------------------------- Avaliar Estadia --------------------------\n");
         while (true){ // loop para garantir que o usuario digite uma avaliacao valida
-            console.log("5 - Excelente\n4- Bom\n3 - Mediano\n2 - Ruim\n1 - Pessimo\n") // imprime as avaliacoes
+            console.log("\n-------------------------- Avaliar Estadia --------------------------\n");
+            console.log("5 - Excelente\n4 - Bom\n3 - Mediano\n2 - Ruim\n1 - Pessimo\n") // imprime as avaliacoes
             let avaliacao = requisicao.question("Digite a opcao da avaliacao da sua estadia: ");
             let comentario;
             if (["1", "2", "3", "4", "5"].includes(avaliacao)){ //condicional para identificar se o usuario avaliou corretamente
                 while (true){ // loop para garantir que o usuario digite a resposta corretamente
-                    let resposta = requisicao.question("Deseja adicionar um comentario? (sim/nao)");
+                    let resposta = requisicao.question("Deseja adicionar um comentario? (sim/nao): ");
                     if (resposta.toUpperCase() == "SIM"){ //se for sim pede para inserir o comentario
                         comentario = requisicao.question("Digite o comentario: ");
                         this.lista_avaliacoes.push([avaliacao, comentario, cliente.nome]); //salva a avaliacao, o comentario e o nome do cliente avaliante na lista_avaliacos (lista de listas)
+                        console.log("\nAvaliacao concluida com sucesso!");
                         break;
                     } else if (resposta.toUpperCase() == "NAO"){ // se nao, adiciona um comentario vazio
                         comentario = " ";
                         this.lista_avaliacoes.push([avaliacao, comentario, cliente.nome]); //salva a avaliacao, o comentario e o nome do cliente avaliante na lista_avaliacos (lista de listas)
+                        console.log("\nAvaliacao concluida com sucesso!");
                         break
                     }else {
-                        console.log("\nResposta invalida.");
+                        console.log("\nResposta invalida.\n");
                     }
                 }
                 break;
             } else {
-                console.log("\nAvaliacao invalida, por favor tente novamente.");
+                console.log("Avaliacao invalida, por favor tente novamente.");
             }
         }
     }
@@ -847,9 +849,9 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             let avaliacao_int = parseInt(this.lista_avaliacoes[i][0]);  //avaliação (primeiro item da lista interna) em inteiro
             let comentario = this.lista_avaliacoes[i][1]; //comentário (segundo item da lista interna)
             let nome_cliente = this.lista_avaliacoes[i][2]; //nome do cliente (terceiro item da lista interna)
-            let estrelas = '★'.repeat(avaliacao_int) + '☆'.repeat(5 - avaliacao_int); // variacel para gerar estrelas de avaliacao (cheias e vazias)
+            let estrelas = '★ '.repeat(avaliacao_int) + '☆ '.repeat(5 - avaliacao_int); // variacel para gerar estrelas de avaliacao (cheias e vazias)
             //imprime a avaliação em estrelas, o comentário e o nome do cliente
-            console.log(`Cliente: ${nome_cliente}`);
+            console.log(`\nCliente: ${nome_cliente}`);
             console.log(`Avaliação: ${estrelas}`);
             console.log(`Comentário: ${comentario}`);
             console.log('------------------------');
