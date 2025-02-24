@@ -31,6 +31,13 @@
       "cpf": "111.111.111-22",
       "email": "c@c.com",
       "senha": "111111"
+    },
+    {
+      "func_id": "498730010",
+      "nome_usuario": "matheus",
+      "cpf": "111.111.111-11",
+      "email": "d@d.com",
+      "senha": "111111"
     }
   ],
   "quartos": [
@@ -39,6 +46,12 @@
       "preco_noite": "111",
       "nome": "1",
       "descricao": "1"
+    },
+    {
+      "quantidade_camas": "5",
+      "preco_noite": "1000",
+      "nome": "normal",
+      "descricao": "normal"
     }
   ],
   "reservas": [
@@ -105,6 +118,14 @@
       "check_in": "10/10/1211",
       "check_out": "10/10/1212",
       "nome_quarto": "oi"
+    },
+    {
+      "reserva_id": "958633356",
+      "cliente_id": "426212261",
+      "status": "REALIZADA",
+      "check_in": "10/10/1003",
+      "check_out": "10/10/1004",
+      "nome_quarto": "1"
     }
   ],
   "avaliacoes": [
@@ -126,6 +147,8 @@
     "379722394",
     "656827919",
     "178415751",
-    "705361225"
+    "705361225",
+    "958633356",
+    "498730010"
   ]
 }

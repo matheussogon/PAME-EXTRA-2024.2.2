@@ -71,11 +71,14 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
 
                     let tipo_login = sistema.fazer_login(); //
 
-                    if (tipo_login[0] == "Usuario Funcionario"){
+                    if (tipo_login == "saiu"){ // caso o usuario nao queiria se logar mais
+                        console.log("\nVoltou ao menu principal.");
+
+                    } else if (tipo_login[0] == "Usuario Funcionario"){ // loga com a conta como funcionario
                         sistema.funcionario_logado(tipo_login[1]);
 
-                    } else {
-                        sistema.cliente_logado(tipo_login[1]);
+                    } else { // loga com a conta como cliente
+                        sistema.cliente_logado(tipo_login[1]); 
                     }
                     break;
         
@@ -99,14 +102,16 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         let manter_login = true;
         while(manter_login){
             console.log("\n-------------------------- Login --------------------------\n");
-            console.log("Digite a tecla enter com a caixa de texto vazia para sair do login.");
+            console.log("Digite a tecla enter com a caixa de texto vazia para sair do login.\n");
             let conta_usuario = requisicao.question("Digite seu nome de usuario ou e-mail de login: "); //pede ao usuario o email e senha
-            if (conta_usuario == ""){
-                return console.log("\nSaindo...");
+            if (conta_usuario == ""){ // caso o usuario nao queira se logar mais
+                console.log("\nSaindo...");
+                return "saiu";
             }
             let senha = requisicao.question("Digite sua senha: ");
-            if (senha == ""){
-                return console.log("\nSaindo...");
+            if (senha == ""){ // caso o usuario nao queira se logar mais
+                console.log("\nSaindo...");
+                return "saiu";
             }
             let confirmacao_conta = false;
             for (let i = 0; i < (this.banco_dados.clientes.length); i++){ //passa pela lista de clientes para ver se o email esta cadastrado la
@@ -115,7 +120,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     if (senha == this.banco_dados.clientes[i].senha){ //caso o email esteja cadastrado, ve se a senha esta correta
                         console.log("\nSua conta foi acessada com exito!")
                         manter_login = false;
-                        return ["Usuario Cliente", this.banco_dados.clientes[i]] //retorna uma lista para ser utilizada em outro metodo para identificacao de usuario e utilizacao no sistema (cliente ou funconario)
+                        return ["Usuario Cliente", this.banco_dados.clientes[i]]; //retorna uma lista para ser utilizada em outro metodo para identificacao de usuario e utilizacao no sistema (cliente ou funconario)
                     }
                 }
             }
@@ -305,7 +310,9 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     break;
                 
                 case "3":
-                    console.log("\nFazer reserva:\n");
+                    console.log("\nQuartos Disponiveis:\n");
+                    sistema.ver_lista_objetos(this.banco_dados.quartos); // mostra os quartos ao cliente
+                    console.log("\nFazer reserva:");
                     sistema.fazer_reserva(cliente);
                     break;
 
@@ -361,7 +368,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
 
     adicionar_quarto(){
         console.log("\n------------------------- Adicionar Quarto --------------------------\n");
-        console.log("Digite a tecla enter com a caixa de texto vazia caso nao queira mais adicionar o quarto.");
+        console.log("Digite a tecla enter com a caixa de texto vazia caso nao queira mais adicionar o quarto\n");
         while(true){
             var qtd_camas = requisicao.question("Digite a quantidade de camas do quarto: ");
             if (qtd_camas == ""){ // caso o usario queria sair
@@ -402,14 +409,13 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         }
         this.banco_dados.quartos.push(new Quartos(qtd_camas, preco_noite, nome_quarto, descricao)); //armazena os dados do quarto em um banco dedados local (lista)
         fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // salva o novo quarto no banco de dados
-        console.log("\nQuarto adicionado com sucesso!\n");
+        console.log("\nQuarto adicionado com sucesso!");
     }
 
     fazer_reserva(usuario_cliente){ //metodo para o usuario realizar uma reserva
         if (this.banco_dados.quartos.length == 0){
             return console.log("Nao ha quartos disponiveis para fazer reserva.");
         }
-        sistema.ver_lista_objetos(this.banco_dados.quartos); // mostra os quartos ao cliente
         console.log("\nDigite a tecla enter com a caixa de texto vazia caso nao queira fazer a reserva.\n");
         while(true){
             var data_checkin = requisicao.question("Digite a data de Check-in: ");
@@ -473,8 +479,8 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
     }
 
     cancelar_reserva(usuario_cliente){
-        let escolha = requisicao.question("Digite o ID da reserva que deseja cancelar: ");
         console.log("Digite a tecla enter com a caixa de texto vazia para sair do cancelamento.\n");
+        let escolha = requisicao.question("Digite o ID da reserva que deseja cancelar: ");
         let contagem = 0; // variavel de contagem para contabilizar as vezes que o id do cliente sera encontrado na lista de reservas
         if (escolha == ""){
             return console.log("\nSaindo...");
@@ -503,13 +509,15 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         if (escolha == ""){ // caso o usuario queira sair
             return console.log("\nSaindo...");
         }
-        let flag = false; // flag para saber se o usuario quis sair ou nao
         let contagem = 0; // variavel de contagem para contabilizar as vezes que o id do cliente sera encontrado na lista de reservas
         for (let i = 0; i < (this.banco_dados.reservas.length); i++){
             if (escolha == this.banco_dados.reservas[i].reserva_id.toString()){ // sabendo que o usuario tem a reserva, agora analisa se o id digitado dessa reserva eh o msm que ele digitou para cancelar
                 while (true){
                     let alteracao_status = requisicao.question("\nDigite o status que deseja atribuir (pendente, adiada, realizada, cancelada) ou enter para sair: ")
-                    if (alteracao_status.toUpperCase() !== "PENDENTE" && 
+                    if (alteracao_status == ""){ // caso o usuario queira sair
+                        return console.log("\nSaindo...");
+
+                    } else if (alteracao_status.toUpperCase() !== "PENDENTE" && // caso o status digitado nao seja pendente, adiada, realizada ou cancelada
                         alteracao_status.toUpperCase() !== "ADIADA" && 
                         alteracao_status.toUpperCase() !== "REALIZADA" && 
                         alteracao_status.toUpperCase() !== "CANCELADA") {
@@ -519,20 +527,15 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                         this.banco_dados.reservas.splice(i,1); // se for cancelada, exclui a reserva      
                         console.log("\nStatus alterado para cancelada, a reserva sera excluida.\n");
                         break;
-                    } else if (alteracao_status == ""){
-                        console.log("\nSaindo...");
-                        flag = true;
-                        break;
+                        
                     } else {
                         this.banco_dados.reservas[i].status = alteracao_status.toUpperCase(); // muda o status da reserva       
-                        console.log("\nStatus alterado com sucesso!\n");
+                        console.log("\nStatus alterado com sucesso!");
                         break;
                     }
                 }
-                if (flag != true){ // caso o usuario nao queira sair entra na conficional
-                    fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // atualiza o status da reserva no bando de dados
-                    contagem++;
-                }
+                fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // atualiza o status da reserva no bando de dados
+                contagem++;
             }
         }
         if (contagem == 0){ // condicional: se o id do cliente nao for encontrado na lista de reservas
@@ -683,7 +686,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         if (this.banco_dados.quartos.length == 0){ // caso nao haja quarto imprime a informacao para o usuario
             return console.log("\nNao ha quartos para serem editados.\n");
         }
-        console.log("\nAperte a tecla enter com a caixa de texto vazia se nao quiser mais alterar.\n");
+        console.log("\nAperte a tecla enter com a caixa de texto vazia se nao quiser mais alterar.");
         while (true){ // loop para garantir que o usuario digite nome de um quarto cadastrado
             let escolha = requisicao.question("\nDigite o nome do quarto que deseja editar: ");
             if (escolha == ""){
@@ -786,9 +789,9 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         if (this.banco_dados.quartos.length == 0){ // caso nao haja quarto imprime a informacao para o usuario
             return console.log("\nNao ha quartos para serem excluidos.\n");
         }     
+        console.log("\nDigite a tecla enter com a caixa de texto vazia caso nao queira mais escluir.");
         while (true){ // loop para garantir que o usuario digite nome de um quarto cadastrado
             let escolha = requisicao.question("\nDigite o nome do quarto que deseja excluir: ");
-            console.log("Digite a tecla enter com a caixa de texto vazia caso nao queira mais escluir.\n");
             if (escolha == ""){ // caso o usuario nao queria mais excluir, o metodo se encerra
                 console.log("\nSaindo...");
                 break; 
