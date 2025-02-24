@@ -1,6 +1,6 @@
 const requisicao = require('readline-sync'); //comando necessario para interacao em terminal em js
 const fs = require('fs');
-const arquivo_reserva = 'reservas.json';
+const arquivo_reservas = 'reservas.json';
 const arquivo_quartos = 'quartos.json';
 const arquivo_clientes = 'clientes.json';
 const arquivo_funcionarios = 'funcionarios.json';
@@ -54,12 +54,39 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         } else { // se nao existir ou estiver vazio, cria uma lista vazia
             this.lista_clientes = [];
         }
-        this.lista_funcionarios = [];
-        this.lista_quartos = [];
-        this.lista_reservas = [];
-        this.lista_avaliacoes = [];
-        this.lista_ids = [];
-
+        //banco de dados funcionario
+        if (fs.existsSync(arquivo_funcionarios) && fs.statSync(arquivo_funcionarios).size > 0) { // verifica se o arquivo json existe e e vazio
+            let dados_funcionarios_brutos = fs.readFileSync(arquivo_funcionarios, 'utf8');
+            this.lista_funcionarios = JSON.parse(dados_funcionarios_brutos); //exporta os dados do json para a lista
+        } else { // se nao existir ou estiver vazio, cria uma lista vazia
+            this.lista_funcionarios = [];
+        }
+        //banco de dados quarto
+        if (fs.existsSync(arquivo_quartos) && fs.statSync(arquivo_quartos).size > 0) { // verifica se o arquivo json existe e e vazio
+            let dados_quartos_brutos = fs.readFileSync(arquivo_quartos, 'utf8');
+            this.lista_quartos = JSON.parse(dados_quartos_brutos); //exporta os dados do json para a lista
+        } else { // se nao existir ou estiver vazio, cria uma lista vazia
+            this.lista_quartos = [];
+        }
+        //bando de dados reserva
+        if (fs.existsSync(arquivo_reservas) && fs.statSync(arquivo_reservas).size > 0) { // verifica se o arquivo json existe e e vazio
+            let dados_reservas_brutos = fs.readFileSync(arquivo_reservas, 'utf8');
+            this.lista_reservas = JSON.parse(dados_reservas_brutos); //exporta os dados do json para a lista
+        } else { // se nao existir ou estiver vazio, cria uma lista vazia
+            this.lista_reservas = [];
+        }
+        if (fs.existsSync(arquivo_avaliacoes) && fs.statSync(arquivo_avaliacoes).size > 0) { // verifica se o arquivo json existe e e vazio
+            let dados_avaliacoes_brutos = fs.readFileSync(arquivo_avaliacoes, 'utf8');
+            this.lista_avaliacoes = JSON.parse(dados_avaliacoes_brutos); //exporta os dados do json para a lista
+        } else { // se nao existir ou estiver vazio, cria uma lista vazia
+            this.lista_avaliacoes = [];
+        }
+        if (fs.existsSync(arquivo_ids) && fs.statSync(arquivo_ids).size > 0) { // verifica se o arquivo json existe e e vazio
+            let dados_ids_brutos = fs.readFileSync(arquivo_ids, 'utf8');
+            this.lista_ids = JSON.parse(dados_ids_brutos); //exporta os dados do json para a lista
+        } else { // se nao existir ou estiver vazio, cria uma lista vazia
+            this.lista_ids = [];
+        }
     }
 
     iniciar_sistema(){ //metodo para inicializacao do sistema
@@ -87,7 +114,30 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         
                 case "3":
                     // ao sair do programa o banco de dados no arquivo json eh atualizado
+                    //cliente
+                    if (this.lista_clientes.length != 0){ // para nao adicionar lista vazia no bando de dados
                     fs.writeFileSync(arquivo_clientes, JSON.stringify(this.lista_clientes, null, 2), 'utf8');
+                    }
+                    //funcionario
+                    if (this.lista_funcionarios.length != 0){ // para nao adicionar lista vazia no bando de dados
+                        fs.writeFileSync(arquivo_funcionarios, JSON.stringify(this.lista_funcionarios, null, 2), 'utf8');
+                    }
+                    //quarto
+                    if (this.lista_quartos.length != 0){ // para nao adicionar lista vazia no bando de dados
+                        fs.writeFileSync(arquivo_quartos, JSON.stringify(this.lista_quartos, null, 2), 'utf8');
+                    }
+                    //reserva
+                    if (this.lista_reservas.length != 0){ // para nao adicionar lista vazia no bando de dados
+                        fs.writeFileSync(arquivo_reservas, JSON.stringify(this.lista_reservas, null, 2), 'utf8');
+                    }
+                    //avaliacao
+                    if (this.lista_avaliacoes.length != 0){ // para nao adicionar lista vazia no bando de dados
+                        fs.writeFileSync(arquivo_avaliacoes, JSON.stringify(this.lista_avaliacoes, null, 2), 'utf8');
+                    }
+                    //id
+                    if (this.lista_ids.length != 0){ // para nao adicionar lista vazia no bando de dados
+                        fs.writeFileSync(arquivo_ids, JSON.stringify(this.lista_ids, null, 2), 'utf8');
+                    }
                     return console.log("\nSaiu do programa com exito.\n");//encerra o loop e termina o sistema
                     
                 default:
@@ -378,7 +428,8 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         }
         while(true){
             var data_checkin = requisicao.question("Digite a data de Check-in: ");
-            if (this.validar_data(data_checkin) == true){ // chama a funcao de validar a data com a data digitada como parametro
+            let sistema_data = sistema.validar_data(data_checkin);// chama a funcao de validar a data com a data digitada como parametro
+            if (sistema_data[0] == true){
                 break //caso a data seja valida o loop se encerra
             } else{
                 console.log("Data invalida, por favor digite novamente.");
@@ -386,7 +437,8 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         }
         while(true){
             var data_checkout = requisicao.question("Digite a data de Check-out: ");
-            if (this.validar_data(data_checkout) == true){ // chama a funcao de validar a data com a data digitada como parametro
+            let sistema_data = sistema.validar_data(data_checkout); // chama a funcao de validar a data com a data digitada como parametro
+            if (sistema_data[0] == true){
                 break //caso a data seja valida o loop se encerra
             } else{
                 console.log("Data invalida, por favor digite novamente.");
@@ -832,46 +884,55 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         }
     }
 
-    validar_data(data){ //metodo para validar data de nascimento
+    validar_data_nascimento(data){ //metodo para validar data de nascimento
+        let sistema_data = sistema.validar_data(data);
+        if (sistema_data[0]){ // chama metodo para validar formatacao da data (sistema_data[0] eh true caso a data seja valida)
+            //sistema_data[3] = ano, sistema_data[2] = mes, sistema_data[1] = dia, sistema_data[0] = true
+            // validação de idade minima (18 anos) e ano minimo (1900), pega a data do dia da execucao do codigo
+            let hoje = new Date();
+            let ano_atual = hoje.getFullYear();
+            let mes_atual = hoje.getMonth() + 1;
+            let dia_atual = hoje.getDate();
+    
+            if (sistema_data[3] < 1900) { // ano minimo para cadastro (ano esta na posicao 3)
+                console.log("Data de nascimento invalida (nasceu antes de 1900).");
+                return false;
+            }
+            let data_nascimento = new Date(sistema_data[3], sistema_data[2] - 1, sistema_data[1]); // para o caso do usuario digitar uma data posterior ao dia de hoje
+            if (data_nascimento > hoje) {
+                console.log("Data de nascimento invalida, por favor digite novamente.");
+                return false;
+            }
+            let idade = ano_atual - sistema_data[3];
+            if (sistema_data[3] > mes_atual || (sistema_data[3] === mes_atual && sistema_data[1] > dia_atual)) {
+                idade--; // ajusta a idade se o aniversario ainda nao aconteceu no ano atual
+            }
+            if (idade < 18){ // retorna true caso a idade seja maior ou igual a 18 e false caso contrario
+                console.log("Data de nascimento invalida (menor de 18 anos).");
+                return false
+            }else {
+                return true
+            }
+        }
+    }
+
+    validar_data(data){
         let formatacao_correta = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/([12][0-9]{3})$/; //expressao regular para o formato dd/mm/aaaa
         if (!formatacao_correta.test(data)) { //verifica se a data está no formato correto
-            console.log("Data de nascimento invalida, por favor digite novamente.");
-            return false;
+            console.log("Data invalida, por favor digite novamente.");
+            return [false];
         }
         let [dia, mes, ano] = data.split('/').map(Number);//se o formato estiver correto, validamos a data
         if (mes < 1 || mes > 12) {//verifica se o me eh valido (1-12)
-            console.log("Data de nascimento invalida, por favor digite novamente.");
-            return false;
+            console.log("Data invalida, por favor digite novamente.");
+            return [false];
         }
         let diasPorMes = [31, (ano % 4 === 0 && (ano % 100 !== 0 || ano % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; //valida o dia de acordo com o mes
         if (dia < 1 || dia > diasPorMes[mes - 1]) {
-            console.log("Data de nascimento invalida, por favor digite novamente.");
-            return false;
+            console.log("Data invalida, por favor digite novamente.");
+            return [false];
         }
-        // validação de idade minima (18 anos) e ano minimo (1900), pega a data do dia da execucao do codigo
-        let hoje = new Date();
-        let ano_atual = hoje.getFullYear();
-        let mes_atual = hoje.getMonth() + 1;
-        let dia_atual = hoje.getDate();
-    
-        if (ano < 1900) { // ano minimo para cadastr0
-            console.log("Data de nascimento invalida (nasceu antes de 1900).");
-            return false;
-        }
-        let data_nascimento = new Date(ano, mes - 1, dia); // para o caso do usuario digitar uma data posterior ao dia de hoje
-        if (data_nascimento > hoje) {
-            console.log("Data de nascimento invalida, por favor digite novamente.");
-            return false;
-        }
-        let idade = ano_atual - ano;
-        if (mes > mes_atual || (mes === mes_atual && dia > dia_atual)) {
-            idade--; // ajusta a idade se o aniversario ainda nao aconteceu no ano atual
-        }
-        if (idade < 18){ // retorna true caso a idade seja maior ou igual a 18 e false caso contrario
-            console.log("Data de nascimento invalida (menor de 18 anos).");
-            return false
-        }else
-            return true 
+        return [true, dia, mes, ano]
     }
 
     validar_preco(preco){ // metodo para validar preco
@@ -925,7 +986,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
     perguntar_data_nascimento(){ // metodo para aquisicao do dado data de nascimento
         while (true){// loop para garantir que o usuario digite uma data valida
             let data_nascimento = requisicao.question("Digite a sua data de nascimento (dd/mm/aaaa): ");
-            if (this.validar_data(data_nascimento) == true){ // chama a funcao de validar a data com a data digitada como parametro
+            if (this.validar_data_nascimento(data_nascimento) == true){ // chama a funcao de validar a data com a data digitada como parametro
                 return data_nascimento //caso a data seja valida retorna a data digitada
             }
         }
