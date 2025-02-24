@@ -809,17 +809,43 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
     validar_data(data){ //metodo para validar datas
         let formatacao_correta = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/([12][0-9]{3})$/; //expressao regular para o formato dd/mm/aaaa
         if (!formatacao_correta.test(data)) { //verifica se a data está no formato correto
+            console.log("Data de nascimento invalida, por favor digite novamente.");
             return false;
         }
         let [dia, mes, ano] = data.split('/').map(Number);//se o formato estiver correto, validamos a data
         if (mes < 1 || mes > 12) {//verifica se o me eh valido (1-12)
+            console.log("Data de nascimento invalida, por favor digite novamente.");
             return false;
         }
         let diasPorMes = [31, (ano % 4 === 0 && (ano % 100 !== 0 || ano % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; //valida o dia de acordo com o mes
         if (dia < 1 || dia > diasPorMes[mes - 1]) {
+            console.log("Data de nascimento invalida, por favor digite novamente.");
             return false;
         }
-        return true; 
+        // validação de idade minima (18 anos) e ano minimo (1900), pega a data do dia da execucao do codigo
+        let hoje = new Date();
+        let ano_atual = hoje.getFullYear();
+        let mes_atual = hoje.getMonth() + 1;
+        let dia_atual = hoje.getDate();
+    
+        if (ano < 1900) { // ano minimo para cadastr0
+            console.log("Data de nascimento invalida (nasceu antes de 1900).");
+            return false;
+        }
+        let data_nascimento = new Date(ano, mes - 1, dia); // para o caso do usuario digitar uma data posterior ao dia de hoje
+        if (data_nascimento > hoje) {
+            console.log("Data de nascimento invalida, por favor digite novamente.");
+            return false;
+        }
+        let idade = ano_atual - ano;
+        if (mes > mes_atual || (mes === mes_atual && dia > dia_atual)) {
+            idade--; // ajusta a idade se o aniversario ainda nao aconteceu no ano atual
+        }
+        if (idade < 18){ // retorna true caso a idade seja maior ou igual a 18 e false caso contrario
+            console.log("Data de nascimento invalida (menor de 18 anos).");
+            return false
+        }else
+            return true 
     }
 
     validar_preco(preco){
@@ -869,8 +895,6 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             let data_nascimento = requisicao.question("Digite a sua data de nascimento (dd/mm/aaaa): ");
             if (this.validar_data(data_nascimento) == true){ // chama a funcao de validar a data com a data digitada como parametro
                 return data_nascimento //caso a data seja valida retorna a data digitada
-            } else{
-                console.log("Data invalida, por favor digite novamente.");
             }
         }
     }
