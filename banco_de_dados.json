@@ -1,0 +1,51 @@
+{
+  "clientes": [
+    {
+      "cliente_id": "426212261",
+      "nome": "matheus",
+      "data_nascimento": "05/12/2002",
+      "cpf": "111.111.111-12",
+      "email": "b@b.com",
+      "senha": "111111"
+    }
+  ],
+  "funcionarios": [
+    {
+      "func_id": "535914593",
+      "nome_usuario": "matheus",
+      "cpf": "111.111.111-11",
+      "email": "a@a.com",
+      "senha": "111111"
+    }
+  ],
+  "quartos": [
+    {
+      "quantidade_camas": "5",
+      "preco_noite": "666",
+      "nome": "oi",
+      "descricao": "22"
+    }
+  ],
+  "reservas": [
+    {
+      "reserva_id": "166556971",
+      "cliente_id": "426212261",
+      "status": "REALIZADA",
+      "check_in": "10/10/2010",
+      "check_out": "10/10/2011",
+      "nome_quarto": "oi"
+    }
+  ],
+  "avaliacoes": [
+    [
+      "4",
+      "oiii",
+      "matheus"
+    ]
+  ],
+  "ids": [
+    "535914593",
+    "426212261",
+    "166556971"
+  ]
+}
