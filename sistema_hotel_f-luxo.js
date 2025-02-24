@@ -343,14 +343,12 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         }
         while(true){
             var nome_quarto = requisicao.question("Digite o nome do quarto: ");
-            let contagem = false;
-            for (let i = 0; i < (this.banco_dados.quartos.length); i++){
-                if (nome_quarto == this.banco_dados.quartos[i].nome){ // faz uma busca no banco de dados para ver se existe o nome de quarto digitado
-                    console.log("Nome de quarto ja cadastrado, por favor tente outro.");
-                    contagem = true;
-                }
-            }
-            if (contagem == false){ //caso nao encontre, o loop se encerra
+            let existe = sistema.encontrar_quarto(nome_quarto)  ;
+            if (existe == true){ // faz uma busca no banco de dados para ver se existe o nome de quarto digitado
+                console.log("Nome de quarto ja cadastrado, por favor tente outro.");
+            } else { //caso nao encontre, o novo nome pode ser inserido
+                this.banco_dados.quartos[posicao_quarto].nome = nome_quarto;
+                console.log("\nNome do quarto editado com sucesso!");
                 break
             }
         }
@@ -364,6 +362,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         if (this.banco_dados.quartos.length == 0){
             return console.log("Nao ha quartos disponiveis para fazer reserva.");
         }
+        sistema.ver_lista_objetos(this.banco_dados.quartos); // mostra os quartos ao cliente
         while(true){
             var data_checkin = requisicao.question("Digite a data de Check-in: ");
             let sistema_data = sistema.validar_data(data_checkin);// chama a funcao de validar a data com a data digitada como parametro
@@ -392,7 +391,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 break
 
             } else {
-                console.log("\nNome do quarto digitado nao foi encontrado.\n")
+                return console.log("\nNome do quarto digitado nao foi encontrado.\n")
             }
         }
         let reserva_id = sistema.gerar_id(); // chama o metodo para gerar um id unico e aleatorio
@@ -418,7 +417,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             }
         }
         if (contagem == 0){ // condicional: se o id do cliente nao for encontrado na lista de reservas
-            console.log("Voce nao tem reservas.");
+            return console.log("Voce nao tem reservas.");
         }
     }
 
@@ -436,7 +435,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             }
         }
         if (contagem == 0){ // condicional: se o id do cliente nao for encontrado na lista de reservas
-            console.log("\nReserva nao encontrada.")
+            return console.log("\nReserva nao encontrada.")
         }
     }
 
@@ -471,7 +470,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             }
         }
         if (contagem == 0){ // condicional: se o id do cliente nao for encontrado na lista de reservas
-            console.log("\nReserva nao encontrada.")
+            return console.log("\nReserva nao encontrada.")
         }
     }
 
@@ -626,14 +625,10 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                         case "3":
                             while(true){
                                 let nome_quarto = requisicao.question("Digite o nome do quarto: ");
-                                let contagem = false;
-                                for (let i = 0; i < (this.banco_dados.quartos.length); i++){
-                                    if (nome_quarto == this.banco_dados.quartos[i].nome){ // faz uma busca no banco de dados para ver se existe o nome de quarto digitado
-                                        console.log("Nome de quarto ja cadastrado, por favor tente outro.");
-                                        contagem = true;
-                                    }
-                                }
-                                if (contagem == false){ //caso nao encontre, o novo nome pode ser inserido
+                                let existe = sistema.encontrar_quarto(nome_quarto)  ;
+                                if (existe == true){ // faz uma busca no banco de dados para ver se existe o nome de quarto digitado
+                                    console.log("Nome de quarto ja cadastrado, por favor tente outro.");
+                                } else { //caso nao encontre, o novo nome pode ser inserido
                                     this.banco_dados.quartos[posicao_quarto].nome = nome_quarto;
                                     console.log("\nNome do quarto editado com sucesso!");
                                     break
@@ -655,7 +650,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     }
                 }
             } else {
-                console.log("\nNome de quarto não encontrado.");
+                return console.log("\nNome de quarto não encontrado.");
             }
         }
     }
@@ -678,7 +673,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 this.banco_dados.quartos.splice(posicao_quarto,1);
                 return console.log("\nQuarto encontrado e removido com sucesso!");
             } else {
-                console.log("\nNome de quarto não encontrado.");
+                return console.log("\nNome de quarto não encontrado.");
             }
         }
     }
@@ -868,7 +863,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         }
     }
 
-    validar_data(data){
+    validar_data(data){ // metodo para validacao de formatacao de data
         let formatacao_correta = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/([12][0-9]{3})$/; //expressao regular para o formato dd/mm/aaaa
         if (!formatacao_correta.test(data)) { //verifica se a data está no formato correto
             console.log("Data invalida, por favor digite novamente.");
