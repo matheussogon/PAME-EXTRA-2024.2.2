@@ -147,7 +147,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 case "2":
                     console.log("\n-------------------------- Cadastro - Cliente --------------------------\n");
                     //pede os dados de cadastro ao cliente
-                    let nome_cliente = requisicao.question("Digite o seu nome: ");
+                    let nome_cliente = sistema.perguntar_nome(); // chama o metodo para perguntar o nome
                     let data_cliente = sistema.perguntar_data_nascimento(); // chama o metodo para perguntar a data de nascimento
                     let cpf_cliente = sistema.perguntar_cpf(); // chama o metodo para perguntar o cpf
                     let email_cliente = sistema.perguntar_email(); // chama o metodo para perguntar o email
@@ -222,7 +222,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     break;
     
                 case "11":
-                    return console.log("\nSaiu da conta com exito.\n");//encerra o loop e sai da interface de usuario logado
+                    return console.log("\nSaiu da conta com exito.");//encerra o loop e sai da interface de usuario logado
                 
                 default:
                     console.log("\nPor favor, digite uma opcao valida.");//ate o usuario inserir uma opcao valida o loop eh repetido
@@ -276,7 +276,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     break;
     
                 case "9":
-                    return console.log("\nSaiu da conta com exito.\n");//encerra o loop e sai da interface de usuario logado
+                    return console.log("\nSaiu da conta com exito.");//encerra o loop e sai da interface de usuario logado
                 
                 default:
                     console.log("\nPor favor, digite uma opcao valida.");//ate o usuario inserir uma opcao valida o loop eh repetido
@@ -539,8 +539,8 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             switch(escolha){
 
                 case "1":
-                    let nome_cliente = requisicao.question("Digite o seu nome: ");
-                    this.lista_clientes[posicao_cliente].nome = nome_cliente;
+                    let nome_cliente = sistema.perguntar_nome(); //chama o metodo para perguntar o nome
+                    this.lista_clientes[posicao_cliente].nome = nome_cliente;  // le esta linha quando o nome for valido e altera
                     console.log("\nNome alterado com sucesso!");
                     break;
                 
@@ -806,7 +806,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         }
     }
 
-    validar_data(data){ //metodo para validar datas
+    validar_data(data){ //metodo para validar data de nascimento
         let formatacao_correta = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/([12][0-9]{3})$/; //expressao regular para o formato dd/mm/aaaa
         if (!formatacao_correta.test(data)) { //verifica se a data está no formato correto
             console.log("Data de nascimento invalida, por favor digite novamente.");
@@ -848,9 +848,15 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             return true 
     }
 
-    validar_preco(preco){
+    validar_preco(preco){ // metodo para validar preco
         let formatacao_correta = /^\d+(\.\d{1,2})?$/; //expressao regular para validar preços no formato "xx.xx"
         return formatacao_correta.test(preco); //retorna true se o preco for valido, false caso contrario
+    }
+    
+    validar_nome(nome){ // metodo para validar nomes 
+        let formatacao_correta = /^[A-Za-zÀ-ÖØ-öø-ÿ ]+$/; // permite letras maiusculas, minusculas, caracteres acentuados e espaços
+        return formatacao_correta.test(nome);
+        
     }
 
     perguntar_cpf(){ // metodo para aquisicao do dado cpf
@@ -911,6 +917,17 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             }
             if (flag == false){ //caso nao encontre retorna o nome de usuario digitado
                 return nome_usuario_func
+            }
+        }
+    }
+
+    perguntar_nome(){
+        while(true){
+            let nome = requisicao.question("Digite o seu nome: ");
+            if (this.validar_nome(nome) == true){
+                return nome
+            } else {
+                console.log("Nome invalido, por favor digite novamente.");
             }
         }
     }
