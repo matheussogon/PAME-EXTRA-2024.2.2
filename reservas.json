@@ -1,0 +1,26 @@
+[
+  {
+    "reserva_id": "996863309",
+    "cliente_id": "844444204",
+    "status": "REALIZADA",
+    "check_in": "10/10/2010",
+    "check_out": "10/10/2011",
+    "nome_quarto": "3"
+  },
+  {
+    "reserva_id": "110412024",
+    "cliente_id": "844444204",
+    "status": "REALIZADA",
+    "check_in": "10/10/2011",
+    "check_out": "10/10/2012",
+    "nome_quarto": "7"
+  },
+  {
+    "reserva_id": "362084727",
+    "cliente_id": "844444204",
+    "status": "REALIZADA",
+    "check_in": "10/10/2010",
+    "check_out": "10/10/2011",
+    "nome_quarto": "7"
+  }
+]

@@ -8,7 +8,7 @@ const arquivo_avaliacoes = 'avaliacoes.json';
 const arquivo_ids = 'ids.json';
 
 class Reserva { //criando a classe Reserva
-    constructor(reserva_id, cliente_id, status, check_in, check_out,nome_quarto) {
+    constructor(reserva_id, cliente_id, status, check_in, check_out, nome_quarto) {
         this.reserva_id = reserva_id;
         this.cliente_id = cliente_id;
         this.status = status;
@@ -241,18 +241,39 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     break;
     
                 case "2":
-                    console.log("\nLista de Reservas:\n");
-                    sistema.ver_lista(this.lista_reservas);
+                    console.log("\n-------------------------- Lista de Reservas --------------------------\n");
+                    if (this.lista_reservas.length == 0){
+                        console.log("Nenhuma reserva encontrada.")
+                    }else{
+                        let contagem = 1;
+                        for (let reserva of this.lista_reservas){ //passa por toda a lista e imprime os dados ao usuario
+                            console.log(`Reserva ${contagem}:\n`);
+                            console.log(`ID da Reserva: ${reserva.reserva_id}\nID do Cliente: ${reserva.cliente_id}\nStatus da Reserva: ${reserva.status}\nCheck-in: ${reserva.check_in}\nCheck-out: ${reserva.check_in}\nNome do Quarto: ${reserva.nome_quarto}\n`);
+                            console.log('------------------------');
+                            contagem++;
+                        }
+                    }
                     break;
 
                 case "3":
-                    console.log("\nLista de Quartos:\n");
-                    sistema.ver_lista(this.lista_quartos);
+                    sistema.ver_quarto();
                     break;
                 
                 case "4":
-                    console.log("\nLista de Clientes:\n");
-                    sistema.ver_lista(this.lista_clientes);
+                    console.log("\n-------------------------- Lista de Clientes --------------------------\n");
+                    if (this.lista_clientes.length == 0){
+                        console.log("Nenhum cliente encontrado.")
+                    }else{
+                        let contagem = 1;
+                        for (let cliente of this.lista_clientes){ // passa por toda a lista e imprime os dados ao usuario
+                            let senha_cliente = cliente.senha;
+                            senha_cliente = "*".repeat(senha_cliente.length) // garante que o funcionario nao vera a senha do cliente
+                            console.log(`Cliente ${contagem}:\n`);
+                            console.log(`ID do Cliente: ${cliente.cliente_id}\nNome do Cliente: ${cliente.nome}\nData de Nascimento: ${cliente.data_nascimento}\nCPF: ${cliente.cpf}\nE-mail: ${cliente.email}\nSenha: ${senha_cliente}\n`);
+                            console.log('------------------------');
+                            contagem++;
+                        }
+                    }
                     break;
 
                 case "5":
@@ -303,8 +324,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     break;
     
                 case "2":
-                    console.log("\nLista de Quartos:\n");
-                    sistema.ver_lista(this.lista_quartos);
+                    sistema.ver_quarto();
                     break;
                 
                 case "3":
@@ -341,34 +361,6 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     console.log("\nPor favor, digite uma opcao valida.");//ate o usuario inserir uma opcao valida o loop eh repetido
                     break;
             }
-        }
-    }
-
-    ver_lista(lista) { // metodo para imprimir dados de uma lista ao usuario
-        if (!Array.isArray(lista) || lista.length === 0) { // verifica se a lista eh valida (array nao vazio)
-            console.log("Não ha."); //informa que nao ha lista
-            return;
-        }
-      
-        let tipo = formatar_nome(lista[0].constructor.name); // determina o tipo (classe) do primeiro objeto na lista
-       
-        lista.forEach((obj, index) => { // para cada objeto na lista imprime os atributos com seus valores
-            console.log(`${tipo.slice(0, -1)} ${index + 1}:`);
-      
-            Object.entries(obj).forEach(([chave, valor]) => { // itera pelos atributos de cada objeto
-                let nome_bonito = sistema.formatar_atributo(chave);
-
-                if (chave.toLowerCase() === "senha") { // se for senha substitui os caracteres por asteriscos
-                    valor = "*".repeat(valor.length); 
-                }
-                console.log(`  ${nome_bonito}: ${valor}`);
-            });
-            console.log("-".repeat(30));
-        });
-
-        function formatar_nome(nome) { // funcao para formatar o nome da classe
-            if (!nome) return null;
-            return nome.charAt(0).toUpperCase() + nome.slice(1) + "s";
         }
     }
 
@@ -439,9 +431,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             var data_checkout = requisicao.question("Digite a data de Check-out: ");
             let sistema_data = sistema.validar_data(data_checkout); // chama a funcao de validar a data com a data digitada como parametro
             if (sistema_data[0] == true){
-                break //caso a data seja valida o loop se encerra
-            } else{
-                console.log("Data invalida, por favor digite novamente.");
+                break; //caso a data seja valida o loop se encerra
             }
         }
         while(true){
@@ -791,6 +781,21 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         }
     }
     
+    ver_quarto(){
+        console.log("\n-------------------------- Lista de Quartos --------------------------\n");
+        if (this.lista_quartos.length == 0){
+            console.log("Nenhum quarto encontrado.")
+        }else{
+            let contagem = 1;
+            for (let quarto of this.lista_quartos){
+                console.log(`Quarto ${contagem}:\n`);
+                console.log(`Quantidade de Camas: ${quarto.quantidade_camas}\nPreco por Noite: ${quarto.preco_noite}\nNome do Quarto: ${quarto.nome}\nDescricao: ${quarto.descricao}\n`);
+                console.log('------------------------');
+                contagem++;
+            }
+        }
+
+    }
     encontrar_quarto(nome_quarto){ // metodo para encontrar nome de quarto na lista de quarto
         for (let i = 0; i < (this.lista_quartos.length); i++){
             if (nome_quarto == this.lista_quartos[i].nome){ // faz uma busca no banco de dados para ver se existe o nome de quarto digitado

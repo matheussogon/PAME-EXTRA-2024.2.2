@@ -1,0 +1,18 @@
+[
+  {
+    "cliente_id": "844444204",
+    "nome": "MATHEUS",
+    "data_nascimento": "06/12/2002",
+    "cpf": "111.111.111-11",
+    "email": "b@b.com",
+    "senha": "111111"
+  },
+  {
+    "cliente_id": "879393867",
+    "nome": "a",
+    "data_nascimento": "11/11/2000",
+    "cpf": "111.111.111-33",
+    "email": "c@c.com",
+    "senha": "111111"
+  }
+]
