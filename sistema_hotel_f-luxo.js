@@ -147,6 +147,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     let senha_func = sistema.perguntar_senha(); // chama o metodo para perguntar a senha
                     let func_id = sistema.gerar_id(); // chama o metodo para gerar um id unico e aleatorio
                     this.banco_dados.funcionarios.push(new Funcionario(func_id, nome_usuario_func, cpf_funcionario, email_func, senha_func)); //armazena os dados do funcionario em um banco dedados local (lista)
+                    fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // salva o novo usuario no banco de dados
                     
                     console.log("\nCadastro realizado com sucesso!\n");
                     console.log("Voce sera redirecionado ao menu de cadastramento.");
@@ -162,6 +163,8 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     let senha_cliente = sistema.perguntar_senha(); // chama o metodo para perguntar a senha
                     let cliente_id = sistema.gerar_id(); // chama o metodo para gerar um id unico e aleatorio
                     this.banco_dados.clientes.push(new Cliente(cliente_id, nome_cliente, data_cliente, cpf_cliente, email_cliente, senha_cliente)); //armazena os dados do cliente em um banco dedados local (lista)
+                    fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // salva o novo usuario no banco de dados
+
                     console.log("\nCadastro realizado com sucesso!\n");
                     console.log("Voce sera redirecionado ao menu de cadastramento.");
                     break
@@ -235,14 +238,17 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 
                 case "7":
                     sistema.editar_quarto();
+                    fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // atualiza o quarto editado no banco de dados
                     break;
 
                 case "8":
                     sistema.excluir_quarto();
+                    fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // atualiza o quarto excluido no banco de dados
                     break;
 
                 case "9":
                     sistema.modificar_funcionario(funcionario);
+                    fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // atualiza o funcionario no banco de dados
                     break;
                 
                 case "10":
@@ -292,10 +298,12 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 
                 case "6":
                     sistema.modificar_cliente(cliente);
+                    fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // atualiza o cliente no banco de dados
                     break;
                 
                 case "7":
                     sistema.avaliar_estadia(cliente);
+                    fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); //salva as avaliacoes no banco de dados
                     break;
                 
                 case "8":
@@ -359,6 +367,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         }
         let descricao = requisicao.question("Digite a descricao do quarto: ")
         this.banco_dados.quartos.push(new Quartos(qtd_camas, preco_noite, nome_quarto, descricao)); //armazena os dados do quarto em um banco dedados local (lista)
+        fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // salva o novo quarto no banco de dados
         console.log("\nQuarto adicionado com sucesso!\n");
     }
 
@@ -399,6 +408,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         }
         let reserva_id = sistema.gerar_id(); // chama o metodo para gerar um id unico e aleatorio
         this.banco_dados.reservas.push(new Reserva(reserva_id, usuario_cliente.cliente_id, "REALIZADA", data_checkin, data_checkout, nome_quarto)); //armazena os dados da reserva em um banco dedados local (lista)
+        fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // salva a nova reserva no banco de dados
         console.log("\nReserva realizada com sucesso!");
     }
 
@@ -429,7 +439,8 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         for (let i = 0; i < (this.banco_dados.reservas.length); i++){
             if (usuario_cliente.cliente_id == this.banco_dados.reservas[i].cliente_id){// faz uma busca no banco de dados para encontrar o id do cliente
                 if (escolha == this.banco_dados.reservas[i].reserva_id.toString()){ // sabendo que o usuario tem a reserva, agora analisa se o id digitado dessa reserva eh o msm que ele digitou para cancelar
-                    this.banco_dados.reservas.splice(i,1); // se encontrar, muda o status da reserva para cancelada        
+                    this.banco_dados.reservas.splice(i,1); // se encontrar, muda o status da reserva para cancelada e a exclui
+                    fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // atualiza a reserva excluida no banco de dados        
                     console.log("\nReserva cancelada com sucesso!");
                     contagem++;
                 }
@@ -466,6 +477,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                         break;
                     }
                 }
+                fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // atualiza o status da reserva no bando de dados
                 contagem++;
             }
         }
@@ -767,6 +779,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             }
         }
         this.banco_dados.ids.push(id); // adiciona o id unico a lista
+        fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // atualiza os ids no banco de dados
         return id;
     }
 
@@ -974,4 +987,3 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
 }
 var sistema = new Sistema();
 sistema.iniciar_sistema();
-module.exports = Sistema;
