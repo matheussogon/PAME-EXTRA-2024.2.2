@@ -1,4 +1,4 @@
-const requisicao = require('readline-sync'); //comando necessario para simular um input em js
+const requisicao = require('readline-sync'); //comando necessario para interacao em terminal em js
 
 class Reserva { //criando a classe Reserva
     constructor(reserva_id, cliente_id, status, check_in, check_out,nome_quarto) {
@@ -115,11 +115,10 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 }
             }
             //este bloco de condicional so sera lida caso o email nao tenha sido encontrado ou a senha esteja incorreta
-            if (confirmacao_email == false){ //caso nao encontre nenhum email, confirmacao_email continua false e informa que o email nao foi encontrado
-                console.log("O e-mail digitado não esta cadastrado, tente novamente.");
+            if (confirmacao_conta == false){ //caso nao encontre nenhum email, confirmacao_email continua false e informa que o email nao foi encontrado
+                console.log("\nO e-mail digitado não esta cadastrado, tente novamente.");
             } else { //caso o email tenha sido encontrado mas a senha esta incorreta informa ao usuario
                 console.log("Senha incorreta."); 
-                
             }
         }
     }
@@ -134,93 +133,26 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 case "1": //caso o usuario escolha a opcao 1, o cadastro sera de funcionario
                     console.log("\n-------------------------- Cadastro - Funcionario --------------------------\n");
                     //pede os dados de cadastro ao funcionario
-                    while (true){ // loop para garantir que o usuario digite um nome de usuario nao existente
-                        var nome_usuario_func = requisicao.question("Digite o nome de usuario desejado: ");
-                        let contagem = false;
-                        for (let i = 0; i < (this.lista_funcionarios.length); i++){
-                            if (nome_usuario_func == this.lista_funcionarios[i].nome_usuario){ // faz uma busca no banco de dados para ver se existe o usuario digitado
-                                console.log("Nome de usuario ja cadastrado, por favor tente outro.");
-                                contagem = true;
-                            }
-                        }
-                        if (contagem == false){ //caso nao encontre, o loop se encerra
-                            break
-                        }
-                    }
-                    while (true){// loop para garantir que o usuario digite um cpf valido
-                        var cpf_func = requisicao.question("Digite o seu cpf (xxx.xxx.xxx-xx): ");
-                        if (this.validar_cpf(cpf_func, this.lista_clientes, this.lista_funcionarios) == true){
-                            break //caso o cpf seja valido o loop se encerra
-                        } else if (this.validar_cpf(cpf_func, this.lista_clientes, this.lista_funcionarios) == "cpf existente") { //verifica se ja existe o cpf digitado
-                            console.log("CPF ja esta cadastrado, tente outro por favor.")
-                        } else{
-                            console.log("CPF invalido, por favor digite novamente.");
-                        }
-                    }
-                    while (true){ // loop para garantir que o usuario digite um email valido
-                        var email_func = requisicao.question("Digite o seu email: "); // chama a funcao de validar o email com o email digitado como parametro
-                        if (this.validar_email(email_func, this.lista_clientes, this.lista_funcionarios) == true){
-                            break //caso o email seja valido o loop se encerra
-                        } else if (this.validar_email(email_func, this.lista_clientes, this.lista_funcionarios) == "email existente") { //verifica se ja existe o email digitado
-                            console.log("Email ja esta cadastrado, tente outro por favor.")
-                        } else{
-                            console.log("Email invalido, por favor digite novamente.");
-                        }
-                    }
-                    while (true){ // loop para garantir que o usuario digite uma senha valida
-                        var senha_func = requisicao.question("Digite a senha desejada (6 caracteres ou mais): ");
-                        if (this.validar_senha(senha_func) == true){ // chama a funcao de validar a senha com a senha digitada como parametro
-                            break //caso a senha seja valida o loop se encerra
-                        } else {
-                            console.log("Senha invalida, por favor digite novamente.");
-                        }
-                    }
-                    this.lista_funcionarios.push(new Funcionario(this.func_id, nome_usuario_func, cpf_func, email_func, senha_func)); //armazena os dados do funcionario em um banco dedados local (lista)
+                    let nome_usuario_func = sistema.perguntar_nome_usuario(); // chama o metodo para perguntar o nome de usuario
+                    let cpf_funcionario = sistema.perguntar_cpf(); // chama o metodo para perguntar o cpf
+                    let email_func = sistema.perguntar_email(); // chama o metodo para perguntar o email
+                    let senha_func = sistema.perguntar_senha(); // chama o metodo para perguntar a senha
+
+                    this.lista_funcionarios.push(new Funcionario(this.func_id, nome_usuario_func, cpf_funcionario, email_func, senha_func)); //armazena os dados do funcionario em um banco dedados local (lista)
                     this.func_id++; //atualiza o valor do id somando mais 1, para que no proximo cadastramento o id seja diferente
                     console.log("\nCadastro realizado com sucesso!\n");
                     console.log("Voce sera redirecionado ao menu de cadastramento.");
-                    break
+                    break;
         
                 case "2":
                     console.log("\n-------------------------- Cadastro - Cliente --------------------------\n");
                     //pede os dados de cadastro ao cliente
-                    var nome_cliente = requisicao.question("Digite o seu nome: ");
-                    while (true){// loop para garantir que o usuario digite uma data valida
-                        var data_cliente = requisicao.question("Digite a sua data de nascimento (dd/mm/aaaa): ");
-                        if (this.validar_data(data_cliente) == true){ // chama a funcao de validar a data com a data digitada como parametro
-                            break //caso a data seja valida o loop se encerra
-                        } else{
-                            console.log("Data invalida, por favor digite novamente.");
-                        }
-                    }
-                    while (true){// loop para garantir que o usuario digite um cpf valido
-                        var cpf_cliente = requisicao.question("Digite o seu cpf (xxx.xxx.xxx-xx): ");
-                        if (this.validar_cpf(cpf_cliente, this.lista_clientes, this.lista_funcionarios) == true){
-                            break //caso o cpf seja valido o loop se encerra
-                        } else if (this.validar_cpf(cpf_cliente, this.lista_clientes, this.lista_funcionarios) == "cpf existente") { //verifica se ja existe o cpf digitado
-                            console.log("CPF ja esta cadastrado, tente outro por favor.")
-                        } else{
-                            console.log("CPF invalido, por favor digite novamente.");
-                        }
-                    }
-                    while (true){ // loop para garantir que o usuario digite um email valido
-                        var email_cliente = requisicao.question("Digite o seu email: "); // chama a funcao de validar o email com o email digitado como parametro
-                        if (this.validar_email(email_cliente, this.lista_clientes, this.lista_funcionarios) == true){
-                            break //caso o email seja valido o loop se encerra
-                        } else if (this.validar_email(email_cliente, this.lista_clientes, this.lista_funcionarios) == "email existente") { //verifica se ja existe o email digitado
-                            console.log("Email ja esta cadastrado, tente outro por favor.")
-                        } else{
-                            console.log("Email invalido, por favor digite novamente.");
-                        }
-                    }
-                    while (true){ // loop para garantir que o usuario digite uma senha valida
-                        var senha_cliente = requisicao.question("Digite a senha desejada (6 caracteres ou mais): ");
-                        if (this.validar_senha(senha_cliente) == true){ // chama a funcao de validar a senha com a senha digitada como parametro
-                            break //caso a senha seja valida o loop se encerra
-                        } else{
-                            console.log("Senha invalida, por favor digite novamente.");
-                        }
-                    }
+                    let nome_cliente = requisicao.question("Digite o seu nome: ");
+                    let data_cliente = sistema.perguntar_data_nascimento(); // chama o metodo para perguntar a data de nascimento
+                    let cpf_cliente = sistema.perguntar_cpf(); // chama o metodo para perguntar o cpf
+                    let email_cliente = sistema.perguntar_email(); // chama o metodo para perguntar o email
+                    let senha_cliente = sistema.perguntar_senha(); // chama o metodo para perguntar a senha
+                    
                     this.lista_clientes.push(new Cliente(this.cliente_id, nome_cliente, data_cliente, cpf_cliente, email_cliente, senha_cliente)); //armazena os dados do cliente em um banco dedados local (lista)
                     this.cliente_id++; //atualiza o valor do id somando mais 1, para que no proximo cadastramento o id seja diferente
                     console.log("\nCadastro realizado com sucesso!\n");
@@ -359,18 +291,18 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             return;
         }
       
-        const tipo = formatar_nome(lista[0].constructor.name); // determina o tipo (classe) do primeiro objeto na lista
+        let tipo = formatar_nome(lista[0].constructor.name); // determina o tipo (classe) do primeiro objeto na lista
        
         lista.forEach((obj, index) => { // para cada objeto na lista imprime os atributos com seus valores
             console.log(`${tipo.slice(0, -1)} ${index + 1}:`);
       
             Object.entries(obj).forEach(([chave, valor]) => { // itera pelos atributos de cada objeto
-                const nomeBonito = sistema.formatar_atributo(chave);
+                let nome_bonito = sistema.formatar_atributo(chave);
 
                 if (chave.toLowerCase() === "senha") { // se for senha substitui os caracteres por asteriscos
                     valor = "*".repeat(valor.length); 
                 }
-                console.log(`  ${nomeBonito}: ${valor}`);
+                console.log(`  ${nome_bonito}: ${valor}`);
             });
             console.log("-".repeat(30));
         });
@@ -548,10 +480,10 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         for (let i = 0; i < (this.lista_funcionarios.length); i++){ //encontra a posicao do usuario na lista de funcionarios de acordo com o nome de usuario
             if (funcionario.nome_usuario == this.lista_funcionarios[i].nome_usuario){
                 posicao_funcionario = i;
-                break
+                break;
             }
         }
-        while (true){
+        while (true){ // loop para garantir que o usuario digite uma opcao valida e se mantenha no menu
             console.log("\n-------------------------- Alterar Dados --------------------------\n");
             console.log("1 - Alterar Nome de Usuario\n2 - Alterar CPF\n3 - Alterar e-mail\n4 - Alterar Senha\n5 - Sair do menu de alteracao\n");
             let escolha = requisicao.question("Escolha a opcao que deseja alterar: ");
@@ -559,66 +491,28 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             switch(escolha){
 
                 case "1":
-                    while (true){ // loop para garantir que o usuario digite um nome de usuario nao existente
-                        let nome_usuario_func = requisicao.question("Digite o nome de usuario desejado: ");
-                        let contagem = false;
-                        for (let i = 0; i < (this.lista_funcionarios.length); i++){
-                            if (nome_usuario_func == this.lista_funcionarios[i].nome_usuario){ // faz uma busca no banco de dados para ver se existe o usuario digitado
-                                console.log("Nome de usuario ja cadastrado, por favor tente outro.");
-                                contagem = true;
-                            }
-                        }
-                        if (contagem == false){ //caso nao encontre, o loop se encerra e altera o usuario
-                            this.lista_funcionarios[posicao_funcionario].nome_usuario = nome_usuario_func;
-                            console.log("Nome de usuario alterado com sucesso!");
-                            break
-                        }
-                    }
+                    let novo_nome_usuario_func = sistema.perguntar_nome_usuario(); // chama o metodo para perguntar o nome de usuario
+                    this.lista_funcionarios[posicao_funcionario].nome_usuario = novo_nome_usuario_func; // le esta linha quando o nome for valido e altera
                     break;
 
                 case "2":
-                    while (true){// loop para garantir que o usuario digite um cpf valido
-                        let cpf_func = requisicao.question("Digite o seu cpf (xxx.xxx.xxx-xx): ");
-                        if (this.validar_cpf(cpf_func, this.lista_clientes, this.lista_funcionarios) == true){
-                            this.lista_funcionarios[posicao_funcionario].cpf = cpf_func;
-                            console.log("CPF alterado com sucesso!");
-                            break //caso o cpf seja valido o loop se encerra e o cpf eh alterado
-                        } else if (this.validar_cpf(cpf_func, this.lista_clientes, this.lista_funcionarios) == "cpf existente") { //verifica se ja existe o cpf digitado
-                            console.log("CPF ja esta cadastrado, tente outro por favor.")
-                        } else{
-                            console.log("CPF invalido, por favor digite novamente.");
-                        }
-                    }
+                    let novo_cpf_func = sistema.perguntar_cpf(); //chama o metodo para perguntar o cpf
+                    this.lista_funcionarios[posicao_funcionario].cpf = novo_cpf_func; // le esta linha quando o cpf for valido e altera
+                    console.log("\nCPF alterado com sucesso!");
                     break;
                 
                 case "3":
-                    while (true){ // loop para garantir que o usuario digite um email valido
-                        let email_func = requisicao.question("Digite o seu email: "); // chama a funcao de validar o email com o email digitado como parametro
-                        if (this.validar_email(email_func, this.lista_clientes, this.lista_funcionarios) == true){
-                            this.lista_funcionarios[posicao_funcionario].email = email_func;
-                            console.log("Email alterado com sucesso!");
-                            break //caso o email seja valido o loop se encerra e o email eh alterado
-                        } else if (this.validar_email(email_func, this.lista_clientes, this.lista_funcionarios) == "email existente") { //verifica se ja existe o email digitado
-                            console.log("Email ja esta cadastrado, tente outro por favor.")
-                        } else{
-                            console.log("Email invalido, por favor digite novamente.");
-                        }
-                    }
+                    let novo_email_func = sistema.perguntar_email(); // chama o metodo para perguntar o email
+                    this.lista_funcionarios[posicao_funcionario].email = novo_email_func; //le esta linha quando o email for valido e altera
+                    console.log("\nEmail alterado com sucesso!");
                     break;
                 
                 case "4":
-                    while (true){ // loop para garantir que o usuario digite uma senha valida
-                        var senha_func = requisicao.question("Digite a senha desejada (6 caracteres ou mais): ");
-                        if (this.validar_senha(senha_func) == true){ // chama a funcao de validar a senha com a senha digitada como parametro
-                            this.lista_funcionarios[posicao_funcionario].senha = senha_func;
-                            console.log("Senha alterada com sucesso!");
-                            break //caso a senha seja valida o loop se encerra e a senha eh alterada
-                        } else {
-                            console.log("Senha invalida, por favor digite novamente.");
-                        }
-                    }
+                    let nova_senha_func = sistema.perguntar_senha(); // chama o metodo para perguntar a senha
+                    this.lista_funcionarios[posicao_funcionario].senha = nova_senha_func; //le esta linha quando a senha for valida e altera
+                    console.log("\nSenha alterada com sucesso!");
                     break;
-
+    
                 case "5":
                     return console.log("\nSaiu do menu de alteracao com exito.\n");//encerra o loop e sai da interface
                     
@@ -634,10 +528,10 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         for (let i = 0; i < (this.lista_clientes.length); i++){ //encontra a posicao do usuario na lista de clientes de acordo com o email
             if (cliente.email == this.lista_clientes[i].email){
                 posicao_cliente = i;
-                break
+                break;
             }
         }
-        while (true){
+        while (true){ // loop para garantir que o usuario digite uma opcao valida e se mantenha no menu
             console.log("\n-------------------------- Alterar Dados --------------------------\n");
             console.log("1 - Alterar Nome\n2 - Alterar Data de Nascimento\n3 - Alterar CPF\n4 - Alterar e-mail\n5 - Alterar Senha\n6 - Sair do menu de alteracao\n");
             let escolha = requisicao.question("Escolha a opcao que deseja alterar: ");
@@ -647,63 +541,31 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 case "1":
                     let nome_cliente = requisicao.question("Digite o seu nome: ");
                     this.lista_clientes[posicao_cliente].nome = nome_cliente;
-                    console.log("Nome alterado com sucesso!");
+                    console.log("\nNome alterado com sucesso!");
                     break;
                 
                 case "2":
-                    while (true){// loop para garantir que o usuario digite uma data valida
-                        let data_cliente = requisicao.question("Digite a sua data de nascimento (dd/mm/aaaa): ");
-                        if (this.validar_data(data_cliente) == true){ // chama a funcao de validar a data com a data digitada como parametro
-                            this.lista_clientes[posicao_cliente].data_nascimento = data_cliente;
-                            console.log("Data de nascimento alterada com sucesso!");
-                            break //caso a data seja valida o loop se encerra e a data eh alterada
-                        } else{
-                            console.log("Data invalida, por favor digite novamente.");
-                        }
-                    }
+                    let nova_data_nascimento = sistema.perguntar_data_nascimento(); //chama o metodo para perguntar a data de nascimento
+                    this.lista_clientes[posicao_cliente].data_nascimento = nova_data_nascimento; // le esta linha quando a data for valido e altera
+                    console.log("\nData de nascimento alterada com sucesso!");
                     break;
                     
                 case "3":
-                    while (true){// loop para garantir que o usuario digite um cpf valido
-                        let cpf_cliente = requisicao.question("Digite o seu cpf (xxx.xxx.xxx-xx): ");
-                        if (this.validar_cpf(cpf_cliente, this.lista_clientes, this.lista_funcionarios) == true){
-                            this.lista_clientes[posicao_cliente].cpf = cpf_cliente;
-                            console.log("CPF alterado com sucesso!");
-                            break //caso o cpf seja valido o loop se encerra e o cpf eh alterado
-                        } else if (this.validar_cpf(cpf_cliente, this.lista_clientes, this.lista_funcionarios) == "cpf existente") { //verifica se ja existe o cpf digitado
-                            console.log("CPF ja esta cadastrado, tente outro por favor.")
-                        } else{
-                            console.log("CPF invalido, por favor digite novamente.");
-                        }
-                    }
+                    let novo_cpf_cliente = sistema.perguntar_cpf() //chama o metodo para perguntar o cpf
+                    this.lista_clientes[posicao_cliente].cpf = novo_cpf_cliente; // le esta linha quando o cpf for valido e altera
+                    console.log("\nCPF alterado com sucesso!");
                     break;
                 
                 case "4":
-                    while (true){ // loop para garantir que o usuario digite um email valido
-                        let email_cliente = requisicao.question("Digite o seu email: "); // chama a funcao de validar o email com o email digitado como parametro
-                        if (this.validar_email(email_cliente, this.lista_clientes, this.lista_funcionarios) == true){
-                            this.lista_clientes[posicao_cliente].email = email_cliente;
-                            console.log("Email alterado com sucesso!");
-                            break //caso o email seja valido o loop se encerra e o email eh alterado
-                        } else if (this.validar_email(email_cliente, this.lista_clientes, this.lista_funcionarios) == "email existente") { //verifica se ja existe o email digitado
-                            console.log("Email ja esta cadastrado, tente outro por favor.")
-                        } else{
-                            console.log("Email invalido, por favor digite novamente.");
-                        }
-                    }
+                    let novo_email_cliente = sistema.perguntar_email(); // chama o metodo para perguntar o email
+                    this.lista_clientes[posicao_cliente].email = novo_email_cliente; //le esta linha quando o email for valido e altera
+                    console.log("\nEmail alterado com sucesso!");
                     break;
 
                 case "5":
-                    while (true){ // loop para garantir que o usuario digite uma senha valida
-                        var senha_cliente = requisicao.question("Digite a senha desejada (6 caracteres ou mais): ");
-                        if (this.validar_senha(senha_cliente) == true){ // chama a funcao de validar a senha com a senha digitada como parametro
-                            this.lista_clientes[posicao_cliente].senha = senha_cliente;
-                            console.log("Senha alterada com sucesso!");
-                            break //caso a senha seja valida o loop se encerra e a senha eh alterada
-                        } else {
-                            console.log("Senha invalida, por favor digite novamente.");
-                        }
-                    }
+                    let nova_senha_cliente = sistema.perguntar_senha(); // chama o metodo para perguntar a senha
+                    this.lista_clientes[posicao_cliente].senha = nova_senha_cliente; //le esta linha quando a senha for valida e altera
+                    console.log("\nSenha alterada com sucesso!");
                     break;
 
                 case "6":
@@ -852,6 +714,9 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
     }
 
     visualizar_avaliacoes(){ // metodo para visualizacao das avaliacoes
+        if (this.lista_avaliacoes.length == 0){
+            return console.log("\nNao ha avaliacoes para serem exibidas.\n");
+        }
         for (let i = 0; i < this.lista_avaliacoes.length; i++){
             let avaliacao_int = parseInt(this.lista_avaliacoes[i][0]);  //avaliação (primeiro item da lista interna) em inteiro
             let comentario = this.lista_avaliacoes[i][1]; //comentário (segundo item da lista interna)
@@ -875,7 +740,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
     }
 
     formatar_atributo(atributo) { // metodo para formatar os atributos e utilizar nos prints de dados
-            const nomes_bonitos = {
+            let nomes_bonitos = {
                 reserva_id: "ID da Reserva",
                 cliente_id: "ID do Cliente",
                 status: "Status da Reserva",
@@ -893,7 +758,6 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 descricao: "Descrição do Quarto",
                 nome_quarto: "Nome do Quarto"
             };
-      
             return nomes_bonitos[atributo] || atributo.replace(/([A-Z])/g, " $1").trim().replace(/^./, str => str.toUpperCase());
     }
 
@@ -908,7 +772,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 return "email existente"
             }
         }
-        const formatacao_correta = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; //expressão regular para verificar o formato de um email
+        let formatacao_correta = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; //expressão regular para verificar o formato de um email
         return formatacao_correta.test(email); //retorna true se o email for valido, false caso contrario  
     } 
 
@@ -923,7 +787,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 return "cpf existente"
             }
         }
-        const formatacao_correta = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/; //expressão regular para verificar o formato de um cpf
+        let formatacao_correta = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/; //expressão regular para verificar o formato de um cpf
         return formatacao_correta.test(cpf); //retorna true se o cpf for valido, false caso contrario
     }
 
@@ -932,29 +796,26 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
     }
 
     validar_quantidade_inteira(numeroStr) { //metodo para validar um numero inteiro
-        // Converte a string para número
-        const numero = Number(numeroStr);
-
-        // Verifica se é um número, se é inteiro e se é positivo
+        // converte a string para número
+        let numero = Number(numeroStr);
+        // verifica se eh um número, se eh inteiro e se eh positivo
         if (!isNaN(numero) && Number.isInteger(numero) && numero > 0) {
-            return true;  // Número válido
+            return true;  // numero valido
         } else {
-            return false; // Número inválido
+            return false; // numero invalido
         }
     }
 
     validar_data(data){ //metodo para validar datas
-        const formatacao_correta = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/([12][0-9]{3})$/; //expressao regular para o formato dd/mm/aaaa
+        let formatacao_correta = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/([12][0-9]{3})$/; //expressao regular para o formato dd/mm/aaaa
         if (!formatacao_correta.test(data)) { //verifica se a data está no formato correto
             return false;
         }
-        
-        const [dia, mes, ano] = data.split('/').map(Number);//se o formato estiver correto, validamos a data
+        let [dia, mes, ano] = data.split('/').map(Number);//se o formato estiver correto, validamos a data
         if (mes < 1 || mes > 12) {//verifica se o me eh valido (1-12)
             return false;
         }
-          
-        const diasPorMes = [31, (ano % 4 === 0 && (ano % 100 !== 0 || ano % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; //valida o dia de acordo com o mes
+        let diasPorMes = [31, (ano % 4 === 0 && (ano % 100 !== 0 || ano % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; //valida o dia de acordo com o mes
         if (dia < 1 || dia > diasPorMes[mes - 1]) {
             return false;
         }
@@ -962,8 +823,72 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
     }
 
     validar_preco(preco){
-        const formatacao_correta = /^\d+(\.\d{1,2})?$/; //expressao regular para validar preços no formato "xx.xx"
+        let formatacao_correta = /^\d+(\.\d{1,2})?$/; //expressao regular para validar preços no formato "xx.xx"
         return formatacao_correta.test(preco); //retorna true se o preco for valido, false caso contrario
+    }
+
+    perguntar_cpf(){ // metodo para aquisicao do dado cpf
+        while (true){// loop para garantir que o usuario digite um cpf valido
+            let cpf_usuario = requisicao.question("Digite o seu cpf (xxx.xxx.xxx-xx): ");
+            if (this.validar_cpf(cpf_usuario, this.lista_clientes, this.lista_funcionarios) == true){
+                return cpf_usuario //caso o cpf seja valido o metodo se encerra e retorna o cpf
+            } else if (this.validar_cpf(cpf_usuario, this.lista_clientes, this.lista_funcionarios) == "cpf existente") { //verifica se ja existe o cpf digitado
+                console.log("CPF ja esta cadastrado, tente outro por favor.")
+            } else{
+                console.log("CPF invalido, por favor digite novamente.");
+            }
+        }
+    }
+
+    perguntar_email(){ // metodo para aquisicao do dado email
+        while (true){ // loop para garantir que o usuario digite um email valido
+            let email_usuario = requisicao.question("Digite o seu email: "); // chama a funcao de validar o email com o email digitado como parametro
+            if (this.validar_email(email_usuario, this.lista_clientes, this.lista_funcionarios) == true){
+                return email_usuario //caso o email seja valido retorna o email digitado
+            } else if (this.validar_email(email_usuario, this.lista_clientes, this.lista_funcionarios) == "email existente") { //verifica se ja existe o email digitado
+                console.log("Email ja esta cadastrado, tente outro por favor.")
+            } else{
+                console.log("Email invalido, por favor digite novamente.");
+            }
+        }
+    }
+
+    perguntar_senha(){ // metodo para aquisicao do dado senha
+        while (true){ // loop para garantir que o usuario digite uma senha valida
+            let senha_usuario = requisicao.question("Digite a senha desejada (6 caracteres ou mais): ");
+            if (this.validar_senha(senha_usuario) == true){ // chama a funcao de validar a senha com a senha digitada como parametro
+                return senha_usuario //caso a senha seja valida retorna a senha digitada
+            } else {
+                console.log("Senha invalida, por favor digite novamente.");
+            }
+        }
+    }
+
+    perguntar_data_nascimento(){ // metodo para aquisicao do dado data de nascimento
+        while (true){// loop para garantir que o usuario digite uma data valida
+            let data_nascimento = requisicao.question("Digite a sua data de nascimento (dd/mm/aaaa): ");
+            if (this.validar_data(data_nascimento) == true){ // chama a funcao de validar a data com a data digitada como parametro
+                return data_nascimento //caso a data seja valida retorna a data digitada
+            } else{
+                console.log("Data invalida, por favor digite novamente.");
+            }
+        }
+    }
+
+    perguntar_nome_usuario(){ // metodo para aquisicao do dado nome de usuario
+        while (true){ // loop para garantir que o usuario digite um nome de usuario nao existente
+            let nome_usuario_func = requisicao.question("Digite o nome de usuario desejado: ");
+            let flag = false;
+            for (let i = 0; i < (this.lista_funcionarios.length); i++){
+                if (nome_usuario_func == this.lista_funcionarios[i].nome_usuario){ // faz uma busca no banco de dados para ver se existe o usuario digitado
+                    console.log("Nome de usuario ja cadastrado, por favor tente outro.");
+                    flag = true;
+                }
+            }
+            if (flag == false){ //caso nao encontre retorna o nome de usuario digitado
+                return nome_usuario_func
+            }
+        }
     }
 }
 var sistema = new Sistema();
