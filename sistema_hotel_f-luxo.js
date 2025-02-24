@@ -193,55 +193,41 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
     
                 case "2":
                     console.log("\n-------------------------- Lista de Reservas --------------------------\n");
-                    if (this.banco_dados.reservas.length == 0){
-                        console.log("Nenhuma reserva encontrada.")
-                    }else{
-                        let contagem = 1;
-                        for (let reserva of this.banco_dados.reservas){ //passa por toda a lista e imprime os dados ao usuario
-                            console.log(`Reserva ${contagem}:\n`);
-                            console.log(`ID da Reserva: ${reserva.reserva_id}\nID do Cliente: ${reserva.cliente_id}\nStatus da Reserva: ${reserva.status}\nCheck-in: ${reserva.check_in}\nCheck-out: ${reserva.check_in}\nNome do Quarto: ${reserva.nome_quarto}\n`);
-                            console.log('------------------------');
-                            contagem++;
-                        }
-                    }
+                    sistema.ver_lista_objetos(this.banco_dados.reservas); // chama metodo para printa a lista
                     break;
 
                 case "3":
-                    sistema.ver_quarto();
+                    console.log("\n-------------------------- Lista de Quartos --------------------------\n");
+                    sistema.ver_lista_objetos(this.banco_dados.quartos); // chama metodo para printa a lista
                     break;
                 
                 case "4":
                     console.log("\n-------------------------- Lista de Clientes --------------------------\n");
-                    if (this.banco_dados.clientes.length == 0){
-                        console.log("Nenhum cliente encontrado.")
-                    }else{
-                        let contagem = 1;
-                        for (let cliente of this.banco_dados.clientes){ // passa por toda a lista e imprime os dados ao usuario
-                            let senha_cliente = cliente.senha;
-                            senha_cliente = "*".repeat(senha_cliente.length) // garante que o funcionario nao vera a senha do cliente
-                            console.log(`Cliente ${contagem}:\n`);
-                            console.log(`ID do Cliente: ${cliente.cliente_id}\nNome do Cliente: ${cliente.nome}\nData de Nascimento: ${cliente.data_nascimento}\nCPF: ${cliente.cpf}\nE-mail: ${cliente.email}\nSenha: ${senha_cliente}\n`);
-                            console.log('------------------------');
-                            contagem++;
-                        }
-                    }
+                    sistema.ver_lista_objetos(this.banco_dados.clientes); // chama metodo para printa a lista
                     break;
 
                 case "5":
+                    console.log("\n-------------------------- Lista de Reservas --------------------------\n");
+                    sistema.ver_lista_objetos(this.banco_dados.reservas); // mostra a lista de reservas para o cliente poder ver
                     console.log("\nAlterar status de reserva:\n");
                     sistema.mudar_status();
                     break;
 
                 case "6":
+                    
                     sistema.adicionar_quarto();
                     break;
                 
                 case "7":
+                    console.log("\n-------------------------- Lista de Quartos --------------------------\n");
+                    sistema.ver_lista_objetos(this.banco_dados.quartos); // mostra lista de quartos para o cliente poder ver
                     sistema.editar_quarto();
                     fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // atualiza o quarto editado no banco de dados
                     break;
 
                 case "8":
+                    console.log("\n-------------------------- Lista de Quartos --------------------------\n");
+                    sistema.ver_lista_objetos(this.banco_dados.quartos); // mostra lista de quartos para o cliente poder ver
                     sistema.excluir_quarto();
                     fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // atualiza o quarto excluido no banco de dados
                     break;
@@ -278,7 +264,8 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     break;
     
                 case "2":
-                    sistema.ver_quarto();
+                    console.log("\n-------------------------- Lista de Quartos --------------------------\n");
+                    sistema.ver_lista_objetos(this.banco_dados.quartos); // mostra lista de quartos para o cliente poder ver
                     break;
                 
                 case "3":
@@ -287,6 +274,8 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     break;
 
                 case "4":
+                    console.log("\nSuas reservas:\n");
+                    sistema.ver_minha_reserva(this.banco_dados.reservas, cliente); // mostra as reservas do usuario
                     console.log("\nCancelar reserva:\n");
                     sistema.cancelar_reserva(cliente);
                     break;
@@ -740,22 +729,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             console.log('------------------------');
         }
     }
-    
-    ver_quarto(){
-        console.log("\n-------------------------- Lista de Quartos --------------------------\n");
-        if (this.banco_dados.quartos.length == 0){
-            console.log("Nenhum quarto encontrado.")
-        }else{
-            let contagem = 1;
-            for (let quarto of this.banco_dados.quartos){
-                console.log(`Quarto ${contagem}:\n`);
-                console.log(`Quantidade de Camas: ${quarto.quantidade_camas}\nPreco por Noite: ${quarto.preco_noite}\nNome do Quarto: ${quarto.nome}\nDescricao: ${quarto.descricao}\n`);
-                console.log('------------------------');
-                contagem++;
-            }
-        }
 
-    }
     encontrar_quarto(nome_quarto){ // metodo para encontrar nome de quarto na lista de quarto
         for (let i = 0; i < (this.banco_dados.quartos.length); i++){
             if (nome_quarto == this.banco_dados.quartos[i].nome){ // faz uma busca no banco de dados para ver se existe o nome de quarto digitado
@@ -781,6 +755,18 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         this.banco_dados.ids.push(id); // adiciona o id unico a lista
         fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // atualiza os ids no banco de dados
         return id;
+    }
+
+    ver_lista_objetos(lista) {
+        if (lista.length == 0){
+            return console.log("\nNao ha dados para serem exibidos.\n")
+        }
+        lista.forEach((objeto) => {
+            for (let atributo in objeto) {
+                console.log(`${sistema.formatar_atributo(atributo)}: ${objeto[atributo]}`);
+            }
+            console.log("\n---------------------------");
+        });
     }
 
     formatar_atributo(atributo) { // metodo para formatar os atributos e utilizar nos prints de dados

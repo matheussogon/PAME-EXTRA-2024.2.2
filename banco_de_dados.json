@@ -27,10 +27,10 @@
   ],
   "quartos": [
     {
-      "quantidade_camas": "5",
-      "preco_noite": "666",
-      "nome": "oi",
-      "descricao": "22"
+      "quantidade_camas": "11",
+      "preco_noite": "111",
+      "nome": "1",
+      "descricao": "1"
     }
   ],
   "reservas": [
@@ -40,6 +40,62 @@
       "status": "REALIZADA",
       "check_in": "10/10/2010",
       "check_out": "10/10/2011",
+      "nome_quarto": "oi"
+    },
+    {
+      "reserva_id": "663371718",
+      "cliente_id": "426212261",
+      "status": "REALIZADA",
+      "check_in": "10/10/1200",
+      "check_out": "10/10/1201",
+      "nome_quarto": "oi"
+    },
+    {
+      "reserva_id": "830205601",
+      "cliente_id": "426212261",
+      "status": "REALIZADA",
+      "check_in": "10/10/1202",
+      "check_out": "10/10/1203",
+      "nome_quarto": "oi"
+    },
+    {
+      "reserva_id": "383861210",
+      "cliente_id": "426212261",
+      "status": "REALIZADA",
+      "check_in": "10/10/1204",
+      "check_out": "10/10/1205",
+      "nome_quarto": "oi"
+    },
+    {
+      "reserva_id": "724374826",
+      "cliente_id": "426212261",
+      "status": "REALIZADA",
+      "check_in": "10/10/1206",
+      "check_out": "10/10/1207",
+      "nome_quarto": "oi"
+    },
+    {
+      "reserva_id": "379722394",
+      "cliente_id": "426212261",
+      "status": "REALIZADA",
+      "check_in": "10/10/1207",
+      "check_out": "10/10/1208",
+      "nome_quarto": "oi"
+    },
+    {
+      "reserva_id": "656827919",
+      "cliente_id": "426212261",
+      "status": "REALIZADA",
+      "check_in": "10/10/1209",
+      "check_out": "10/10/1210",
+      "nome_quarto": "oi"
+    },
+    {
+      "reserva_id": "178415751",
+      "cliente_id": "426212261",
+      "status": "REALIZADA",
+      "check_in": "10/10/1211",
+      "check_out": "10/10/1212",
       "nome_quarto": "oi"
     }
   ],
@@ -54,6 +110,13 @@
     "535914593",
     "426212261",
     "166556971",
-    "770651812"
+    "770651812",
+    "663371718",
+    "830205601",
+    "383861210",
+    "724374826",
+    "379722394",
+    "656827919",
+    "178415751"
   ]
 }
