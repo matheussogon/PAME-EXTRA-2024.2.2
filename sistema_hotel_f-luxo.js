@@ -1,4 +1,11 @@
 const requisicao = require('readline-sync'); //comando necessario para interacao em terminal em js
+const fs = require('fs');
+const arquivo_reserva = 'reservas.json';
+const arquivo_quartos = 'quartos.json';
+const arquivo_clientes = 'clientes.json';
+const arquivo_funcionarios = 'funcionarios.json';
+const arquivo_avaliacoes = 'avaliacoes.json';
+const arquivo_ids = 'ids.json';
 
 class Reserva { //criando a classe Reserva
     constructor(reserva_id, cliente_id, status, check_in, check_out,nome_quarto) {
@@ -40,9 +47,14 @@ class Quartos { //criando a classe Quartos
 class Sistema { //criando a classe Sistema, que sera a classe principal do codigo, onde estara todos os metodos a serem utilizados
     constructor(){
 
-        //listas para armazenar dados
+        //banco de dados cliente
+        if (fs.existsSync(arquivo_clientes) && fs.statSync(arquivo_clientes).size > 0) { // verifica se o arquivo json existe e e vazio
+            let dados_clientes_brutos = fs.readFileSync(arquivo_clientes, 'utf8');
+            this.lista_clientes = JSON.parse(dados_clientes_brutos); //exporta os dados do json para a lista
+        } else { // se nao existir ou estiver vazio, cria uma lista vazia
+            this.lista_clientes = [];
+        }
         this.lista_funcionarios = [];
-        this.lista_clientes = [];
         this.lista_quartos = [];
         this.lista_reservas = [];
         this.lista_avaliacoes = [];
@@ -74,6 +86,8 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     break;
         
                 case "3":
+                    // ao sair do programa o banco de dados no arquivo json eh atualizado
+                    fs.writeFileSync(arquivo_clientes, JSON.stringify(this.lista_clientes, null, 2), 'utf8');
                     return console.log("\nSaiu do programa com exito.\n");//encerra o loop e termina o sistema
                     
                 default:
