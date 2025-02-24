@@ -46,11 +46,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         this.lista_quartos = [];
         this.lista_reservas = [];
         this.lista_avaliacoes = [];
-
-        //variaveis para definir os id's unicos
-        this.func_id = 1000;
-        this.cliente_id = 1000;
-        this.reserva_id = 1000;
+        this.lista_ids = [];
 
     }
 
@@ -137,9 +133,9 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     let cpf_funcionario = sistema.perguntar_cpf(); // chama o metodo para perguntar o cpf
                     let email_func = sistema.perguntar_email(); // chama o metodo para perguntar o email
                     let senha_func = sistema.perguntar_senha(); // chama o metodo para perguntar a senha
-
-                    this.lista_funcionarios.push(new Funcionario(this.func_id, nome_usuario_func, cpf_funcionario, email_func, senha_func)); //armazena os dados do funcionario em um banco dedados local (lista)
-                    this.func_id++; //atualiza o valor do id somando mais 1, para que no proximo cadastramento o id seja diferente
+                    let func_id = sistema.gerar_id(); // chama o metodo para gerar um id unico e aleatorio
+                    this.lista_funcionarios.push(new Funcionario(func_id, nome_usuario_func, cpf_funcionario, email_func, senha_func)); //armazena os dados do funcionario em um banco dedados local (lista)
+                    
                     console.log("\nCadastro realizado com sucesso!\n");
                     console.log("Voce sera redirecionado ao menu de cadastramento.");
                     break;
@@ -152,9 +148,8 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     let cpf_cliente = sistema.perguntar_cpf(); // chama o metodo para perguntar o cpf
                     let email_cliente = sistema.perguntar_email(); // chama o metodo para perguntar o email
                     let senha_cliente = sistema.perguntar_senha(); // chama o metodo para perguntar a senha
-                    
-                    this.lista_clientes.push(new Cliente(this.cliente_id, nome_cliente, data_cliente, cpf_cliente, email_cliente, senha_cliente)); //armazena os dados do cliente em um banco dedados local (lista)
-                    this.cliente_id++; //atualiza o valor do id somando mais 1, para que no proximo cadastramento o id seja diferente
+                    let cliente_id = sistema.gerar_id(); // chama o metodo para gerar um id unico e aleatorio
+                    this.lista_clientes.push(new Cliente(cliente_id, nome_cliente, data_cliente, cpf_cliente, email_cliente, senha_cliente)); //armazena os dados do cliente em um banco dedados local (lista)
                     console.log("\nCadastro realizado com sucesso!\n");
                     console.log("Voce sera redirecionado ao menu de cadastramento.");
                     break
@@ -398,8 +393,8 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 console.log("\nNome do quarto digitado nao foi encontrado.\n")
             }
         }
-        this.lista_reservas.push(new Reserva(this.reserva_id, usuario_cliente.cliente_id, "REALIZADA", data_checkin, data_checkout, nome_quarto)); //armazena os dados da reserva em um banco dedados local (lista)
-        this.reserva_id++; // atualiza o id de reserva
+        let reserva_id = sistema.gerar_id(); // chama o metodo para gerar um id unico e aleatorio
+        this.lista_reservas.push(new Reserva(reserva_id, usuario_cliente.cliente_id, "REALIZADA", data_checkin, data_checkout, nome_quarto)); //armazena os dados da reserva em um banco dedados local (lista)
         console.log("\nReserva realizada com sucesso!");
     }
 
@@ -737,6 +732,23 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             }
         }
         return false
+    }
+
+    gerar_id(){
+        let id = Math.floor(100000000 + Math.random() * 900000000).toString(); // gera um id de 9 digitos
+        let existe = true;
+        while (existe) { // loop para garantir que o id nao seja repetido
+            existe = false; // assume que o id nao existe. se realmente nao existir, o loop eh encerrado
+            for (let i = 0; i < this.lista_ids.length; i++) { // loop para encontrar o id caso ele exista
+                if (this.lista_ids[i] === id) {
+                    existe = true; // marca como existente e sai do loop for
+                    id = Math.floor(100000000 + Math.random() * 900000000).toString(); // gera novo id e repete o processo
+                    break;
+                }
+            }
+        }
+        this.lista_ids.push(id); // adiciona o id unico a lista
+        return id;
     }
 
     formatar_atributo(atributo) { // metodo para formatar os atributos e utilizar nos prints de dados
