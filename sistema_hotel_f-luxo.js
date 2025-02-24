@@ -126,6 +126,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     return console.log("\nSaiu do programa com exito.\n");//encerra o loop e termina o sistema
                     
                 default:
+                    this.printar_logo();
                     console.log("\nPor favor, digite uma opcao valida.");//ate o usuario inserir uma opcao valida o loop eh repetido
                     break;
             }
@@ -141,11 +142,13 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             let conta_usuario = requisicao.question("Digite seu nome de usuario ou e-mail de login: "); //pede ao usuario o email e senha
             if (conta_usuario == ""){ // caso o usuario nao queira se logar mais
                 console.log("\nSaindo...");
+                this.printar_logo();
                 return "saiu";
             }
             let senha = requisicao.question("Digite sua senha: ");
             if (senha == ""){ // caso o usuario nao queira se logar mais
                 console.log("\nSaindo...");
+                this.printar_logo();
                 return "saiu";
             }
             let confirmacao_conta = false;
@@ -171,14 +174,17 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             }
             //este bloco de condicional so sera lida caso o email nao tenha sido encontrado ou a senha esteja incorreta
             if (confirmacao_conta == false){ //caso nao encontre nenhum email, confirmacao_email continua false e informa que o email nao foi encontrado
-                console.log("\nO e-mail digitado não esta cadastrado, tente novamente.");
+                this.printar_logo();
+                console.log("\nO e-mail ou nome de usuario digitado não esta cadastrado, tente novamente.");
             } else { //caso o email tenha sido encontrado mas a senha esta incorreta informa ao usuario
+                this.printar_logo();
                 console.log("Senha incorreta."); 
             }
         }
     }
 
     fazer_cadastro(){//metodo para fazer o cadastro
+        this.printar_logo();
         while(true){
             console.log("\n-------------------------- Cadastramento --------------------------\n");
             console.log("1 - Cadastrar como funcionario\n2 - Cadastrar como cliente\n3 - Voltar ao menu principal.\n");
@@ -186,69 +192,82 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
 
             switch(escolha){
                 case "1": //caso o usuario escolha a opcao 1, o cadastro sera de funcionario
+                    this.printar_logo();
                     console.log("\n-------------------------- Cadastro - Funcionario --------------------------\n");
                     //pede os dados de cadastro ao funcionario
                     console.log("Aperte a tecla enter com a caixa de texto vazia se quiser sair do cadastro.\n");
                     let nome_usuario_func = this.perguntar_nome_usuario(); // chama o metodo para perguntar o nome de usuario
                     if (nome_usuario_func == 'sair'){ // se o usuario apertou enter com caixa vazia ele sai
+                        this.printar_logo();
                         break;
                     }
                     let cpf_funcionario = this.perguntar_cpf(); // chama o metodo para perguntar o cpf
                     if (cpf_funcionario == 'sair'){ // se o usuario apertou enter com caixa vazia ele sai
+                        this.printar_logo();
                         break;
                     }
                     let email_func = this.perguntar_email(); // chama o metodo para perguntar o email
                     if (email_func == 'sair'){ // se o usuario apertou enter com caixa vazia ele sai
+                        this.printar_logo();
                         break;
                     }
                     let senha_func = this.perguntar_senha(); // chama o metodo para perguntar a senha
                     if (senha_func == 'sair'){ // se o usuario apertou enter com caixa vazia ele sai
+                        this.printar_logo();
                         break;
                     }
                     let func_id = this.gerar_id(); // chama o metodo para gerar um id unico e aleatorio
                     this.banco_dados.funcionarios.push(new Funcionario(func_id, nome_usuario_func, cpf_funcionario, email_func, senha_func)); //armazena os dados do funcionario em um banco dedados local (lista)
                     fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // salva o novo usuario no banco de dados
-                    
+                    this.printar_logo();
                     console.log("\nCadastro realizado com sucesso!\n");
                     console.log("Voce sera redirecionado ao menu de cadastramento.");
                     break;
         
                 case "2":
+                    this.printar_logo();
                     console.log("\n-------------------------- Cadastro - Cliente --------------------------\n");
                     console.log("Aperte a tecla enter com a caixa de texto vazia se quiser sair do cadastro.\n");
                     //pede os dados de cadastro ao cliente
                     let nome_cliente = this.perguntar_nome(); // chama o metodo para perguntar o nome
                     if (nome_cliente == 'sair'){ // se o usuario apertou enter com caixa vazia ele sai
+                        this.printar_logo();
                         break;
                     }
                     let data_cliente = this.perguntar_data_nascimento(); // chama o metodo para perguntar a data de nascimento
                     if (data_cliente == 'sair'){ // se o usuario apertou enter com caixa vazia ele sai
+                        this.printar_logo();
                         break;
                     }
                     let cpf_cliente = this.perguntar_cpf(); // chama o metodo para perguntar o cpf
                     if (cpf_cliente == 'sair'){ // se o usuario apertou enter com caixa vazia ele sai
+                        this.printar_logo();
                         break;
                     }
                     let email_cliente = this.perguntar_email(); // chama o metodo para perguntar o email
                     if (email_cliente == 'sair'){ // se o usuario apertou enter com caixa vazia ele sai
+                        this.printar_logo();
                         break;
                     }
                     let senha_cliente = this.perguntar_senha(); // chama o metodo para perguntar a senha
                     if (senha_cliente == 'sair'){ // se o usuario apertou enter com caixa vazia ele sai
+                        this.printar_logo();
                         break;
                     }
                     let cliente_id = this.gerar_id(); // chama o metodo para gerar um id unico e aleatorio
                     this.banco_dados.clientes.push(new Cliente(cliente_id, nome_cliente, data_cliente, cpf_cliente, email_cliente, senha_cliente)); //armazena os dados do cliente em um banco dedados local (lista)
                     fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // salva o novo usuario no banco de dados
-
+                    this.printar_logo();
                     console.log("\nCadastro realizado com sucesso!\n");
                     console.log("Voce sera redirecionado ao menu de cadastramento.");
-                    break
+                    break;
         
                 case "3": //encerra o loop e volta ao menu principal
+                    this.printar_logo();
                     return console.log("\nVoltou ao menu principal com exito.\n");
                     
                 default: //ate o usuario inserir uma opcao valida o loop eh repetido
+                    this.printar_logo();
                     console.log("\nPor favor, digite uma opcao valida.");
                     break
             }
@@ -256,6 +275,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
     }
 
     funcionario_logado(funcionario) { //metodo para o usuario interagir com o sistema estando logado como funcionario
+        this.printar_logo();
         while(true) {
             console.log("\n-------------------------- Sua conta (Funcionario) --------------------------\n");
             console.log("1 - Ver meus Dados\n2 - Ver lista de Reservas\n3 - Ver lista de Quartos\n4 - Ver lista de Clientes\n5 - Mudar status da reserva (pendente, adiada, realizada, cancelada)\n6 - Adicionar Quarto\n7 - Editar Quarto\n8 - Excluir Quarto\n9 - Modificar Dados\n10 - Visualizar Avaliacoes\n11 - Sair da Conta");
@@ -263,26 +283,31 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             
             switch(escolha){
                 case "1":
+                    this.printar_logo();
                     console.log("\nSeus dados:\n");
                     this.ver_dados(this.banco_dados.funcionarios, funcionario);
                     break;
     
                 case "2":
+                    this.printar_logo();
                     console.log("\n-------------------------- Lista de Reservas --------------------------\n");
                     this.ver_lista_objetos(this.banco_dados.reservas); // chama metodo para printa a lista
                     break;
 
                 case "3":
+                    this.printar_logo();
                     console.log("\n-------------------------- Lista de Quartos --------------------------\n");
                     this.ver_lista_objetos(this.banco_dados.quartos); // chama metodo para printa a lista
                     break;
                 
                 case "4":
+                    this.printar_logo();
                     console.log("\n-------------------------- Lista de Clientes --------------------------\n");
                     this.ver_lista_objetos(this.banco_dados.clientes); // chama metodo para printa a lista
                     break;
 
                 case "5":
+                    this.printar_logo();
                     console.log("\n-------------------------- Lista de Reservas --------------------------\n");
                     this.ver_lista_objetos(this.banco_dados.reservas); // mostra a lista de reservas para o cliente poder ver
                     console.log("\nAlterar status de reserva:\n");
@@ -290,11 +315,12 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     break;
 
                 case "6":
-                    
+                    this.printar_logo();
                     this.adicionar_quarto();
                     break;
                 
                 case "7":
+                    this.printar_logo();
                     console.log("\n-------------------------- Lista de Quartos --------------------------\n");
                     this.ver_lista_objetos(this.banco_dados.quartos); // mostra lista de quartos para o cliente poder ver
                     this.editar_quarto();
@@ -302,6 +328,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     break;
 
                 case "8":
+                    this.printar_logo();
                     console.log("\n-------------------------- Lista de Quartos --------------------------\n");
                     this.ver_lista_objetos(this.banco_dados.quartos); // mostra lista de quartos para o cliente poder ver
                     this.excluir_quarto();
@@ -309,18 +336,22 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     break;
 
                 case "9":
+                    this.printar_logo();
                     this.modificar_funcionario(funcionario);
                     fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // atualiza o funcionario no banco de dados
                     break;
                 
                 case "10":
+                    this.printar_logo();
                     this.visualizar_avaliacoes();
                     break;
     
                 case "11":
+                    this.printar_logo();
                     return console.log("\nSaiu da conta com exito.");//encerra o loop e sai da interface de usuario logado
                 
                 default:
+                    this.printar_logo();
                     console.log("\nPor favor, digite uma opcao valida.");//ate o usuario inserir uma opcao valida o loop eh repetido
                     break;
             }
@@ -328,6 +359,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
     }
 
     cliente_logado(cliente) { //metodo para o usuario interagir com o sistema estando logado como cliente
+        this.printar_logo();
         while(true){
             console.log("\n-------------------------- Sua conta (Cliente) --------------------------\n");
             console.log("1 - Ver meus Dados\n2 - Ver lista de Quartos\n3 - Fazer reserva\n4 - Cancelar reserva\n5 - Ver minhas reservas\n6 - Modificar Dados\n7 - Avaliar Estadia\n8 - Visualizar Avaliacoes\n9 - Sair da Conta");
@@ -335,16 +367,19 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             
             switch(escolha){
                 case "1":
+                    this.printar_logo();
                     console.log("\nSeus dados:\n");
                     this.ver_dados(this.banco_dados.clientes, cliente);
                     break;
     
                 case "2":
+                    this.printar_logo();
                     console.log("\n-------------------------- Lista de Quartos --------------------------\n");
                     this.ver_lista_objetos(this.banco_dados.quartos); // mostra lista de quartos para o cliente poder ver
                     break;
                 
                 case "3":
+                    this.printar_logo();
                     console.log("\nQuartos Disponiveis:\n");
                     this.ver_lista_objetos(this.banco_dados.quartos); // mostra os quartos ao cliente
                     console.log("\nFazer reserva:");
@@ -352,6 +387,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     break;
 
                 case "4":
+                    this.printar_logo();
                     console.log("\nSuas reservas:\n");
                     this.ver_minha_reserva(this.banco_dados.reservas, cliente); // mostra as reservas do usuario
                     console.log("\nCancelar reserva:\n");
@@ -359,28 +395,34 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     break;
 
                 case "5":
+                    this.printar_logo();
                     console.log("\nSuas reservas:\n");
                     this.ver_minha_reserva(this.banco_dados.reservas, cliente);
                     break;
                 
                 case "6":
+                    this.printar_logo();
                     this.modificar_cliente(cliente);
                     fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // atualiza o cliente no banco de dados
                     break;
                 
                 case "7":
+                    this.printar_logo();
                     this.avaliar_estadia(cliente);
                     fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); //salva as avaliacoes no banco de dados
                     break;
                 
                 case "8":
+                    this.printar_logo();
                     this.visualizar_avaliacoes();
                     break;
     
                 case "9":
+                    this.printar_logo();
                     return console.log("\nSaiu da conta com exito.");//encerra o loop e sai da interface de usuario logado
                 
                 default:
+                    this.printar_logo();
                     console.log("\nPor favor, digite uma opcao valida.");//ate o usuario inserir uma opcao valida o loop eh repetido
                     break;
             }
@@ -407,6 +449,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         while(true){
             var qtd_camas = requisicao.question("Digite a quantidade de camas do quarto: ");
             if (qtd_camas == ""){ // caso o usario queria sair
+                this.printar_logo();
                 return console.log("\nSaindo...");
             }
             if (this.validar_quantidade_inteira(qtd_camas) == true){ // chama a funcao de validar a quantidadede camas com a digitada como parametro
@@ -418,6 +461,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         while(true){
             var preco_noite = requisicao.question("Digite o preco por noite (Ex: xxx.xx): ");
             if (preco_noite == ""){ // caso o usario queria sair
+                this.printar_logo();
                 return console.log("\nSaindo...");
             }
             if (this.validar_preco(preco_noite) == true){ // chama a funcao de validar o preco com o digitado como parametro
@@ -429,6 +473,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         while(true){
             var nome_quarto = requisicao.question("Digite o nome do quarto: ");
             if (nome_quarto == ""){ // caso o usario queria sair
+                this.printar_logo();
                 return console.log("\nSaindo...");
             }
             let existe = this.encontrar_quarto(nome_quarto)  ;
@@ -440,6 +485,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         }
         let descricao = requisicao.question("Digite a descricao do quarto: ")
         if (descricao == ""){ // caso o usario queria sair
+            this.printar_logo();
             return console.log("\nSaindo...");
         }
         this.banco_dados.quartos.push(new Quartos(qtd_camas, preco_noite, nome_quarto, descricao)); //armazena os dados do quarto em um banco dedados local (lista)
@@ -455,6 +501,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         while(true){
             var data_checkin = requisicao.question("Digite a data de Check-in: ");
             if (data_checkin == ""){
+                this.printar_logo();
                 return console.log("\nSaindo...");
             }
             let sistema_data = this.validar_data(data_checkin);// chama a funcao de validar a data com a data digitada como parametro
@@ -467,6 +514,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         while(true){
             var data_checkout = requisicao.question("Digite a data de Check-out: ");
             if (data_checkout == ""){ // caso o usuario queira sair
+                this.printar_logo();
                 return console.log("\nSaindo...");
             }
             let sistema_data = this.validar_data(data_checkout); // chama a funcao de validar a data com a data digitada como parametro
@@ -477,6 +525,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         while(true){
             var nome_quarto = requisicao.question("Digite o nome do quarto que deseja fazer a reserva: ");
             if (nome_quarto == ""){ // caso o usuario queira sair
+                this.printar_logo();
                 return console.log("\nSaindo...");
             }
             let existe = this.encontrar_quarto(nome_quarto);
@@ -518,6 +567,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         let escolha = requisicao.question("Digite o ID da reserva que deseja cancelar: ");
         let contagem = 0; // variavel de contagem para contabilizar as vezes que o id do cliente sera encontrado na lista de reservas
         if (escolha == ""){
+            this.printar_logo();
             return console.log("\nSaindo...");
         }
         for (let i = 0; i < (this.banco_dados.reservas.length); i++){
@@ -542,6 +592,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         console.log("Digite a tecla enter com a caixa de texto vazia para sair da alteracao.\n");
         let escolha = requisicao.question("Digite o ID da reserva que deseja alterar o status: ")
         if (escolha == ""){ // caso o usuario queira sair
+            this.printar_logo();
             return console.log("\nSaindo...");
         }
         let contagem = 0; // variavel de contagem para contabilizar as vezes que o id do cliente sera encontrado na lista de reservas
@@ -550,6 +601,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 while (true){
                     let alteracao_status = requisicao.question("\nDigite o status que deseja atribuir (pendente, adiada, realizada, cancelada) ou enter para sair: ")
                     if (alteracao_status == ""){ // caso o usuario queira sair
+                        this.printar_logo();
                         return console.log("\nSaindo...");
 
                     } else if (alteracao_status.toUpperCase() !== "PENDENTE" && // caso o status digitado nao seja pendente, adiada, realizada ou cancelada
@@ -559,12 +611,14 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                         console.log("\nStatus invalido, por favor digite novamente.");
 
                     } else if (alteracao_status.toUpperCase() == "CANCELADA") {
-                        this.banco_dados.reservas.splice(i,1); // se for cancelada, exclui a reserva      
+                        this.banco_dados.reservas.splice(i,1); // se for cancelada, exclui a reserva
+                        this.printar_logo();   
                         console.log("\nStatus alterado para cancelada, a reserva sera excluida.\n");
                         break;
                         
                     } else {
-                        this.banco_dados.reservas[i].status = alteracao_status.toUpperCase(); // muda o status da reserva       
+                        this.banco_dados.reservas[i].status = alteracao_status.toUpperCase(); // muda o status da reserva   
+                        this.printar_logo();
                         console.log("\nStatus alterado com sucesso!");
                         break;
                     }
@@ -574,6 +628,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             }
         }
         if (contagem == 0){ // condicional: se o id do cliente nao for encontrado na lista de reservas
+            this.printar_logo();
             return console.log("\nReserva nao encontrada.")
         }
     }
@@ -597,18 +652,23 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     console.log("\nAperte a tecla enter com a caixa de texto vazia se nao quiser mais alterar.\n");
                     let novo_nome_usuario_func = this.perguntar_nome_usuario(); // chama o metodo para perguntar o nome de usuario
                     if (novo_nome_usuario_func == "sair"){ // caso o usuario aperte enter para sair
+                        this.printar_logo();
                         break;
                     }
                     this.banco_dados.funcionarios[posicao_funcionario].nome_usuario = novo_nome_usuario_func; // le esta linha quando o nome for valido e altera
+                    this.printar_logo();
+                    console.log("\nNome de usuario alterado com sucesso!");
                     break;
 
                 case "2":
                     console.log("\nAperte a tecla enter com a caixa de texto vazia se nao quiser mais alterar.\n");
                     let novo_cpf_func = this.perguntar_cpf(); //chama o metodo para perguntar o cpf
                     if (novo_cpf_func == "sair"){ // caso o usuario aperte enter para sair
+                        this.printar_logo();
                         break;
                     }
                     this.banco_dados.funcionarios[posicao_funcionario].cpf = novo_cpf_func; // le esta linha quando o cpf for valido e altera
+                    this.printar_logo();
                     console.log("\nCPF alterado com sucesso!");
                     break;
                 
@@ -616,9 +676,11 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     console.log("\nAperte a tecla enter com a caixa de texto vazia se nao quiser mais alterar.\n");
                     let novo_email_func = this.perguntar_email(); // chama o metodo para perguntar o email
                     if (novo_email_func == "sair"){ // caso o usuario aperte enter para sair
+                        this.printar_logo();
                         break;
                     }
                     this.banco_dados.funcionarios[posicao_funcionario].email = novo_email_func; //le esta linha quando o email for valido e altera
+                    this.printar_logo();
                     console.log("\nEmail alterado com sucesso!");
                     break;
                 
@@ -626,16 +688,20 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     console.log("\nperte a tecla enter com a caixa de texto vazia se nao quiser mais alterar.\n");
                     let nova_senha_func = this.perguntar_senha(); // chama o metodo para perguntar a senha
                     if (nova_senha_func == "sair"){ // caso o usuario aperte enter para sair
+                        this.printar_logo();
                         break;
                     }
                     this.banco_dados.funcionarios[posicao_funcionario].senha = nova_senha_func; //le esta linha quando a senha for valida e altera
+                    this.printar_logo();
                     console.log("\nSenha alterada com sucesso!");
                     break;
     
                 case "5":
+                    this.printar_logo();
                     return console.log("\nSaiu do menu de alteracao com exito.\n");//encerra o loop e sai da interface
                     
                 default:
+                    this.printar_logo();
                     console.log("\nPor favor, digite uma opcao valida.");//ate o usuario inserir uma opcao valida o loop eh repetido
                     break;
             }
@@ -661,9 +727,11 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     console.log("\nAperte a tecla enter com a caixa de texto vazia se nao quiser mais alterar.\n");
                     let nome_cliente = this.perguntar_nome(); //chama o metodo para perguntar o nome
                     if (nome_cliente == "sair"){ // caso o usuario aperte enter para sair
+                        this.printar_logo();
                         break;
                     }
                     this.banco_dados.clientes[posicao_cliente].nome = nome_cliente;  // le esta linha quando o nome for valido e altera
+                    this.printar_logo();
                     console.log("\nNome alterado com sucesso!");
                     break;
                 
@@ -671,9 +739,11 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     console.log("\nAperte a tecla enter com a caixa de texto vazia se nao quiser mais alterar.\n");
                     let nova_data_nascimento = this.perguntar_data_nascimento(); //chama o metodo para perguntar a data de nascimento
                     if (nova_data_nascimento == "sair"){ // caso o usuario aperte enter para sair
+                        this.printar_logo();
                         break;
                     }
                     this.banco_dados.clientes[posicao_cliente].data_nascimento = nova_data_nascimento; // le esta linha quando a data for valido e altera
+                    this.printar_logo();
                     console.log("\nData de nascimento alterada com sucesso!");
                     break;
                     
@@ -681,9 +751,11 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     console.log("\nAperte a tecla enter com a caixa de texto vazia se nao quiser mais alterar.\n");
                     let novo_cpf_cliente = this.perguntar_cpf() //chama o metodo para perguntar o cpf
                     if (novo_cpf_cliente == "sair"){ // caso o usuario aperte enter para sair
+                        this.printar_logo();
                         break;
                     }
                     this.banco_dados.clientes[posicao_cliente].cpf = novo_cpf_cliente; // le esta linha quando o cpf for valido e altera
+                    this.printar_logo();
                     console.log("\nCPF alterado com sucesso!");
                     break;
                 
@@ -691,9 +763,11 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     console.log("\nAperte a tecla enter com a caixa de texto vazia se nao quiser mais alterar.\n");
                     let novo_email_cliente = this.perguntar_email(); // chama o metodo para perguntar o email
                     if (novo_email_cliente == "sair"){ // caso o usuario aperte enter para sair
+                        this.printar_logo();
                         break;
                     }
                     this.banco_dados.clientes[posicao_cliente].email = novo_email_cliente; //le esta linha quando o email for valido e altera
+                    this.printar_logo();
                     console.log("\nEmail alterado com sucesso!");
                     break;
 
@@ -701,16 +775,20 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     console.log("\nAperte a tecla enter com a caixa de texto vazia se nao quiser mais alterar.\n");
                     let nova_senha_cliente = this.perguntar_senha(); // chama o metodo para perguntar a senha
                     if (nova_senha_cliente == "sair"){ // caso o usuario aperte enter para sair
+                        this.printar_logo();
                         break;
                     }
                     this.banco_dados.clientes[posicao_cliente].senha = nova_senha_cliente; //le esta linha quando a senha for valida e altera
+                    this.printar_logo();
                     console.log("\nSenha alterada com sucesso!");
                     break;
 
                 case "6":
+                    this.printar_logo();
                     return console.log("\nSaiu do menu de alteracao com exito.\n");//encerra o loop e sai da interface
                     
                 default:
+                    this.printar_logo();
                     console.log("\nPor favor, digite uma opcao valida.");//ate o usuario inserir uma opcao valida o loop eh repetido
                     break;
             }
@@ -737,6 +815,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 }
             }
             if (resultado == true){ // se o quarto for encontrado ele podera ser editado
+                this.printar_logo();
                 console.log("\nQuarto encontrado!");
                 while (true){
                     console.log("\n-------------------------- Editar Quartos --------------------------\n");
@@ -748,11 +827,13 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                             while(true){
                                 let qtd_camas = requisicao.question("Digite a quantidade de camas do quarto: ");
                                 if (qtd_camas == ""){ // volta ao menu de edicao caso o usuario nao queira mais alterar
+                                    this.printar_logo();
                                     console.log("\nSaindo...");
                                     break;
                                 }
                                 if (this.validar_quantidade_inteira(qtd_camas) == true){ // chama a funcao de validar a quantidadede camas com a digitada como parametro
                                     this.banco_dados.quartos[posicao_quarto].quantidade_camas = qtd_camas;
+                                    this.printar_logo();
                                     console.log("\nQuantidade de camas editada com sucesso!");
                                     break //caso a qtd de camas seja valida o loop se encerra a quantidade eh alterada
                                 } else {
@@ -765,13 +846,15 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                             while(true){
                                 let preco = requisicao.question("Digite o preco por noite (Ex: xxx.xx): ");
                                 if (preco == ""){ // volta ao menu de edicao caso o usuario nao queira mais alterar
+                                    this.printar_logo();
                                     console.log("\nSaindo...");
                                     break;
                                 }
                                 if (this.validar_preco(preco) == true){ // chama a funcao de validar o preco com o digitado como parametro
                                     this.banco_dados.quartos[posicao_quarto].preco_noite = preco;
+                                    this.printar_logo();
                                     console.log("\nPreco por noite editado com sucesso!");
-                                    break //caso a senha seja valida o loop se encerra e o preco eh alterado
+                                    break; //caso a senha seja valida o loop se encerra e o preco eh alterado
                                 } else {
                                     console.log("Valor invalido, por favor digite novamente.");
                                 }
@@ -782,16 +865,18 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                             while(true){
                                 let nome_quarto = requisicao.question("Digite o nome do quarto: ");
                                 if (nome_quarto == ""){ // volta ao menu de edicao caso o usuario nao queira mais alterar
+                                    this.printar_logo();
                                     console.log("\nSaindo...");
                                     break;
                                 }
-                                let existe = this.encontrar_quarto(nome_quarto)  ;
+                                let existe = this.encontrar_quarto(nome_quarto);
                                 if (existe == true){ // faz uma busca no banco de dados para ver se existe o nome de quarto digitado
                                     console.log("Nome de quarto ja cadastrado, por favor tente outro.");
                                 } else { //caso nao encontre, o novo nome pode ser inserido
                                     this.banco_dados.quartos[posicao_quarto].nome = nome_quarto;
+                                    this.printar_logo();
                                     console.log("\nNome do quarto editado com sucesso!");
-                                    break
+                                    break;
                                 }
                             }
                             break;
@@ -799,17 +884,21 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                             console.log("\nAperte a tecla enter com a caixa de texto vazia se nao quiser mais alterar.\n");
                             let descricao_quarto = requisicao.question("Digite a descricao do quarto: ")
                             if (descricao_quarto == ""){ // volta ao menu de edicao caso o usuario nao queira mais alterar
+                                this.printar_logo();
                                 console.log("\nSaindo...");
                                 break;
                             }
                             this.banco_dados.quartos[posicao_quarto].descricao = descricao_quarto;
+                            this.printar_logo();
                             console.log("\nDescricao do quarto editada com sucesso!");
                             break;
 
                         case "5":
+                            this.printar_logo();
                             return console.log("\nSaiu do menu de edicao com exito.\n");//encerra o loop e sai da interface
                     
                         default:
+                            this.printar_logo();
                             console.log("\nPor favor, digite uma opcao valida.");//ate o usuario inserir uma opcao valida o loop eh repetido
                             break;
                     }
@@ -822,25 +911,27 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
     
     excluir_quarto(){
         if (this.banco_dados.quartos.length == 0){ // caso nao haja quarto imprime a informacao para o usuario
+            this.printar_logo();
             return console.log("\nNao ha quartos para serem excluidos.\n");
         }     
         console.log("\nDigite a tecla enter com a caixa de texto vazia caso nao queira mais escluir.");
         while (true){ // loop para garantir que o usuario digite nome de um quarto cadastrado
             let escolha = requisicao.question("\nDigite o nome do quarto que deseja excluir: ");
             if (escolha == ""){ // caso o usuario nao queria mais excluir, o metodo se encerra
-                console.log("\nSaindo...");
-                break; 
+                this.printar_logo();
+                return console.log("\nSaindo...");
             }
             let resultado = this.encontrar_quarto(escolha);
             let posicao_quarto;
             for (let i = 0; i < (this.banco_dados.quartos.length); i++){ //encontra a posicao do quarto na lista de quartos de acordo com o nome 
                 if (escolha == this.banco_dados.quartos[i].nome){
                     posicao_quarto = i;
-                    break
+                    break;
                 }
             }
             if (resultado == true){ // se o quarto for encontrado ele podera ser editado
                 this.banco_dados.quartos.splice(posicao_quarto,1);
+                this.printar_logo();
                 return console.log("\nQuarto encontrado e removido com sucesso!");
             } else {
                 console.log("\nNome de quarto não encontrado.");
@@ -861,17 +952,21 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     if (resposta.toUpperCase() == "SIM"){ //se for sim pede para inserir o comentario
                         comentario = requisicao.question("Digite o comentario: ");
                         if (comentario == ""){ // caso o usuario queira sair
+                            this.printar_logo();
                             return console.log("\nSaindo...");
                         }
-                        this.banco_dados.avaliacoes .push([avaliacao, comentario, cliente.nome]); //salva a avaliacao, o comentario e o nome do cliente avaliante na lista_avaliacos (lista de listas)
+                        this.banco_dados.avaliacoes.push([avaliacao, comentario, cliente.nome]); //salva a avaliacao, o comentario e o nome do cliente avaliante na lista_avaliacos (lista de listas)
+                        this.printar_logo();
                         console.log("\nAvaliacao concluida com sucesso!");
                         break;
                     } else if (resposta.toUpperCase() == "NAO"){ // se nao, adiciona um comentario vazio
                         comentario = " ";
                         this.banco_dados.avaliacoes .push([avaliacao, comentario, cliente.nome]); //salva a avaliacao, o comentario e o nome do cliente avaliante na lista_avaliacos (lista de listas)
+                        this.printar_logo();
                         console.log("\nAvaliacao concluida com sucesso!");
                         break;
                     } else if (resposta == ""){ // caso o usuario queira sair
+                        this.printar_logo();
                         return console.log("\nSaindo...");
                     }else {
                         console.log("\nResposta invalida.\n");
@@ -879,6 +974,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 }
                 break;
             } else if (avaliacao == ""){ // caso o usuario queira sair
+                this.printar_logo();
                 return console.log("\nSaindo...");
             } else {
                 console.log("Avaliacao invalida, por favor tente novamente.");

@@ -15,6 +15,14 @@
       "cpf": "111.111.111-13",
       "email": "n@n.com",
       "senha": "111111"
+    },
+    {
+      "cliente_id": "710866081",
+      "nome": "matheus",
+      "data_nascimento": "07/12/2000",
+      "cpf": "111.111.112-11",
+      "email": "g@g.com",
+      "senha": "111111"
     }
   ],
   "funcionarios": [
@@ -27,16 +35,30 @@
     },
     {
       "func_id": "770651812",
-      "nome_usuario": "matheuss",
+      "nome_usuario": "matheus",
       "cpf": "111.111.111-22",
       "email": "c@c.com",
       "senha": "111111"
     },
     {
       "func_id": "498730010",
-      "nome_usuario": "matheus",
+      "nome_usuario": "math",
       "cpf": "111.111.111-11",
       "email": "d@d.com",
+      "senha": "111111"
+    },
+    {
+      "func_id": "165696107",
+      "nome_usuario": "matheus4",
+      "cpf": "111.111.111-37",
+      "email": "m@m.com",
+      "senha": "111111"
+    },
+    {
+      "func_id": "183995673",
+      "nome_usuario": "oi",
+      "cpf": "111.111.111-88",
+      "email": "v@v.com",
       "senha": "111111"
     }
   ],
@@ -50,7 +72,7 @@
     {
       "quantidade_camas": "5",
       "preco_noite": "1000",
-      "nome": "normal",
+      "nome": "quarto",
       "descricao": "normal"
     }
   ],
@@ -149,6 +171,9 @@
     "178415751",
     "705361225",
     "958633356",
-    "498730010"
+    "498730010",
+    "165696107",
+    "710866081",
+    "183995673"
   ]
 }
