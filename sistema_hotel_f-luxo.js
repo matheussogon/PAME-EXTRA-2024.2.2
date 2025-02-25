@@ -88,11 +88,12 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         if (fs.existsSync(arquivo_banco) && fs.statSync(arquivo_banco).size > 0) {
             let dados_brutos = fs.readFileSync(arquivo_banco, 'utf8');
             this.banco_dados = JSON.parse(dados_brutos);
-        } else {
-            this.banco_dados = this.estrutura_padrao;
+        } else { // caso o arquivo json esteja vazio ou nao exista atribui a estrutura padrao
+            this.banco_dados = this.estrutura_padrao; 
         }
-    }
+    } 
 
+//OBS: o metodo printar_logo() eh chamado sempre que se deseja limpar o terminal e printar a logo
     iniciar_sistema(){ //metodo para inicializacao do sistema
         while (true){
             console.log("\n\x1b[38;5;208m" + "                    -------------------------- Bem vindo ao Hotel F-Luxo --------------------------\n\n                    O que deseja fazer?\n");
@@ -102,9 +103,9 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             switch(escolha){
                 case "1":
 
-                    let tipo_login = this.fazer_login(); //
+                    let tipo_login = this.fazer_login(); //variavel que chama o metodo fazer_login() para saber qual o tipo de login do usuario (funcionario ou cliente)
 
-                    if (tipo_login == "saiu"){ // caso o usuario nao queiria se logar mais
+                    if (tipo_login == "saiu"){ // caso o usuario nao queira se logar mais
                         console.log("\n\x1b[38;5;208m" + "                    Voltou ao menu principal.");
 
                     } else if (tipo_login[0] == "Usuario Funcionario"){ // loga com a conta como funcionario
@@ -119,11 +120,11 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     this.fazer_cadastro(); //abre o menu de cadastro
                     break;
         
-                case "3":
+                case "3": // opcao para sair do programa
                     this.printar_logo();
-                    while (true){
+                    while (true){ //loop para garantir que o usuario digire uma opcao valida (sim ou nao)
                         let confirmacao_saida = requisicao.question("\n\x1b[38;5;208m" + "                                   Tem certeza que deseja sair do aplicativo? (sim/nao): " + "\x1b[0m");
-                        if (confirmacao_saida.toUpperCase() == "SIM"){
+                        if (confirmacao_saida.toUpperCase() == "SIM"){ // caso seja sim, salva as informacoes no bando de dados e printa uma tela de encerramento
                             fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8');
                             console.clear();
                             console.log("\n\n\n\n"); // bloco de codigo para simular uma tela de encerramento
@@ -138,15 +139,15 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                                 console.clear();
                             }, 2500);
                             return;
-                        } else if (confirmacao_saida.toUpperCase() == "NAO"){
+                        } else if (confirmacao_saida.toUpperCase() == "NAO"){ // caso seja nao volta para o menu principal
                             this.printar_logo();
                             break;
-                        } else {
+                        } else { // para o caso de nao digitar uma opcao valida, o loop continua
                             console.log("\n\x1b[38;5;208m" + "                                   Por favor, digite uma resposta valida.");//ate o usuario inserir uma opcao valida o loop eh repetido)
                         }
                     }  
                     break;
-                default:
+                default: // caso o usuario nao digite uma opcao valida
                     this.printar_logo();
                     console.log("\n\x1b[38;5;208m" + "                    Por favor, digite uma opcao valida.");//ate o usuario inserir uma opcao valida o loop eh repetido
                     break;
@@ -156,8 +157,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
 
     fazer_login() { //metodo para fazer o login
         this.printar_logo();
-        let manter_login = true;
-        while(manter_login){
+        while(true){  // loop para garantir que o usuario digite senhas e email ou nome de usuario validos
             console.log("\x1b[38;5;208m" + `                                                                   
                                      ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
                                     █                                █
@@ -165,46 +165,44 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                                     █  █     █   █  █ ▀▀█  █  █ █ █  █
                                     █  ▀▀▀▀   ▀▀▀    ▀▀▀▀  ▀  ▀  ▀   █ 
                                     ▀▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▀
-` + "\x1b[0m");
+` + "\x1b[0m"); //printa uma imagem de login
             console.log("\x1b[38;5;208m" + "                    Digite a tecla enter com a caixa de texto vazia para sair do login.\n");
-            let conta_usuario = requisicao.question("\x1b[38;5;208m" + "                    Digite seu nome de usuario ou e-mail de login: "); //pede ao usuario o email e senha
+            let conta_usuario = requisicao.question("\x1b[38;5;208m" + "                    Digite seu nome de usuario ou e-mail de login: "); //pergunta o email ou o nome de usuario
             if (conta_usuario == ""){ // caso o usuario nao queira se logar mais
                 console.log("\n\x1b[38;5;208m" + "                    Saindo...");
                 this.printar_logo();
-                return "saiu";
+                return "saiu"; //retorna uma indicacao de que o usuario saiu
             }
-            let senha = requisicao.question("\x1b[38;5;208m" + "                    Digite sua senha: ");
+            let senha = requisicao.question("\x1b[38;5;208m" + "                    Digite sua senha: "); // pergunta a senha
             if (senha == ""){ // caso o usuario nao queira se logar mais
                 console.log("\n\x1b[38;5;208m" + "                    Saindo...");
                 this.printar_logo();
-                return "saiu";
+                return "saiu"; //retorna uma indicacao de que o usuario saiu
             }
-            let confirmacao_conta = false;
+            let confirmacao_conta = false; // variavel para identificar se o usuario digitou um email ou nome de usuario cadastrado (assume que nao digitou)
             for (let i = 0; i < (this.banco_dados.clientes.length); i++){ //passa pela lista de clientes para ver se o email esta cadastrado la
                 if (conta_usuario == this.banco_dados.clientes[i].email){
-                    confirmacao_conta = true;
-                    if (senha == this.banco_dados.clientes[i].senha){ //caso o email esteja cadastrado, ve se a senha esta correta
+                    confirmacao_conta = true; // usuario digitou um email cadastrado
+                    if (senha == this.banco_dados.clientes[i].senha){ // ve se a senha esta correta
                         console.log("\n\x1b[38;5;208m" + "                    Sua conta foi acessada com exito!");
-                        manter_login = false;
                         return ["Usuario Cliente", this.banco_dados.clientes[i]]; //retorna uma lista para ser utilizada em outro metodo para identificacao de usuario e utilizacao no sistema (cliente ou funconario)
                     }
                 }
             }
-            for (let i = 0; i < (this.banco_dados.funcionarios.length); i++){ //passa pela lista de funcionarios para ver se o email esta cadastrado la
+            for (let i = 0; i < (this.banco_dados.funcionarios.length); i++){ //passa pela lista de funcionarios para ver se o email ou nome de usuario esta cadastrado la
                 if (conta_usuario == this.banco_dados.funcionarios[i].email || conta_usuario == this.banco_dados.funcionarios[i].nome_usuario){
-                    confirmacao_conta = true;
-                    if (senha == this.banco_dados.funcionarios[i].senha){ //caso o email esteja cadastrado, ve se a senha esta correta
+                    confirmacao_conta = true; //usuario digitou um email ou nome de usuario cadastrado
+                    if (senha == this.banco_dados.funcionarios[i].senha){ //caso o email ou nome de usuario esteja cadastrado, ve se a senha esta correta
                         console.log("\n\x1b[38;5;208m" + "                    Sua conta foi acessada com exito!");
-                        manter_login = false;
                         return ["Usuario Funcionario", this.banco_dados.funcionarios[i]] //retorna uma lista para ser utilizada em outro metodo para identificacao de usuario ou utilizacao no sistema(cliente ou funconario)
                     }
                 }
             }
-            //este bloco de condicional so sera lida caso o email nao tenha sido encontrado ou a senha esteja incorreta
-            if (confirmacao_conta == false){ //caso nao encontre nenhum email, confirmacao_email continua false e informa que o email nao foi encontrado
+            //este bloco de condicional so sera lida caso o email (ou tambem nome de usuario no caso do funcionario) nao tenha sido encontrado ou a senha esteja incorreta
+            if (confirmacao_conta == false){ //caso nao encontre nenhum email (ou nome de usuario), confirmacao_email continua false e informa que o email nao foi encontrado
                 this.printar_logo();
                 console.log("\n\x1b[38;5;208m" + "                    O e-mail ou nome de usuario digitado não esta cadastrado, tente novamente.");
-            } else { //caso o email tenha sido encontrado mas a senha esta incorreta informa ao usuario
+            } else { //caso o email ou nome de usuario tenha sido encontrado mas a senha esta incorreta informa ao usuario
                 this.printar_logo();
                 console.log("\x1b[38;5;208m" + "                    Senha incorreta."); 
             }
@@ -221,7 +219,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                    █  █     █▄▄█  █  █  █▄▄█   ▀▀▄    █    █▀▀▄  █  █  █
                    █   ▀▀▀  ▀  ▀  ▀▀▀   ▀  ▀  ▀▀▀     ▀    ▀  ▀   ▀▀   █
                    ▀▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▀
-       ` + "\x1b[0m"); 
+       ` + "\x1b[0m"); // printa uma imagem de cadastro
             console.log("\x1b[38;5;208m" + "                   1 - Cadastrar como funcionario\n                   2 - Cadastrar como cliente\n                   3 - Voltar ao menu principal\n");
             let escolha = requisicao.question("\x1b[38;5;208m" + "                   Selecione uma das opcoes acima: "); //mostra as opcoes e faz o usuario escolher uma dentre elas
 
@@ -252,10 +250,10 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                         break;
                     }
                     let func_id = this.gerar_id(); // chama o metodo para gerar um id unico e aleatorio
-                    this.banco_dados.funcionarios.push(new Funcionario(func_id, nome_usuario_func, cpf_funcionario, email_func, senha_func)); //armazena os dados do funcionario em um banco dedados local (lista)
+                    this.banco_dados.funcionarios.push(new Funcionario(func_id, nome_usuario_func, cpf_funcionario, email_func, senha_func)); //armazena os dados do funcionario em um banco de dados
                     fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // salva o novo usuario no banco de dados
                     this.printar_logo();
-                    console.log("\n\x1b[38;5;208m" + "                    Cadastro realizado com sucesso!\n");
+                    console.log("\n\x1b[38;5;208m" + "                    Cadastro realizado com sucesso!\n"); // printa que o cadastro foi bem sucedido
                     console.log("\x1b[38;5;208m" + "                    Voce sera redirecionado ao menu de cadastramento.");
                     break;
         
@@ -290,10 +288,10 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                         break;
                     }
                     let cliente_id = this.gerar_id(); // chama o metodo para gerar um id unico e aleatorio
-                    this.banco_dados.clientes.push(new Cliente(cliente_id, nome_cliente, data_cliente, cpf_cliente, email_cliente, senha_cliente)); //armazena os dados do cliente em um banco dedados local (lista)
+                    this.banco_dados.clientes.push(new Cliente(cliente_id, nome_cliente, data_cliente, cpf_cliente, email_cliente, senha_cliente)); //armazena os dados do cliente em um banco de dados
                     fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // salva o novo usuario no banco de dados
                     this.printar_logo();
-                    console.log("\n\x1b[38;5;208m" + "                    Cadastro realizado com sucesso!\n");
+                    console.log("\n\x1b[38;5;208m" + "                    Cadastro realizado com sucesso!\n"); // printa que o cadastro foi bem sucedido
                     console.log("\x1b[38;5;208m" + "                    Voce sera redirecionado ao menu de cadastramento.");
                     break;
         
@@ -328,96 +326,96 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             let escolha = requisicao.question("\n\x1b[38;5;208m" + "                    Selecione uma das opcoes acima: "); //mostra as opcoes e faz o usuario escolher uma dentre elas
             
             switch(escolha){
-                case "1":
+                case "1": // opcao para ver dados
                     this.printar_logo();
                     console.log("\n\x1b[38;5;208m" + "                    Seus dados:\n");
-                    this.ver_dados(this.banco_dados.funcionarios, funcionario);
-                    let manter_dados = requisicao.question("\n\x1b[38;5;208m" + "                    Digite a tecla enter para sair da visualizacao.");
+                    this.ver_dados(this.banco_dados.funcionarios, funcionario); // chama o metodo para ver dados 
+                    let manter_dados = requisicao.question("\n\x1b[38;5;208m" + "                    Digite a tecla enter para sair da visualizacao."); // bloco de codigo para o usuario se manter visualizando apenas seus dados
                     if (manter_dados!= "4848484848fgfgjfrjgj85t858t49jr48hr84rt4tni"){ // input praticamente impossivel do usuario digitar
                         this.printar_logo();
                         break;
                     }
                 
-                case "2":
+                case "2": // opcao para ver reservas
                     this.printar_logo();
                     console.log("\n\x1b[38;5;208m" + "                    ------------------------------ Lista de Reservas ------------------------------\n"+ "\x1b[0m");
-                    this.ver_lista_objetos(this.banco_dados.reservas,"reserva"); // chama metodo para printa a lista
-                    let manter_rerservas = requisicao.question("\n\x1b[38;5;208m" + "                    Digite a tecla enter para sair da visualizacao.")
+                    this.ver_lista_objetos(this.banco_dados.reservas,"reserva"); // chama metodo para printar as reservas
+                    let manter_rerservas = requisicao.question("\n\x1b[38;5;208m" + "                    Digite a tecla enter para sair da visualizacao."); // bloco de codigo para o usuario se manter visualizando apenas os dados
                     if (manter_rerservas != "4848484848fgfgjfrjgj85t858t49jr48hr84rt4tni"){ // input impossivel do usuario digitar
                         this.printar_logo();
                         break;
                     } 
                     
-                case "3":
+                case "3": // opcao para ver quartos
                     this.printar_logo();
                     console.log("\n\x1b[38;5;208m" + "                    ------------------------------ Lista de Quartos ------------------------------\n"+ "\x1b[0m");
-                    this.ver_lista_objetos(this.banco_dados.quartos,"quarto"); // chama metodo para printa a lista
-                    let manter_quartos = requisicao.question("\n\x1b[38;5;208m" + "                    Digite a tecla enter para sair da visualizacao.");
+                    this.ver_lista_objetos(this.banco_dados.quartos,"quarto"); // chama metodo para printar os quartos
+                    let manter_quartos = requisicao.question("\n\x1b[38;5;208m" + "                    Digite a tecla enter para sair da visualizacao."); // bloco de codigo para o usuario se manter visualizando apenas os dados
                     if (manter_quartos != "4848484848fgfgjfrjgj85t858t49jr48hr84rt4tni"){ // input impossivel do usuario digitar
                         this.printar_logo();
                         break;
                     } 
                 
-                case "4":
+                case "4": // opcao para ver clientes
                     this.printar_logo();
                     console.log("\n\x1b[38;5;208m" + "                    ------------------------------ Lista de Clientes ------------------------------\n"+ "\x1b[0m");
-                    this.ver_lista_objetos(this.banco_dados.clientes,"cliente"); // chama metodo para printa a lista
-                    let manter_clientes = requisicao.question("\n\x1b[38;5;208m" + "                    Digite a tecla enter para sair da visualizacao.");
+                    this.ver_lista_objetos(this.banco_dados.clientes,"cliente"); // chama metodo para printar os clientes
+                    let manter_clientes = requisicao.question("\n\x1b[38;5;208m" + "                    Digite a tecla enter para sair da visualizacao."); // bloco de codigo para o usuario se manter visualizando apenas os dados
                     if (manter_clientes != "4848484848fgfgjfrjgj85t858t49jr48hr84rt4tni"){ // input impossivel do usuario digitar
                         this.printar_logo();
                         break;
                     }
 
-                case "5":
+                case "5": // opcao para alterar status de reserva
                     this.printar_logo();
                     console.log("\n\x1b[38;5;208m" + "                    ------------------------------ Lista de Reservas ------------------------------\n"+ "\x1b[0m");
-                    this.ver_lista_objetos(this.banco_dados.reservas,"reserva"); // mostra a lista de reservas para o cliente poder ver
+                    this.ver_lista_objetos(this.banco_dados.reservas,"reserva"); // mostra a lista de reservas para o funcionario poder alterar com mais clareza
                     console.log("\n\x1b[38;5;208m" + "                    Alterar status de reserva:\n");
-                    this.mudar_status();
+                    this.mudar_status(); // chama metodo para alter status
                     break;
 
-                case "6":
+                case "6": // opcao para adicionar quarto
                     this.printar_logo();
-                    this.adicionar_quarto();
+                    this.adicionar_quarto(); // chama metodo para adicionar quarto
                     break;
                 
-                case "7":
+                case "7": // opcao para editar quarto
                     this.printar_logo();
                     console.log("\n\x1b[38;5;208m" + "                    ------------------------------ Lista de Quartos ------------------------------\n"+ "\x1b[0m");
-                    this.ver_lista_objetos(this.banco_dados.quartos,"quarto"); // mostra lista de quartos para o funcionario poder ver
-                    this.editar_quarto();
+                    this.ver_lista_objetos(this.banco_dados.quartos,"quarto"); // mostra lista de quartos para o funcionario poder editar com mais clareza
+                    this.editar_quarto(); // chama o metodo para editar quarto
                     fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // atualiza o quarto editado no banco de dados
                     break;
 
-                case "8":
+                case "8": // oppcao para excluir quarto
                     this.printar_logo();
                     console.log("\n\x1b[38;5;208m" + "                    ------------------------------ Lista de Quartos ------------------------------\n"+ "\x1b[0m");
-                    this.ver_lista_objetos(this.banco_dados.quartos,"quarto"); // mostra lista de quartos para o funcionario poder ver
-                    this.excluir_quarto();
+                    this.ver_lista_objetos(this.banco_dados.quartos,"quarto"); // mostra lista de quartos para o funcionario poder excluir com mais clareza
+                    this.excluir_quarto(); // chama o metodo para excluir quarto
                     fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // atualiza o quarto excluido no banco de dados
                     break;
 
-                case "9":
+                case "9": // opcao para modificar os dados
                     this.printar_logo();
-                    this.modificar_funcionario(funcionario);
+                    this.modificar_funcionario(funcionario); // chama metodo para modificar dados com funcionario como parametro
                     fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // atualiza o funcionario no banco de dados
                     break;
                 
-                case "10":
+                case "10": // opcao para visualizar avaliacoes
                     this.printar_logo();
                     console.log("\n\x1b[38;5;208m" + "                    --------------------------------- Avaliacoes ---------------------------------\n"+ "\x1b[0m");
-                    this.visualizar_avaliacoes();
-                    let manter_avaliacoes = requisicao.question("\n\x1b[38;5;208m" + "                    Digite a tecla enter para sair da visualizacao.");
+                    this.visualizar_avaliacoes(); // chama metodo para visualizar avaliacoes
+                    let manter_avaliacoes = requisicao.question("\n\x1b[38;5;208m" + "                    Digite a tecla enter para sair da visualizacao."); // bloco de codigo para o usuario se manter visualizando apenas as avaliacoes
                     if (manter_avaliacoes != "4848484848fgfgjfrjgj85t858t49jr48hr84rt4tni"){ // input praticamente impossivel do usuario digitar
                         this.printar_logo();
                         break;
                     }
                
-                case "11":
+                case "11": // opcao para sair da conta
                     this.printar_logo();
                     return console.log("\n\x1b[38;5;208m" + "                    Saiu da conta com exito.");//encerra o loop e sai da interface de usuario logado
                 
-                default:
+                default: // caso o usuario digite uma opcao invalida
                     this.printar_logo();
                     console.log("\n\x1b[38;5;208m" + "                    Por favor, digite uma opcao valida.");//ate o usuario inserir uma opcao valida o loop eh repetido
                     break;
@@ -443,80 +441,80 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             let escolha = requisicao.question("\n\x1b[38;5;208m" + "                    Selecione uma das opcoes acima: "); //mostra as opcoes e faz o usuario escolher uma dentre elas
             
             switch(escolha){
-                case "1":
+                case "1": // opcao para cliente ver seus dados
                     this.printar_logo();
                     console.log("\n\x1b[38;5;208m" + "                    Seus dados:\n");
-                    this.ver_dados(this.banco_dados.clientes, cliente);
-                    let manter_dados = requisicao.question("\n\x1b[38;5;208m" + "                    Digite a tecla enter para sair da visualizacao.");
+                    this.ver_dados(this.banco_dados.clientes, cliente); // chama metodo para visualizado dos dados
+                    let manter_dados = requisicao.question("\n\x1b[38;5;208m" + "                    Digite a tecla enter para sair da visualizacao."); // bloco de codigo para o usuario se manter visualizando apenas seus dados
                     if (manter_dados!= "4848484848fgfgjfrjgj85t858t49jr48hr84rt4tni"){ // input praticamente impossivel do usuario digitar
                         this.printar_logo();
                         break;
                     }
 
-                case "2":
+                case "2": // opcao para ver quartos
                     this.printar_logo();
                     console.log("\n\x1b[38;5;208m" + "                    ------------------------------ Lista de Quartos ------------------------------\n"+ "\x1b[0m");
                     this.ver_lista_objetos(this.banco_dados.quartos,"quarto"); // mostra lista de quartos para o cliente poder ver
-                    let manter_quartos = requisicao.question("\n\x1b[38;5;208m" + "                    Digite a tecla enter para sair da visualizacao.");
+                    let manter_quartos = requisicao.question("\n\x1b[38;5;208m" + "                    Digite a tecla enter para sair da visualizacao."); // bloco de codigo para o usuario se manter visualizando apenas os dados
                     if (manter_quartos != "4848484848fgfgjfrjgj85t858t49jr48hr84rt4tni"){ // input praticamente impossivel do usuario digitar
                         this.printar_logo();
                         break;
                     }
                 
-                case "3":
+                case "3": // opcao para fazer reserva
                     this.printar_logo();
                     console.log("\n\x1b[38;5;208m" + "                    Quartos Disponiveis:\n" + "\x1b[0m");
-                    this.ver_lista_objetos(this.banco_dados.quartos,"quarto"); // mostra os quartos ao cliente
+                    this.ver_lista_objetos(this.banco_dados.quartos,"quarto"); // mostra os quartos ao cliente para poder fazer a reserva com mais clareza
                     console.log("\n\x1b[38;5;208m" + "                    Fazer reserva:");
-                    this.fazer_reserva(cliente);
+                    this.fazer_reserva(cliente); // chama metodo pra fazer reserva
                     break;
 
-                case "4":
+                case "4": // opcao para cancelar reserva
                     this.printar_logo();
                     console.log("\n\x1b[38;5;208m" + "                    Suas reservas:\n");
-                    this.ver_minha_reserva(this.banco_dados.reservas, cliente); // mostra as reservas do usuario
+                    this.ver_minha_reserva(this.banco_dados.reservas, cliente); // mostra as reservas do usuario para poder cancelar com mais clareza
                     console.log("\n\x1b[38;5;208m" + "                    Cancelar reserva:\n");
-                    this.cancelar_reserva(cliente);
+                    this.cancelar_reserva(cliente); // chama metodo para cancelar reserva
                     break;
 
-                case "5":
+                case "5": // opcao para ver reserva
                     this.printar_logo();
                     console.log("\n\x1b[38;5;208m" + "                    Suas reservas:\n");
-                    this.ver_minha_reserva(this.banco_dados.reservas, cliente);
-                    let manter_visualizacao = requisicao.question("\n\x1b[38;5;208m" + "                    Digite a tecla enter para sair da visualizacao.");
+                    this.ver_minha_reserva(this.banco_dados.reservas, cliente); // chama metodo para mostrar as reservas do usuario
+                    let manter_visualizacao = requisicao.question("\n\x1b[38;5;208m" + "                    Digite a tecla enter para sair da visualizacao."); // bloco de codigo para o usuario se manter visualizando apenas os dados
                     if (manter_visualizacao!= "4848484848fgfgjfrjgj85t858t49jr48hr84rt4tni"){ // input praticamente impossivel do usuario digitar
                         this.printar_logo();
                         break;
                     }
                     break;
                 
-                case "6":
+                case "6": // opcao para alterar dados do usuario
                     this.printar_logo();
-                    this.modificar_cliente(cliente);
+                    this.modificar_cliente(cliente); // chama metodo para alterar os dados com cliente como parametro
                     fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // atualiza o cliente no banco de dados
                     break;
                 
-                case "7":
+                case "7": // opcao para avaliar estadia
                     this.printar_logo();
-                    this.avaliar_estadia(cliente);
+                    this.avaliar_estadia(cliente);// chama metodo para avaliar estadia
                     fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); //salva as avaliacoes no banco de dados
                     break;
                 
-                case "8":
+                case "8": // opcap para visualizar avaliacoes
                     this.printar_logo();
                     console.log("\n\x1b[38;5;208m" + "                    --------------------------------- Avaliacoes ---------------------------------\n"+ "\x1b[0m");
-                    this.visualizar_avaliacoes();
-                    let manter_avaliacoes = requisicao.question("\n\x1b[38;5;208m" + "                    Digite a tecla enter para sair da visualizacao.");
+                    this.visualizar_avaliacoes(); // chama metodo para visualizar avaliacoes
+                    let manter_avaliacoes = requisicao.question("\n\x1b[38;5;208m" + "                    Digite a tecla enter para sair da visualizacao."); // bloco de codigo para o usuario se manter visualizando apenas as avaliacoes
                     if (manter_avaliacoes != "4848484848fgfgjfrjgj85t858t49jr48hr84rt4tni"){ // input praticamente impossivel do usuario digitar
                         this.printar_logo();
                         break;
                     }
     
-                case "9":
+                case "9": // opcap para sair da conta e voltar ao menu principal
                     this.printar_logo();
                     return console.log("\n\x1b[38;5;208m" + "                    Saiu da conta com exito.");//encerra o loop e sai da interface de usuario logado
                 
-                default:
+                default: // caso o usuario digite uma opcao invalida
                     this.printar_logo();
                     console.log("\n\x1b[38;5;208m" + "                    Por favor, digite uma opcao valida.");//ate o usuario inserir uma opcao valida o loop eh repetido
                     break;
@@ -538,12 +536,12 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         }
     }
 
-    adicionar_quarto(){
+    adicionar_quarto(){ // metodo para adicionar quartos
         console.log("\n\x1b[38;5;208m" + "                    ------------------------------------ Adicionar Quarto -------------------------------------\n");
         console.log("\x1b[38;5;208m" + "                    Digite a tecla enter com a caixa de texto vazia caso nao queira mais adicionar o quarto\n");
-        while(true){
+        while(true){ // loop para garantir que o usuario digite a informacao corretamente
             var qtd_camas = requisicao.question("\x1b[38;5;208m" + "                    Digite a quantidade de camas do quarto: ");
-            if (qtd_camas == ""){ // caso o usario queria sair
+            if (qtd_camas == ""){ // caso o usario queira sair
                 this.printar_logo();
                 return console.log("\n\x1b[38;5;208m" + "                    Saindo...");
             }
@@ -553,9 +551,9 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 console.log("\x1b[38;5;208m" + "                    Quantidade invalida, por favor digite novamente.");
             }
         }
-        while(true){
+        while(true){ // loop para garantir que o usuario digite a informacao corretamente
             var preco_noite = requisicao.question("\x1b[38;5;208m" + "                    Digite o preco por noite (Ex: xxx.xx): ");
-            if (preco_noite == ""){ // caso o usario queria sair
+            if (preco_noite == ""){ // caso o usario queira sair
                 this.printar_logo();
                 return console.log("\n\x1b[38;5;208m" + "                    Saindo...");
             }
@@ -565,13 +563,13 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 console.log("\x1b[38;5;208m" + "                    Valor invalido, por favor digite novamente.");
             }
         }
-        while(true){
+        while(true){ // loop para garantir que o usuario digite a informacao corretamente
             var nome_quarto = requisicao.question("\x1b[38;5;208m" + "                    Digite o nome do quarto: ");
-            if (nome_quarto == ""){ // caso o usario queria sair
+            if (nome_quarto == ""){ // caso o usario queira sair
                 this.printar_logo();
                 return console.log("\n\x1b[38;5;208m" + "                    Saindo...");
             }
-            let existe = this.encontrar_quarto(nome_quarto)  ;
+            let existe = this.encontrar_quarto(nome_quarto); // chama metodo para identificar se o nome digitado ja existe no bando de dados
             if (existe == true){ // faz uma busca no banco de dados para ver se existe o nome de quarto digitado
                 console.log("\x1b[38;5;208m" + "                    Nome de quarto ja cadastrado, por favor tente outro.");
             } else {
@@ -579,29 +577,29 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             }
         }
         let descricao = requisicao.question("\x1b[38;5;208m" + "                    Digite a descricao do quarto: ")
-        if (descricao == ""){ // caso o usario queria sair
+        if (descricao == ""){ // caso o usario queira sair
             this.printar_logo();
             return console.log("\n\x1b[38;5;208m" + "                    Saindo...");
         }
-        this.banco_dados.quartos.push(new Quartos(qtd_camas, preco_noite, nome_quarto, descricao)); //armazena os dados do quarto em um banco dedados local (lista)
+        this.banco_dados.quartos.push(new Quartos(qtd_camas, preco_noite, nome_quarto, descricao)); //armazena os dados do quarto em um banco de dados
         fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // salva o novo quarto no banco de dados
         this,this.printar_logo();
         console.log("\n\x1b[38;5;208m" + "                    Quarto adicionado com sucesso!");
     }
 
     fazer_reserva(usuario_cliente){ //metodo para o usuario realizar uma reserva
-        if (this.banco_dados.quartos.length == 0){
+        if (this.banco_dados.quartos.length == 0){ // caso nao tenha quartos no banco de dados
             return console.log("\x1b[38;5;208m" + "                    Nao ha quartos disponiveis para fazer reserva.");
         }
         console.log("\n\x1b[38;5;208m" + "                    Digite a tecla enter com a caixa de texto vazia caso nao queira fazer a reserva.\n");
-        while(true){
+        while(true){ // loop para garantir que o usuario digite a informacao corretamente
             var data_checkin = requisicao.question("\x1b[38;5;208m" + "                    Digite a data de Check-in: ");
             if (data_checkin == ""){// caso o usuario queira sair
                 this.printar_logo();
                 return console.log("\n\x1b[38;5;208m" + "                    Saindo...");
             }
             var sistema_data_checkin = this.validar_data(data_checkin);// chama a funcao de validar a data com a data digitada como parametro
-            let data_posterior = this.data_posterior(sistema_data_checkin);
+            let data_posterior = this.data_posterior(sistema_data_checkin); // chama a funcao para analisar se a data eh depois de hoje
             if (data_posterior == false){
                 console.log("\n\x1b[38;5;208m" + "                    Data invalida (data anterior ao dia de hoje)\n");
             } else {
@@ -610,14 +608,15 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 }
             }
         }
-        while(true){
+        while(true){ // loop para garantir que o usuario digite a informacao corretamente
             var data_checkout = requisicao.question("\x1b[38;5;208m" + "                    Digite a data de Check-out: ");
             if (data_checkout == ""){ // caso o usuario queira sair
                 this.printar_logo();
                 return console.log("\n\x1b[38;5;208m" + "                    Saindo...");
             }
             var sistema_data_checkout = this.validar_data(data_checkout);// chama a funcao de validar a data com a data digitada como parametro
-            let data_posterior = this.data_posterior(sistema_data_checkout);
+            let data_posterior = this.data_posterior(sistema_data_checkout); // chama a funcao para analisar se a data eh depois de hoje
+            // variaveis criadas para analisar se a data de checkout digitada eh depois ou antes da data de checkin
             let comparar_data_checkout = new Date(sistema_data_checkout[3], sistema_data_checkout[2] - 1, sistema_data_checkout[1]); //variaveis para comparacao de datas
             let comparar_data_checkin = new Date(sistema_data_checkin[3], sistema_data_checkin[2] - 1, sistema_data_checkin[1])
             if (data_posterior == false){ //caso a data seja depois do dia de hoje
@@ -630,13 +629,13 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 }
             }
         }
-        while(true){
+        while(true){ // loop para garantir que o usuario digite a informacao corretamente
             var nome_quarto = requisicao.question("\x1b[38;5;208m" + "                    Digite o nome do quarto que deseja fazer a reserva: ");
             if (nome_quarto == ""){ // caso o usuario queira sair
                 this.printar_logo();
                 return console.log("\n\x1b[38;5;208m" + "                    Saindo...");
             }
-            let existe = this.encontrar_quarto(nome_quarto);
+            let existe = this.encontrar_quarto(nome_quarto); // chama metodo para ver se o nome digitado existe
             if (existe == false){
                 console.log("\n\x1b[38;5;208m" + "                    Nome do quarto digitado nao foi encontrado.\n")
             } else {
@@ -644,7 +643,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             }
         }
         let reserva_id = this.gerar_id(); // chama o metodo para gerar um id unico e aleatorio
-        this.banco_dados.reservas.push(new Reserva(reserva_id, usuario_cliente.cliente_id, "REALIZADA", data_checkin, data_checkout, nome_quarto)); //armazena os dados da reserva em um banco dedados local (lista)
+        this.banco_dados.reservas.push(new Reserva(reserva_id, usuario_cliente.cliente_id, "REALIZADA", data_checkin, data_checkout, nome_quarto)); //armazena os dados da reserva em um banco de dados
         fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // salva a nova reserva no banco de dados
         this.printar_logo();
         console.log("\n\x1b[38;5;208m" + "                    Reserva realizada com sucesso!");
@@ -656,7 +655,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             if (usuario_cliente.cliente_id == lista[i].cliente_id){// faz uma busca no banco de dados para encontrar o id do cliente
                 console.log("\x1b[38;5;208m" + "                    Reserva" + ` ${contagem+1}:\n`);
                 contagem++;
-                for (let chave in lista[i]) { // itera sobre os atributos do objeto usuário e imprime de maneira formatada
+                for (let chave in lista[i]) { // itera sobre os atributos do objeto cliente e imprime de maneira formatada
                     if (lista[i].hasOwnProperty(chave)) {
                         const valor = lista[i][chave];
                         const nome_bonito = this.formatar_atributo(chave); // chama a função formatar_atributo para formatar o nome do atributo
@@ -671,7 +670,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         }
     }
 
-    cancelar_reserva(usuario_cliente){
+    cancelar_reserva(usuario_cliente){ // metodo para o usuario cancelar a reserva
         console.log("\x1b[38;5;208m" + "                    Digite a tecla enter com a caixa de texto vazia para sair do cancelamento.\n");
         let escolha = requisicao.question("\x1b[38;5;208m" + "                    Digite o ID da reserva que deseja cancelar: ");
         let contagem = 0; // variavel de contagem para contabilizar as vezes que o id do cliente sera encontrado na lista de reservas
@@ -696,8 +695,8 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         }
     }
 
-    mudar_status(){
-        if (this.banco_dados.clientes.length == 0){
+    mudar_status(){ // metodo apra o usuario alterar o status de uma reserva
+        if (this.banco_dados.clientes.length == 0){ // caso nao tenha reservas
             return console.log("\n\x1b[38;5;208m" + "                    Nao ha reservas realizadas.");
         }
         console.log("\x1b[38;5;208m" + "                    Digite a tecla enter com a caixa de texto vazia para sair da alteracao.\n");
@@ -764,7 +763,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             let escolha = requisicao.question("\x1b[38;5;208m" + "                    Escolha a opcao que deseja alterar: ");
             switch(escolha){
 
-                case "1":
+                case "1": // opcao para alterar nome de usuario
                     console.log("\n\x1b[38;5;208m" + "                    Aperte a tecla enter com a caixa de texto vazia se nao quiser mais alterar.\n");
                     let novo_nome_usuario_func = this.perguntar_nome_usuario(); // chama o metodo para perguntar o nome de usuario
                     if (novo_nome_usuario_func == "sair"){ // caso o usuario aperte enter para sair
@@ -776,7 +775,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     console.log("\n\x1b[38;5;208m" + "                    Nome de usuario alterado com sucesso!");
                     break;
 
-                case "2":
+                case "2": // opcao para alterar cpf
                     console.log("\n\x1b[38;5;208m" + "                    Aperte a tecla enter com a caixa de texto vazia se nao quiser mais alterar.\n");
                     let novo_cpf_func = this.perguntar_cpf(); //chama o metodo para perguntar o cpf
                     if (novo_cpf_func == "sair"){ // caso o usuario aperte enter para sair
@@ -788,7 +787,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     console.log("\n\x1b[38;5;208m" + "                    CPF alterado com sucesso!");
                     break;
                 
-                case "3":
+                case "3": // opcao para alterar email
                     console.log("\n\x1b[38;5;208m" + "                    Aperte a tecla enter com a caixa de texto vazia se nao quiser mais alterar.\n");
                     let novo_email_func = this.perguntar_email(); // chama o metodo para perguntar o email
                     if (novo_email_func == "sair"){ // caso o usuario aperte enter para sair
@@ -800,7 +799,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     console.log("\n\x1b[38;5;208m" + "                    Email alterado com sucesso!");
                     break;
                 
-                case "4":
+                case "4": // opcao para alterar senha
                     console.log("\n\x1b[38;5;208m" + "                    Aperte a tecla enter com a caixa de texto vazia se nao quiser mais alterar.\n");
                     let nova_senha_func = this.perguntar_senha(); // chama o metodo para perguntar a senha
                     if (nova_senha_func == "sair"){ // caso o usuario aperte enter para sair
@@ -812,11 +811,11 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     console.log("\n\x1b[38;5;208m" + "                    Senha alterada com sucesso!");
                     break;
     
-                case "5":
+                case "5": // opcao para sair do menu de alteracao
                     this.printar_logo();
                     return console.log("\n\x1b[38;5;208m" + "                    Saiu do menu de alteracao com exito.\n");//encerra o loop e sai da interface
                     
-                default:
+                default: // caso o usuario digite uma opcao invalida
                     this.printar_logo();
                     console.log("\n\x1b[38;5;208m" + "                    Por favor, digite uma opcao valida.");//ate o usuario inserir uma opcao valida o loop eh repetido
                     break;
@@ -846,7 +845,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
 
             switch(escolha){
 
-                case "1":
+                case "1": // opcao para alterar nome
                     console.log("\n\x1b[38;5;208m" + "                    Aperte a tecla enter com a caixa de texto vazia se nao quiser mais alterar.\n");
                     let nome_cliente = this.perguntar_nome(); //chama o metodo para perguntar o nome
                     if (nome_cliente == "sair"){ // caso o usuario aperte enter para sair
@@ -858,7 +857,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     console.log("\n\x1b[38;5;208m" + "                    Nome alterado com sucesso!");
                     break;
                 
-                case "2":
+                case "2": // opcao para alterar data de nascimento
                     console.log("\n\x1b[38;5;208m" + "                    Aperte a tecla enter com a caixa de texto vazia se nao quiser mais alterar.\n");
                     let nova_data_nascimento = this.perguntar_data_nascimento(); //chama o metodo para perguntar a data de nascimento
                     if (nova_data_nascimento == "sair"){ // caso o usuario aperte enter para sair
@@ -870,7 +869,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     console.log("\n\x1b[38;5;208m" + "                    Data de nascimento alterada com sucesso!");
                     break;
                     
-                case "3":
+                case "3": // opcao para alterar cpf
                     console.log("\n\x1b[38;5;208m" + "                    Aperte a tecla enter com a caixa de texto vazia se nao quiser mais alterar.\n");
                     let novo_cpf_cliente = this.perguntar_cpf() //chama o metodo para perguntar o cpf
                     if (novo_cpf_cliente == "sair"){ // caso o usuario aperte enter para sair
@@ -882,7 +881,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     console.log("\n\x1b[38;5;208m" + "                    CPF alterado com sucesso!");
                     break;
                 
-                case "4":
+                case "4": // opcao para alterar email
                     console.log("\n\x1b[38;5;208m" + "                    Aperte a tecla enter com a caixa de texto vazia se nao quiser mais alterar.\n");
                     let novo_email_cliente = this.perguntar_email(); // chama o metodo para perguntar o email
                     if (novo_email_cliente == "sair"){ // caso o usuario aperte enter para sair
@@ -894,7 +893,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     console.log("\n\x1b[38;5;208m" + "                    Email alterado com sucesso!");
                     break;
 
-                case "5":
+                case "5": // opcao para alterar senha
                     console.log("\n\x1b[38;5;208m" + "                    Aperte a tecla enter com a caixa de texto vazia se nao quiser mais alterar.\n");
                     let nova_senha_cliente = this.perguntar_senha(); // chama o metodo para perguntar a senha
                     if (nova_senha_cliente == "sair"){ // caso o usuario aperte enter para sair
@@ -906,11 +905,11 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     console.log("\n\x1b[38;5;208m" + "                    Senha alterada com sucesso!");
                     break;
 
-                case "6":
+                case "6": // opcao para sair do menu de alteracao
                     this.printar_logo();
                     return console.log("\n\x1b[38;5;208m" + "                    Saiu do menu de alteracao com exito.\n");//encerra o loop e sai da interface
                     
-                default:
+                default: // caso o usuario digite uma opcao invalida
                     this.printar_logo();
                     console.log("\n\x1b[38;5;208m" + "                    Por favor, digite uma opcao valida.");//ate o usuario inserir uma opcao valida o loop eh repetido
                     break;
@@ -930,7 +929,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 console.log("\n\x1b[38;5;208m" + "                    Saindo...");
                 break;
             }
-            let resultado = this.encontrar_quarto(escolha);
+            let resultado = this.encontrar_quarto(escolha); // chama metodo de encontrar quarto para ver se ele existe
             let posicao_quarto;
             for (let i = 0; i < (this.banco_dados.quartos.length); i++){ //encontra a posicao do quarto na lista de quartos de acordo com o nome 
                 if (escolha == this.banco_dados.quartos[i].nome){
@@ -952,7 +951,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     );
                     let escolha = requisicao.question("\x1b[38;5;208m" + "                    Escolha a opcao que deseja editar: ");
                     switch(escolha){
-                        case "1":
+                        case "1": // opcao para alterar quantidade de camas
                             console.log("\n\x1b[38;5;208m" + "                    Aperte a tecla enter com a caixa de texto vazia se nao quiser mais alterar.\n");
                             while(true){
                                 let qtd_camas = requisicao.question("\x1b[38;5;208m" + "                    Digite a quantidade de camas do quarto: ");
@@ -971,7 +970,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                                 }
                             }
                             break;
-                        case "2":
+                        case "2": // opcao para alterar preco por noite
                             console.log("\n\x1b[38;5;208m" + "                    Aperte a tecla enter com a caixa de texto vazia se nao quiser mais alterar.\n");
                             while(true){
                                 let preco = requisicao.question("\x1b[38;5;208m" + "                    Digite o preco por noite (Ex: xxx.xx): ");
@@ -990,7 +989,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                                 }
                             }
                             break;
-                        case "3":
+                        case "3": // opcao para alterar nome do quarto
                             console.log("\n\x1b[38;5;208m" + "                    Aperte a tecla enter com a caixa de texto vazia se nao quiser mais alterar.\n");
                             while(true){
                                 let nome_quarto = requisicao.question("\x1b[38;5;208m" + "                    Digite o nome do quarto: ");
@@ -999,7 +998,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                                     console.log("\n\x1b[38;5;208m" + "                    Saindo...");
                                     break;
                                 }
-                                let existe = this.encontrar_quarto(nome_quarto);
+                                let existe = this.encontrar_quarto(nome_quarto); // chama a funcao de encontrar quarto para ver se o nome existe
                                 if (existe == true){ // faz uma busca no banco de dados para ver se existe o nome de quarto digitado
                                     console.log("\x1b[38;5;208m" + "                    Nome de quarto ja cadastrado, por favor tente outro.");
                                 } else { //caso nao encontre, o novo nome pode ser inserido
@@ -1010,7 +1009,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                                 }
                             }
                             break;
-                        case "4":
+                        case "4": // opcao para alterar descricao do quarto
                             console.log("\n\x1b[38;5;208m" + "                    Aperte a tecla enter com a caixa de texto vazia se nao quiser mais alterar.\n");
                             let descricao_quarto = requisicao.question("\x1b[38;5;208m" + "                    Digite a descricao do quarto: ")
                             if (descricao_quarto == ""){ // volta ao menu de edicao caso o usuario nao queira mais alterar
@@ -1023,23 +1022,23 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                             console.log("\n\x1b[38;5;208m" + "                    Descricao do quarto editada com sucesso!");
                             break;
 
-                        case "5":
+                        case "5": // opcao para sair do menu de alteracao
                             this.printar_logo();
                             return console.log("\n\x1b[38;5;208m" + "                    Saiu do menu de edicao com exito.\n");//encerra o loop e sai da interface
                     
-                        default:
+                        default: // caso osuaurio digite uma opcao invalida
                             this.printar_logo();
                             console.log("\n\x1b[38;5;208m" + "                    Por favor, digite uma opcao valida.");//ate o usuario inserir uma opcao valida o loop eh repetido
                             break;
                     }
                 }
-            } else {
+            } else { // se nao encontrar o quarto que deseja alterar printa que nao encontrou
                 return console.log("\n\x1b[38;5;208m" + "                    Nome de quarto não encontrado.");
             }
         }
     }
     
-    excluir_quarto(){
+    excluir_quarto(){ // metodo para exclusao de quartos
         if (this.banco_dados.quartos.length == 0){ // caso nao haja quarto imprime a informacao para o usuario
             this.printar_logo();
             return console.log("\n\x1b[38;5;208m" + "                    Nao ha quartos para serem excluidos.\n");
@@ -1051,7 +1050,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 this.printar_logo();
                 return console.log("\n\x1b[38;5;208m" + "                    Saindo...");
             }
-            let resultado = this.encontrar_quarto(escolha);
+            let resultado = this.encontrar_quarto(escolha); // chama metodo para encotrar quarto e ver se o nome digitado existe
             let posicao_quarto;
             for (let i = 0; i < (this.banco_dados.quartos.length); i++){ //encontra a posicao do quarto na lista de quartos de acordo com o nome 
                 if (escolha == this.banco_dados.quartos[i].nome){
@@ -1059,8 +1058,8 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     break;
                 }
             }
-            if (resultado == true){ // se o quarto for encontrado ele podera ser editado
-                this.banco_dados.quartos.splice(posicao_quarto,1);
+            if (resultado == true){ // se o quarto for encontrado ele podera ser excluido
+                this.banco_dados.quartos.splice(posicao_quarto,1); // exclui o quarto de acordo com a sua posicao
                 this.printar_logo();
                 return console.log("\n\x1b[38;5;208m" + "                    Quarto encontrado e removido com sucesso!");
             } else {
@@ -1145,7 +1144,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         return false
     }
 
-    gerar_id(){
+    gerar_id(){ // metodo para gerar aleatoriamente um id
         let id = Math.floor(100000000 + Math.random() * 900000000).toString(); // gera um id de 9 digitos
         let existe = true;
         while (existe) { // loop para garantir que o id nao seja repetido
@@ -1163,36 +1162,29 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         return id;
     }
 
-    ver_lista_objetos(lista, tipo) {
-        if (lista.length == 0){
+    ver_lista_objetos(lista, tipo) { // metodo para visualizacao de lista de objetos em tabela
+        if (lista.length == 0){ // condional para caso nao haja elementos na lista
             return console.log("\x1b[38;5;208m                    Nao ha dados.")
         }
-        const tabela = {};
-    
-        lista.forEach((item, index) => {
-            // Define o índice customizado (por exemplo: "Quarto 1", "Reserva 1", etc.)
+        let tabela = {};
+        lista.forEach((item, index) => {  // define o indice customizado ("Quarto 1", "Reserva 1", etc)
             tabela[`${tipo.charAt(0).toUpperCase() + tipo.slice(1)} ${index + 1}:`] = {};
     
-            // Adiciona os atributos formatados
-            for (const [atributo, valor] of Object.entries(item)) {
-                const atributoFormatado = this.formatar_atributo(atributo);
+            for (let [atributo, valor] of Object.entries(item)) { // itera sobre os atributos, os formata e define o valor de cada um no print
+                let atributo_formatado = this.formatar_atributo(atributo);
     
-                // Se for o atributo 'senha', substitui por * repetido de acordo com o tamanho da senha
-                if (atributo === "senha") {
-                    tabela[`${tipo.charAt(0).toUpperCase() + tipo.slice(1)} ${index + 1}:`][atributoFormatado] = "*".repeat(valor.length);
-                }
-                // Se for o atributo 'preco_noite', formata com 'R$'
-                else if (atributo === "preco_noite") {
-                    tabela[`${tipo.charAt(0).toUpperCase() + tipo.slice(1)} ${index + 1}:`][atributoFormatado] = `R$ ${valor}`;
-                }
-                // Para os outros atributos, mantém o valor original
-                else {
-                    tabela[`${tipo.charAt(0).toUpperCase() + tipo.slice(1)} ${index + 1}:`][atributoFormatado] = valor;
+                if (atributo === "senha") { //se for o atributo senha substitui por * repetido de acordo com o tamanho da senha
+                    tabela[`${tipo.charAt(0).toUpperCase() + tipo.slice(1)} ${index + 1}:`][atributo_formatado] = "*".repeat(valor.length);
+
+                } else if (atributo === "preco_noite"){ // se for o atributo preco_noite formata com 'R$'
+                    tabela[`${tipo.charAt(0).toUpperCase() + tipo.slice(1)} ${index + 1}:`][atributo_formatado] = `R$ ${valor}`;
+
+                } else {  // para os outros atributos  mantem o valor original
+                    tabela[`${tipo.charAt(0).toUpperCase() + tipo.slice(1)} ${index + 1}:`][atributo_formatado] = valor;
                 }
             }
         });
-    
-        console.table(tabela);
+        console.table(tabela); // printa a tabela
     }
 
     formatar_atributo(atributo) { // metodo para formatar os atributos e utilizar nos prints de dados
@@ -1434,7 +1426,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         }
         return true; // le esta linha caso a data digitada seja maior, ou seja, depois
     }
-    printar_logo(){
+    printar_logo(){ // metodo para printar a logo e limpar o terminal
         console.clear();
         console.log("\x1b[38;5;208m" + "----------------------------------------------------------------------------------------------------------------------------"+ "\x1b[0m");
         console.log("\x1b[38;5;208m" + `
