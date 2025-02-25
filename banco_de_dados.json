@@ -2,7 +2,7 @@
   "clientes": [
     {
       "cliente_id": "426212261",
-      "nome": "matheus",
+      "nome": "Matheus",
       "data_nascimento": "06/12/2002",
       "cpf": "111.111.111-55",
       "email": "a@a.com",
@@ -22,6 +22,14 @@
       "data_nascimento": "07/12/2000",
       "cpf": "111.111.112-11",
       "email": "g@g.com",
+      "senha": "111111"
+    },
+    {
+      "cliente_id": "105636368",
+      "nome": "matheus",
+      "data_nascimento": "06/12/2002",
+      "cpf": "111.111.111-99",
+      "email": "f@f.com",
       "senha": "111111"
     }
   ],
@@ -64,16 +72,16 @@
   ],
   "quartos": [
     {
-      "quantidade_camas": "11",
-      "preco_noite": "111",
-      "nome": "1",
-      "descricao": "1"
-    },
-    {
       "quantidade_camas": "5",
       "preco_noite": "1000",
       "nome": "quarto",
       "descricao": "normal"
+    },
+    {
+      "quantidade_camas": "8",
+      "preco_noite": "999",
+      "nome": "muito caro",
+      "descricao": "muito caro"
     }
   ],
   "reservas": [
@@ -83,14 +91,6 @@
       "status": "REALIZADA",
       "check_in": "10/10/2010",
       "check_out": "10/10/2011",
-      "nome_quarto": "oi"
-    },
-    {
-      "reserva_id": "663371718",
-      "cliente_id": "426212261",
-      "status": "REALIZADA",
-      "check_in": "10/10/1200",
-      "check_out": "10/10/1201",
       "nome_quarto": "oi"
     },
     {
@@ -148,6 +148,14 @@
       "check_in": "10/10/1003",
       "check_out": "10/10/1004",
       "nome_quarto": "1"
+    },
+    {
+      "reserva_id": "465155143",
+      "cliente_id": "426212261",
+      "status": "REALIZADA",
+      "check_in": "10/10/2002",
+      "check_out": "10/10/2003",
+      "nome_quarto": "quarto"
     }
   ],
   "avaliacoes": [
@@ -155,6 +163,11 @@
       "4",
       "oiii",
       "matheus"
+    ],
+    [
+      "5",
+      "muito bom",
+      "Matheus"
     ]
   ],
   "ids": [
@@ -174,6 +187,9 @@
     "498730010",
     "165696107",
     "710866081",
-    "183995673"
+    "183995673",
+    "105636368",
+    "465155143",
+    "243970143"
   ]
 }
