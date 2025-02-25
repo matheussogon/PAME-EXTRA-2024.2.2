@@ -332,12 +332,16 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     this.printar_logo();
                     console.log("\n\x1b[38;5;208m" + "                    Seus dados:\n");
                     this.ver_dados(this.banco_dados.funcionarios, funcionario);
-                    break;
-    
+                    let manter_dados = requisicao.question("\n\x1b[38;5;208m" + "                    Digite a tecla enter para sair da visualizacao.");
+                    if (manter_dados!= "4848484848fgfgjfrjgj85t858t49jr48hr84rt4tni"){ // input praticamente impossivel do usuario digitar
+                        this.printar_logo();
+                        break;
+                    }
+                
                 case "2":
                     this.printar_logo();
-                    console.log("\n\x1b[38;5;208m" + "                    ------------------------------ Lista de Reservas ------------------------------\n");
-                    this.ver_lista_objetos(this.banco_dados.reservas); // chama metodo para printa a lista
+                    console.log("\n\x1b[38;5;208m" + "                    ------------------------------ Lista de Reservas ------------------------------\n"+ "\x1b[0m");
+                    this.ver_lista_objetos(this.banco_dados.reservas,"reserva"); // chama metodo para printa a lista
                     let manter_rerservas = requisicao.question("\n\x1b[38;5;208m" + "                    Digite a tecla enter para sair da visualizacao.")
                     if (manter_rerservas != "4848484848fgfgjfrjgj85t858t49jr48hr84rt4tni"){ // input impossivel do usuario digitar
                         this.printar_logo();
@@ -346,8 +350,8 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     
                 case "3":
                     this.printar_logo();
-                    console.log("\n\x1b[38;5;208m" + "                    ------------------------------ Lista de Quartos ------------------------------\n");
-                    this.ver_lista_objetos(this.banco_dados.quartos); // chama metodo para printa a lista
+                    console.log("\n\x1b[38;5;208m" + "                    ------------------------------ Lista de Quartos ------------------------------\n"+ "\x1b[0m");
+                    this.ver_lista_objetos(this.banco_dados.quartos,"quarto"); // chama metodo para printa a lista
                     let manter_quartos = requisicao.question("\n\x1b[38;5;208m" + "                    Digite a tecla enter para sair da visualizacao.");
                     if (manter_quartos != "4848484848fgfgjfrjgj85t858t49jr48hr84rt4tni"){ // input impossivel do usuario digitar
                         this.printar_logo();
@@ -356,8 +360,8 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 
                 case "4":
                     this.printar_logo();
-                    console.log("\n\x1b[38;5;208m" + "                    ------------------------------ Lista de Clientes ------------------------------\n");
-                    this.ver_lista_objetos(this.banco_dados.clientes); // chama metodo para printa a lista
+                    console.log("\n\x1b[38;5;208m" + "                    ------------------------------ Lista de Clientes ------------------------------\n"+ "\x1b[0m");
+                    this.ver_lista_objetos(this.banco_dados.clientes,"cliente"); // chama metodo para printa a lista
                     let manter_clientes = requisicao.question("\n\x1b[38;5;208m" + "                    Digite a tecla enter para sair da visualizacao.");
                     if (manter_clientes != "4848484848fgfgjfrjgj85t858t49jr48hr84rt4tni"){ // input impossivel do usuario digitar
                         this.printar_logo();
@@ -366,8 +370,8 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
 
                 case "5":
                     this.printar_logo();
-                    console.log("\n\x1b[38;5;208m" + "                    ------------------------------ Lista de Reservas ------------------------------\n");
-                    this.ver_lista_objetos(this.banco_dados.reservas); // mostra a lista de reservas para o cliente poder ver
+                    console.log("\n\x1b[38;5;208m" + "                    ------------------------------ Lista de Reservas ------------------------------\n"+ "\x1b[0m");
+                    this.ver_lista_objetos(this.banco_dados.reservas,"reserva"); // mostra a lista de reservas para o cliente poder ver
                     console.log("\n\x1b[38;5;208m" + "                    Alterar status de reserva:\n");
                     this.mudar_status();
                     break;
@@ -379,16 +383,16 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 
                 case "7":
                     this.printar_logo();
-                    console.log("\n\x1b[38;5;208m" + "                    ------------------------------ Lista de Quartos ------------------------------\n");
-                    this.ver_lista_objetos(this.banco_dados.quartos); // mostra lista de quartos para o cliente poder ver
+                    console.log("\n\x1b[38;5;208m" + "                    ------------------------------ Lista de Quartos ------------------------------\n"+ "\x1b[0m");
+                    this.ver_lista_objetos(this.banco_dados.quartos,"quarto"); // mostra lista de quartos para o funcionario poder ver
                     this.editar_quarto();
                     fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // atualiza o quarto editado no banco de dados
                     break;
 
                 case "8":
                     this.printar_logo();
-                    console.log("\n\x1b[38;5;208m" + "                    ------------------------------ Lista de Quartos ------------------------------\n");
-                    this.ver_lista_objetos(this.banco_dados.quartos); // mostra lista de quartos para o cliente poder ver
+                    console.log("\n\x1b[38;5;208m" + "                    ------------------------------ Lista de Quartos ------------------------------\n"+ "\x1b[0m");
+                    this.ver_lista_objetos(this.banco_dados.quartos,"quarto"); // mostra lista de quartos para o funcionario poder ver
                     this.excluir_quarto();
                     fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // atualiza o quarto excluido no banco de dados
                     break;
@@ -401,6 +405,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 
                 case "10":
                     this.printar_logo();
+                    console.log("\n\x1b[38;5;208m" + "                    --------------------------------- Avaliacoes ---------------------------------\n"+ "\x1b[0m");
                     this.visualizar_avaliacoes();
                     let manter_avaliacoes = requisicao.question("\n\x1b[38;5;208m" + "                    Digite a tecla enter para sair da visualizacao.");
                     if (manter_avaliacoes != "4848484848fgfgjfrjgj85t858t49jr48hr84rt4tni"){ // input praticamente impossivel do usuario digitar
@@ -442,12 +447,16 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     this.printar_logo();
                     console.log("\n\x1b[38;5;208m" + "                    Seus dados:\n");
                     this.ver_dados(this.banco_dados.clientes, cliente);
-                    break;
-    
+                    let manter_dados = requisicao.question("\n\x1b[38;5;208m" + "                    Digite a tecla enter para sair da visualizacao.");
+                    if (manter_dados!= "4848484848fgfgjfrjgj85t858t49jr48hr84rt4tni"){ // input praticamente impossivel do usuario digitar
+                        this.printar_logo();
+                        break;
+                    }
+
                 case "2":
                     this.printar_logo();
-                    console.log("\n\x1b[38;5;208m" + "                    ------------------------------ Lista de Quartos ------------------------------\n");
-                    this.ver_lista_objetos(this.banco_dados.quartos); // mostra lista de quartos para o cliente poder ver
+                    console.log("\n\x1b[38;5;208m" + "                    ------------------------------ Lista de Quartos ------------------------------\n"+ "\x1b[0m");
+                    this.ver_lista_objetos(this.banco_dados.quartos,"quarto"); // mostra lista de quartos para o cliente poder ver
                     let manter_quartos = requisicao.question("\n\x1b[38;5;208m" + "                    Digite a tecla enter para sair da visualizacao.");
                     if (manter_quartos != "4848484848fgfgjfrjgj85t858t49jr48hr84rt4tni"){ // input praticamente impossivel do usuario digitar
                         this.printar_logo();
@@ -456,8 +465,8 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 
                 case "3":
                     this.printar_logo();
-                    console.log("\n\x1b[38;5;208m" + "                    Quartos Disponiveis:\n");
-                    this.ver_lista_objetos(this.banco_dados.quartos); // mostra os quartos ao cliente
+                    console.log("\n\x1b[38;5;208m" + "                    Quartos Disponiveis:\n" + "\x1b[0m");
+                    this.ver_lista_objetos(this.banco_dados.quartos,"quarto"); // mostra os quartos ao cliente
                     console.log("\n\x1b[38;5;208m" + "                    Fazer reserva:");
                     this.fazer_reserva(cliente);
                     break;
@@ -474,6 +483,11 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     this.printar_logo();
                     console.log("\n\x1b[38;5;208m" + "                    Suas reservas:\n");
                     this.ver_minha_reserva(this.banco_dados.reservas, cliente);
+                    let manter_visualizacao = requisicao.question("\n\x1b[38;5;208m" + "                    Digite a tecla enter para sair da visualizacao.");
+                    if (manter_visualizacao!= "4848484848fgfgjfrjgj85t858t49jr48hr84rt4tni"){ // input praticamente impossivel do usuario digitar
+                        this.printar_logo();
+                        break;
+                    }
                     break;
                 
                 case "6":
@@ -490,6 +504,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 
                 case "8":
                     this.printar_logo();
+                    console.log("\n\x1b[38;5;208m" + "                    --------------------------------- Avaliacoes ---------------------------------\n"+ "\x1b[0m");
                     this.visualizar_avaliacoes();
                     let manter_avaliacoes = requisicao.question("\n\x1b[38;5;208m" + "                    Digite a tecla enter para sair da visualizacao.");
                     if (manter_avaliacoes != "4848484848fgfgjfrjgj85t858t49jr48hr84rt4tni"){ // input praticamente impossivel do usuario digitar
@@ -1148,22 +1163,36 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         return id;
     }
 
-    ver_lista_objetos(lista) {
+    ver_lista_objetos(lista, tipo) {
         if (lista.length == 0){
-            return console.log("\n\x1b[38;5;208m" + "                    Nao ha dados para serem exibidos.\n")
+            return console.log("\x1b[38;5;208m                    Nao ha dados.")
         }
-        lista.forEach((objeto) => {
-            for (let atributo in objeto) {
-                let valor = objeto[atributo];
-
-            // Se o atributo for "senha", substitui pelo mesmo número de "*"
-                if (atributo.toLowerCase() === "senha") {
-                valor = "*".repeat(valor.length);
+        const tabela = {};
+    
+        lista.forEach((item, index) => {
+            // Define o índice customizado (por exemplo: "Quarto 1", "Reserva 1", etc.)
+            tabela[`${tipo.charAt(0).toUpperCase() + tipo.slice(1)} ${index + 1}:`] = {};
+    
+            // Adiciona os atributos formatados
+            for (const [atributo, valor] of Object.entries(item)) {
+                const atributoFormatado = this.formatar_atributo(atributo);
+    
+                // Se for o atributo 'senha', substitui por * repetido de acordo com o tamanho da senha
+                if (atributo === "senha") {
+                    tabela[`${tipo.charAt(0).toUpperCase() + tipo.slice(1)} ${index + 1}:`][atributoFormatado] = "*".repeat(valor.length);
                 }
-                console.log(`\x1b[38;5;208m                    ${this.formatar_atributo(atributo)}: ${valor}`);
+                // Se for o atributo 'preco_noite', formata com 'R$'
+                else if (atributo === "preco_noite") {
+                    tabela[`${tipo.charAt(0).toUpperCase() + tipo.slice(1)} ${index + 1}:`][atributoFormatado] = `R$ ${valor}`;
+                }
+                // Para os outros atributos, mantém o valor original
+                else {
+                    tabela[`${tipo.charAt(0).toUpperCase() + tipo.slice(1)} ${index + 1}:`][atributoFormatado] = valor;
+                }
             }
-            console.log("\n\x1b[38;5;208m" + "                    ---------------------------");
         });
+    
+        console.table(tabela);
     }
 
     formatar_atributo(atributo) { // metodo para formatar os atributos e utilizar nos prints de dados

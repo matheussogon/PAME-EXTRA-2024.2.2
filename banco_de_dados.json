@@ -7,6 +7,14 @@
       "cpf": "111.111.111-11",
       "email": "matheussogon17@gmail.com",
       "senha": "111111"
+    },
+    {
+      "cliente_id": "481832268",
+      "nome": "daniel",
+      "data_nascimento": "07/08/2006",
+      "cpf": "222.222.222-22",
+      "email": "b@b.com",
+      "senha": "111111"
     }
   ],
   "funcionarios": [
@@ -34,12 +42,28 @@
       "check_in": "10/10/2025",
       "check_out": "10/10/2025",
       "nome_quarto": "Suite"
+    },
+    {
+      "reserva_id": "476220462",
+      "cliente_id": "481832268",
+      "status": "REALIZADA",
+      "check_in": "10/10/2025",
+      "check_out": "10/10/2026",
+      "nome_quarto": "Suite"
     }
   ],
-  "avaliacoes": [],
+  "avaliacoes": [
+    [
+      "5",
+      "muito bom",
+      "daniel"
+    ]
+  ],
   "ids": [
     "384333725",
     "475233205",
-    "645106648"
+    "645106648",
+    "481832268",
+    "476220462"
   ]
 }
