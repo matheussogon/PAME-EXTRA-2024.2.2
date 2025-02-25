@@ -120,11 +120,34 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     break;
         
                 case "3":
-                    //ao sair do programa o banco de dados no arquivo json eh atualizado
-                    fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8');
-                    console.clear();
-                    return console.log("\n\x1b[38;5;208m" + "                   Saiu do programa com exito.\n");//encerra o loop e termina o sistema
-                    
+                    this.printar_logo();
+                    console.log("\x1b[38;5;208m" + `
+                                    ██████████████████████████████████████████████████
+                                    ██                                              ██                                                                  
+                                    ██                                              ██                                                                  
+                                    ██      ██████      ████      ██      ████      ██  
+                                    ██    ██          ██    ██    ██    ██    ██    ██    
+                                    ██      ████      ██▄▄▄▄██    ██    ██████      ██  
+                                    ██          ██    ██▀▀▀▀██    ██    ██    ██    ██        
+                                    ██    ██████      ██    ██    ██    ██    ██    ██           
+                                    ██                                              ██                                                                  
+                                    ██                                              ██                                                                 
+                                    ██████████████████████████████████████████████████
+                        ` + "\x1b[0m");
+                    while (true){
+                        let confirmacao_saida = requisicao.question("\n\x1b[38;5;208m" + "                                   Tem certeza que deseja sair do aplicativo? (sim/nao): " + "\x1b[0m");
+                        if (confirmacao_saida.toUpperCase() == "SIM"){
+                            fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8');
+                            console.clear();
+                            return console.log("\n\x1b[38;5;208m" + "Saiu do aplicativo com exito.\n" + "\x1b[0m");//encerra o loop e termina o sistema
+                        } else if (confirmacao_saida.toUpperCase() == "NAO"){
+                            this.printar_logo();
+                            break;
+                        } else {
+                            console.log("\n\x1b[38;5;208m" + "                                   Por favor, digite uma resposta valida.");//ate o usuario inserir uma opcao valida o loop eh repetido)
+                        }
+                    }  
+                    break;
                 default:
                     this.printar_logo();
                     console.log("\n\x1b[38;5;208m" + "                    Por favor, digite uma opcao valida.");//ate o usuario inserir uma opcao valida o loop eh repetido
