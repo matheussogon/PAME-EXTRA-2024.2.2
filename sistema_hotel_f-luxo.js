@@ -1,14 +1,14 @@
 console.log("\n\n\n\n"); // bloco de codigo para simular uma tela de carregamento
-const frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
-let index = 0;
+let frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+let posicao = 0;
 
-const loading = setInterval(() => {
-    process.stdout.write("\x1b[38;5;208m" + `\r                                                     ${frames[index]} Carregando` + "\x1b[0m" );
-    index = (index + 1) % frames.length;
+let carregando = setInterval(() => {
+    process.stdout.write("\x1b[38;5;208m" + `\r                                                     ${frames[posicao]} Carregando` + "\x1b[0m" );
+    posicao = (posicao + 1) % frames.length;
 }, 100);
 
 setTimeout(() => {
-    clearInterval(loading); // quando a tela de carregamento acaba, limpa o terminal, printa a logo e começa o sistema
+    clearInterval(carregando); // quando a tela de carregamento acaba, limpa o terminal, printa a logo e começa o sistema
     console.clear();
     console.log("\x1b[38;5;208m" + "----------------------------------------------------------------------------------------------------------------------------"+ "\x1b[0m");
     console.log("\x1b[38;5;208m" + `
