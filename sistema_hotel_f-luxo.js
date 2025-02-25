@@ -137,7 +137,14 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         this.printar_logo();
         let manter_login = true;
         while(manter_login){
-            console.log("\n\x1b[38;5;208m" + "                    ------------------------------------ Login ------------------------------------\n");
+            console.log("\x1b[38;5;208m" + `                                                                   
+                                     ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+                                    █                                █
+                                    █  █     ▄▀▀▀▄  ▄▀▀▀▀  █  █▄  █  █
+                                    █  █     █   █  █ ▀▀█  █  █ █ █  █
+                                    █  ▀▀▀▀   ▀▀▀    ▀▀▀▀  ▀  ▀  ▀   █ 
+                                    ▀▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▀
+` + "\x1b[0m");
             console.log("\x1b[38;5;208m" + "                    Digite a tecla enter com a caixa de texto vazia para sair do login.\n");
             let conta_usuario = requisicao.question("\x1b[38;5;208m" + "                    Digite seu nome de usuario ou e-mail de login: "); //pede ao usuario o email e senha
             if (conta_usuario == ""){ // caso o usuario nao queira se logar mais
@@ -186,7 +193,14 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
     fazer_cadastro(){//metodo para fazer o cadastro
         this.printar_logo();
         while(true){
-            console.log("\n\x1b[38;5;208m" + "                   -------------------------------- Cadastramento --------------------------------\n");
+            console.log("\x1b[38;5;208m" + `                                                                 
+                    ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+                   █                                                   █
+                   █  ▄▀▀▀  ▄▀▀▄  █▀▀▄  ▄▀▀▄  ▄▀▀▀  ▀▀█▀▀  ▄▀▀▄  ▄▀▀▄  █
+                   █  █     █▄▄█  █  █  █▄▄█   ▀▀▄    █    █▀▀▄  █  █  █
+                   █   ▀▀▀  ▀  ▀  ▀▀▀   ▀  ▀  ▀▀▀     ▀    ▀  ▀   ▀▀   █
+                   ▀▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▀
+       ` + "\x1b[0m"); 
             console.log("\x1b[38;5;208m" + "                   1 - Cadastrar como funcionario\n                   2 - Cadastrar como cliente\n                   3 - Voltar ao menu principal\n");
             let escolha = requisicao.question("\x1b[38;5;208m" + "                   Selecione uma das opcoes acima: "); //mostra as opcoes e faz o usuario escolher uma dentre elas
 
