@@ -121,25 +121,23 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         
                 case "3":
                     this.printar_logo();
-                    console.log("\x1b[38;5;208m" + `
-                                    ██████████████████████████████████████████████████
-                                    ██                                              ██                                                                  
-                                    ██                                              ██                                                                  
-                                    ██      ██████      ████      ██      ████      ██  
-                                    ██    ██          ██    ██    ██    ██    ██    ██    
-                                    ██      ████      ██▄▄▄▄██    ██    ██████      ██  
-                                    ██          ██    ██▀▀▀▀██    ██    ██    ██    ██        
-                                    ██    ██████      ██    ██    ██    ██    ██    ██           
-                                    ██                                              ██                                                                  
-                                    ██                                              ██                                                                 
-                                    ██████████████████████████████████████████████████
-                        ` + "\x1b[0m");
                     while (true){
                         let confirmacao_saida = requisicao.question("\n\x1b[38;5;208m" + "                                   Tem certeza que deseja sair do aplicativo? (sim/nao): " + "\x1b[0m");
                         if (confirmacao_saida.toUpperCase() == "SIM"){
                             fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8');
                             console.clear();
-                            return console.log("\n\x1b[38;5;208m" + "Saiu do aplicativo com exito.\n" + "\x1b[0m");//encerra o loop e termina o sistema
+                            console.log("\n\n\n\n"); // bloco de codigo para simular uma tela de encerramento
+                            let frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+                            let posicao = 0;
+                            let fechando = setInterval(() => {
+                                process.stdout.write("\x1b[38;5;208m" + `\r                                                     ${frames[posicao]} Encerrando Aplicativo` + "\x1b[0m" );
+                                posicao = (posicao + 1) % frames.length;
+                            }, 100);
+                            setTimeout(() => {
+                                clearInterval(fechando); // quando a tela de finalizacao acaba, limpa o terminal, printa a logo e começa o sistema
+                                console.clear();
+                            }, 2500);
+                            return;
                         } else if (confirmacao_saida.toUpperCase() == "NAO"){
                             this.printar_logo();
                             break;
