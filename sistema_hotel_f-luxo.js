@@ -134,7 +134,7 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                                 posicao = (posicao + 1) % frames.length;
                             }, 100);
                             setTimeout(() => {
-                                clearInterval(fechando); // quando a tela de finalizacao acaba, limpa o terminal, printa a logo e começa o sistema
+                                clearInterval(fechando); // quando a tela de finalizacao acaba, limpa o terminal e finaliza o sistema
                                 console.clear();
                             }, 2500);
                             return;
