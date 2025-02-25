@@ -546,15 +546,18 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         console.log("\n\x1b[38;5;208m" + "                    Digite a tecla enter com a caixa de texto vazia caso nao queira fazer a reserva.\n");
         while(true){
             var data_checkin = requisicao.question("\x1b[38;5;208m" + "                    Digite a data de Check-in: ");
-            if (data_checkin == ""){
+            if (data_checkin == ""){// caso o usuario queira sair
                 this.printar_logo();
                 return console.log("\n\x1b[38;5;208m" + "                    Saindo...");
             }
-            let sistema_data = this.validar_data(data_checkin);// chama a funcao de validar a data com a data digitada como parametro
-            if (sistema_data[0] == true){ // caso o usuario queira sair
-                break //caso a data seja valida o loop se encerra
-            } else{
-                console.log("\x1b[38;5;208m" + "                    Data invalida, por favor digite novamente.");
+            var sistema_data_checkin = this.validar_data(data_checkin);// chama a funcao de validar a data com a data digitada como parametro
+            let data_posterior = this.data_posterior(sistema_data_checkin);
+            if (data_posterior == false){
+                console.log("\n\x1b[38;5;208m" + "                    Data invalida (data anterior ao dia de hoje)\n");
+            } else {
+                if (sistema_data_checkin[0] == true){ 
+                    break; //caso a data seja valida o loop se encerra
+                }
             }
         }
         while(true){
@@ -563,9 +566,18 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 this.printar_logo();
                 return console.log("\n\x1b[38;5;208m" + "                    Saindo...");
             }
-            let sistema_data = this.validar_data(data_checkout); // chama a funcao de validar a data com a data digitada como parametro
-            if (sistema_data[0] == true){
-                break; //caso a data seja valida o loop se encerra
+            var sistema_data_checkout = this.validar_data(data_checkout);// chama a funcao de validar a data com a data digitada como parametro
+            let data_posterior = this.data_posterior(sistema_data_checkout);
+            let comparar_data_checkout = new Date(sistema_data_checkout[3], sistema_data_checkout[2] - 1, sistema_data_checkout[1]); //variaveis para comparacao de datas
+            let comparar_data_checkin = new Date(sistema_data_checkin[3], sistema_data_checkin[2] - 1, sistema_data_checkin[1])
+            if (data_posterior == false){ //caso a data seja depois do dia de hoje
+                console.log("\n\x1b[38;5;208m" + "                    Data invalida (data anterior ao dia de hoje).\n");
+            } else if ( comparar_data_checkin >= comparar_data_checkout){ // caso a data do checkout seja antes da data do checkin
+                console.log("\n\x1b[38;5;208m" + "                    Data invalida (data anterior ou igual ao check-in).\n");
+            } else {
+                if (sistema_data_checkout[0] == true){ 
+                    break; //caso a data seja valida o loop se encerra
+                }
             }
         }
         while(true){
@@ -1200,9 +1212,9 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 console.log("\x1b[38;5;208m" + "                    Data de nascimento invalida (nasceu antes de 1900).");
                 return false;
             }
-            let data_nascimento = new Date(sistema_data[3], sistema_data[2] - 1, sistema_data[1]); // para o caso do usuario digitar uma data posterior ao dia de hoje
-            if (data_nascimento > hoje) {
-                console.log("\x1b[38;5;208m" + "                    Data de nascimento invalida, por favor digite novamente.");
+            let data_nascimento = this.data_posterior(sistema_data);
+            if (data_nascimento == true){
+                console.log("\x1b[38;5;208m" + "                    Data de nascimento invalida (data posterior ao dia de hoje).");
                 return false;
             }
             let idade = ano_atual - sistema_data[3];
@@ -1349,6 +1361,14 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             console.log("\n\x1b[38;5;208m" + "                    Saindo...");
             return true
         } 
+    }
+    data_posterior(sistema_data){ // metodo para saber se a data digitada pelo usuario eh depois de hoje ou antes
+        let hoje = new Date();
+        let data = new Date(sistema_data[3], sistema_data[2] - 1, sistema_data[1]); // para o caso do usuario digitar uma data posterior ao dia de hoje
+        if (data < hoje) {
+            return false; // se a data digitada for menor, entao nao eh depois
+        }
+        return true; // le esta linha caso a data digitada seja maior, ou seja, depois
     }
     printar_logo(){
         console.clear();

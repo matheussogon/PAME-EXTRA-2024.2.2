@@ -1,0 +1,45 @@
+{
+  "clientes": [
+    {
+      "cliente_id": "384333725",
+      "nome": "matheus",
+      "data_nascimento": "06/12/2002",
+      "cpf": "111.111.111-11",
+      "email": "matheussogon17@gmail.com",
+      "senha": "111111"
+    }
+  ],
+  "funcionarios": [
+    {
+      "func_id": "475233205",
+      "nome_usuario": "matheus",
+      "cpf": "111.111.111-12",
+      "email": "matheussogon18@gmail.com",
+      "senha": "111111"
+    }
+  ],
+  "quartos": [
+    {
+      "quantidade_camas": "3",
+      "preco_noite": "340",
+      "nome": "Suite",
+      "descricao": "Vista para o mar"
+    }
+  ],
+  "reservas": [
+    {
+      "reserva_id": "645106648",
+      "cliente_id": "384333725",
+      "status": "REALIZADA",
+      "check_in": "10/10/2025",
+      "check_out": "10/10/2025",
+      "nome_quarto": "Suite"
+    }
+  ],
+  "avaliacoes": [],
+  "ids": [
+    "384333725",
+    "475233205",
+    "645106648"
+  ]
+}
