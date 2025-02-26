@@ -632,48 +632,28 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
     adicionar_quarto(){ // metodo para adicionar quartos
         console.log("\n\x1b[38;5;208m" + "                    ------------------------------------ Adicionar Quarto -------------------------------------\n");
         console.log("\x1b[38;5;208m" + "                    Digite a tecla enter com a caixa de texto vazia caso nao queira mais adicionar o quarto\n");
-        while(true){ // loop para garantir que o usuario digite a informacao corretamente
-            var qtd_camas = requisicao.question("\x1b[38;5;208m" + "                    Digite a quantidade de camas do quarto: ");
-            if (qtd_camas == ""){ // caso o usario queira sair
-                this.printar_logo();
-                return console.log("\n\x1b[38;5;208m" + "                    Saindo...");
-            }
-            if (this.validar_quantidade_inteira(qtd_camas) == true){ // chama a funcao de validar a quantidadede camas com a digitada como parametro
-                break //caso a qtd de camas seja valida o loop se encerra
-            } else {
-                console.log("\x1b[38;5;208m" + "                    Quantidade invalida, por favor digite novamente.");
-            }
-        }
-        while(true){ // loop para garantir que o usuario digite a informacao corretamente
-            var preco_noite = requisicao.question("\x1b[38;5;208m" + "                    Digite o preco por noite (Ex: xxx.xx): ");
-            if (preco_noite == ""){ // caso o usario queira sair
-                this.printar_logo();
-                return console.log("\n\x1b[38;5;208m" + "                    Saindo...");
-            }
-            if (this.validar_preco(preco_noite) == true){ // chama a funcao de validar o preco com o digitado como parametro
-                break //caso a senha seja valida o loop se encerra
-            } else {
-                console.log("\x1b[38;5;208m" + "                    Valor invalido, por favor digite novamente.");
-            }
-        }
-        while(true){ // loop para garantir que o usuario digite a informacao corretamente
-            var nome_quarto = requisicao.question("\x1b[38;5;208m" + "                    Digite o nome do quarto: ");
-            if (nome_quarto == ""){ // caso o usario queira sair
-                this.printar_logo();
-                return console.log("\n\x1b[38;5;208m" + "                    Saindo...");
-            }
-            let existe = this.encontrar_quarto(nome_quarto); // chama metodo para identificar se o nome digitado ja existe no bando de dados
-            if (existe == true){ // faz uma busca no banco de dados para ver se existe o nome de quarto digitado
-                console.log("\x1b[38;5;208m" + "                    Nome de quarto ja cadastrado, por favor tente outro.");
-            } else {
-                break;
-            }
-        }
-        let descricao = requisicao.question("\x1b[38;5;208m" + "                    Digite a descricao do quarto: ")
-        if (descricao == ""){ // caso o usario queira sair
+        
+        let qtd_camas = this.perguntar_qtd_camas(); // chama metodo para perguntar a qtd de cama
+        if (qtd_camas == "sair"){
             this.printar_logo();
             return console.log("\n\x1b[38;5;208m" + "                    Saindo...");
         }
+        let preco_noite = this.perguntar_preco(); // chama metodo para perguntar o preco
+        if (preco_noite == "sair"){
+            this.printar_logo();
+            return console.log("\n\x1b[38;5;208m" + "                    Saindo...");
+        }
+        let nome_quarto = this.perguntar_nome_quarto(); // chama metodo para perguntar o nome do quarto
+        if (nome_quarto == "sair"){
+            this.printar_logo();
+            return console.log("\n\x1b[38;5;208m" + "                    Saindo...");
+        }
+        let descricao = this.perguntar_descricao(); // chama metodo para perguntar descricao
+        if (descricao == "sair"){
+            this.printar_logo();
+            return console.log("\n\x1b[38;5;208m" + "                    Saindo...");
+        }
+        
         this.banco_dados.quartos.push(new Quartos(qtd_camas, preco_noite, nome_quarto, descricao)); //armazena os dados do quarto em um banco de dados
         fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // salva o novo quarto no banco de dados
         this,this.printar_logo();
@@ -685,58 +665,20 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             return console.log("\x1b[38;5;208m" + "                    Nao ha quartos disponiveis para fazer reserva.");
         }
         console.log("\n\x1b[38;5;208m" + "                    Digite a tecla enter com a caixa de texto vazia caso nao queira fazer a reserva.\n");
-        while(true){ // loop para garantir que o usuario digite a informacao corretamente
-            var data_checkin = requisicao.question("\x1b[38;5;208m" + "                    Digite a data de Check-in: ");
-            if (data_checkin == ""){// caso o usuario queira sair
-                this.printar_logo();
-                return console.log("\n\x1b[38;5;208m" + "                    Saindo...");
-            }
-            var sistema_data_checkin = this.validar_data(data_checkin);// chama a funcao de validar a data com a data digitada como parametro
-            let data_posterior = this.data_posterior(sistema_data_checkin); // chama a funcao para analisar se a data eh depois de hoje
-            if (data_posterior == false){
-                console.log("\n\x1b[38;5;208m" + "                    Data invalida (data anterior ao dia de hoje)\n");
-            } else {
-                if (sistema_data_checkin[0] == true){ 
-                    break; //caso a data seja valida o loop se encerra
-                }
-            }
+        
+        let datas = this.perguntar_checkout_e_checkin();
+        if (datas == "saiu"){
+            this.printar_logo();
+            return console.log("\n\x1b[38;5;208m" + "                    Saindo...");
         }
-        while(true){ // loop para garantir que o usuario digite a informacao corretamente
-            var data_checkout = requisicao.question("\x1b[38;5;208m" + "                    Digite a data de Check-out: ");
-            if (data_checkout == ""){ // caso o usuario queira sair
-                this.printar_logo();
-                return console.log("\n\x1b[38;5;208m" + "                    Saindo...");
-            }
-            var sistema_data_checkout = this.validar_data(data_checkout);// chama a funcao de validar a data com a data digitada como parametro
-            let data_posterior = this.data_posterior(sistema_data_checkout); // chama a funcao para analisar se a data eh depois de hoje
-            // variaveis criadas para analisar se a data de checkout digitada eh depois ou antes da data de checkin
-            let comparar_data_checkout = new Date(sistema_data_checkout[3], sistema_data_checkout[2] - 1, sistema_data_checkout[1]); //variaveis para comparacao de datas
-            let comparar_data_checkin = new Date(sistema_data_checkin[3], sistema_data_checkin[2] - 1, sistema_data_checkin[1])
-            if (data_posterior == false){ //caso a data seja depois do dia de hoje
-                console.log("\n\x1b[38;5;208m" + "                    Data invalida (data anterior ao dia de hoje).\n");
-            } else if ( comparar_data_checkin >= comparar_data_checkout){ // caso a data do checkout seja antes da data do checkin
-                console.log("\n\x1b[38;5;208m" + "                    Data invalida (data anterior ou igual ao check-in).\n");
-            } else {
-                if (sistema_data_checkout[0] == true){ 
-                    break; //caso a data seja valida o loop se encerra
-                }
-            }
-        }
-        while(true){ // loop para garantir que o usuario digite a informacao corretamente
-            var nome_quarto = requisicao.question("\x1b[38;5;208m" + "                    Digite o nome do quarto que deseja fazer a reserva: ");
-            if (nome_quarto == ""){ // caso o usuario queira sair
-                this.printar_logo();
-                return console.log("\n\x1b[38;5;208m" + "                    Saindo...");
-            }
-            let existe = this.encontrar_quarto(nome_quarto); // chama metodo para ver se o nome digitado existe
-            if (existe == false){
-                console.log("\n\x1b[38;5;208m" + "                    Nome do quarto digitado nao foi encontrado.\n")
-            } else {
-                break;
-            }
+        let nome_quarto = this.perguntar_nome_quarto_reserva();
+        if (nome_quarto == "sair"){
+            this.printar_logo();
+            return console.log("\n\x1b[38;5;208m" + "                    Saindo...");
         }
         let reserva_id = this.gerar_id(); // chama o metodo para gerar um id unico e aleatorio
-        this.banco_dados.reservas.push(new Reserva(reserva_id, usuario_cliente.cliente_id, "REALIZADA", data_checkin, data_checkout, nome_quarto)); //armazena os dados da reserva em um banco de dados
+        
+        this.banco_dados.reservas.push(new Reserva(reserva_id, usuario_cliente.cliente_id, "REALIZADA", datas[0], datas[1], nome_quarto)); //armazena os dados da reserva em um banco de dados
         fs.writeFileSync(arquivo_banco, JSON.stringify(this.banco_dados, null, 2), 'utf8'); // salva a nova reserva no banco de dados
         this.printar_logo();
         console.log("\n\x1b[38;5;208m" + "                    Reserva realizada com sucesso!");
@@ -1023,14 +965,8 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 break;
             }
             let resultado = this.encontrar_quarto(escolha); // chama metodo de encontrar quarto para ver se ele existe
-            let posicao_quarto;
-            for (let i = 0; i < (this.banco_dados.quartos.length); i++){ //encontra a posicao do quarto na lista de quartos de acordo com o nome 
-                if (escolha == this.banco_dados.quartos[i].nome){
-                    posicao_quarto = i;
-                    break;
-                }
-            }
             if (resultado == true){ // se o quarto for encontrado ele podera ser editado
+                let posicao_quarto = this.encontrar_pos_quarto(escolha); // chama metodo para encontrar a posicao do quarto
                 this.printar_logo();
                 console.log("\n\x1b[38;5;208m" + "                    Quarto encontrado!");
                 while (true){
@@ -1044,71 +980,49 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                     );
                     let escolha = requisicao.question("\x1b[38;5;208m" + "                    Escolha a opcao que deseja editar: ");
                     switch(escolha){
+
                         case "1": // opcao para alterar quantidade de camas
                             console.log("\n\x1b[38;5;208m" + "                    Aperte a tecla enter com a caixa de texto vazia se nao quiser mais alterar.\n");
-                            while(true){
-                                let qtd_camas = requisicao.question("\x1b[38;5;208m" + "                    Digite a quantidade de camas do quarto: ");
-                                if (qtd_camas == ""){ // volta ao menu de edicao caso o usuario nao queira mais alterar
-                                    this.printar_logo();
-                                    console.log("\n\x1b[38;5;208m" + "                    Saindo...");
-                                    break;
-                                }
-                                if (this.validar_quantidade_inteira(qtd_camas) == true){ // chama a funcao de validar a quantidadede camas com a digitada como parametro
-                                    this.banco_dados.quartos[posicao_quarto].quantidade_camas = qtd_camas;
-                                    this.printar_logo();
-                                    console.log("\n\x1b[38;5;208m" + "                    Quantidade de camas editada com sucesso!");
-                                    break //caso a qtd de camas seja valida o loop se encerra a quantidade eh alterada
-                                } else {
-                                    console.log("\x1b[38;5;208m" + "                    Quantidade invalida, por favor digite novamente.");
-                                }
+                            let qtd_camas = this.perguntar_qtd_camas(); // chama metodo para perguntar a qtd de camas
+                            if (qtd_camas == "sair"){
+                                this.printar_logo();
+                                return console.log("\n\x1b[38;5;208m" + "                    Saindo...");
                             }
+                            this.banco_dados.quartos[posicao_quarto].quantidade_camas = qtd_camas; // atualiza a qtd de camas no banco de dados
+                            this.printar_logo();
+                            console.log("\n\x1b[38;5;208m" + "                    Quantidade de camas editada com sucesso!");
                             break;
+
                         case "2": // opcao para alterar preco por noite
                             console.log("\n\x1b[38;5;208m" + "                    Aperte a tecla enter com a caixa de texto vazia se nao quiser mais alterar.\n");
-                            while(true){
-                                let preco = requisicao.question("\x1b[38;5;208m" + "                    Digite o preco por noite (Ex: xxx.xx): ");
-                                if (preco == ""){ // volta ao menu de edicao caso o usuario nao queira mais alterar
-                                    this.printar_logo();
-                                    console.log("\n\x1b[38;5;208m" + "                    Saindo...");
-                                    break;
-                                }
-                                if (this.validar_preco(preco) == true){ // chama a funcao de validar o preco com o digitado como parametro
-                                    this.banco_dados.quartos[posicao_quarto].preco_noite = preco;
-                                    this.printar_logo();
-                                    console.log("\n\x1b[38;5;208m" + "                    Preco por noite editado com sucesso!");
-                                    break; //caso a senha seja valida o loop se encerra e o preco eh alterado
-                                } else {
-                                    console.log("\x1b[38;5;208m" + "                    Valor invalido, por favor digite novamente.");
-                                }
+                            let preco = this.perguntar_preco(); // chama metodo para perguntar o preco
+                            if (preco == "sair"){
+                                this.printar_logo();
+                                return console.log("\n\x1b[38;5;208m" + "                    Saindo...");
                             }
+                            this.banco_dados.quartos[posicao_quarto].preco_noite = preco; // atualiza o preco no banco de dados
+                            this.printar_logo();
+                            console.log("\n\x1b[38;5;208m" + "                    Preco por noite editado com sucesso!");
                             break;
+
                         case "3": // opcao para alterar nome do quarto
                             console.log("\n\x1b[38;5;208m" + "                    Aperte a tecla enter com a caixa de texto vazia se nao quiser mais alterar.\n");
-                            while(true){
-                                let nome_quarto = requisicao.question("\x1b[38;5;208m" + "                    Digite o nome do quarto: ");
-                                if (nome_quarto == ""){ // volta ao menu de edicao caso o usuario nao queira mais alterar
-                                    this.printar_logo();
-                                    console.log("\n\x1b[38;5;208m" + "                    Saindo...");
-                                    break;
-                                }
-                                let existe = this.encontrar_quarto(nome_quarto); // chama a funcao de encontrar quarto para ver se o nome existe
-                                if (existe == true){ // faz uma busca no banco de dados para ver se existe o nome de quarto digitado
-                                    console.log("\x1b[38;5;208m" + "                    Nome de quarto ja cadastrado, por favor tente outro.");
-                                } else { //caso nao encontre, o novo nome pode ser inserido
-                                    this.banco_dados.quartos[posicao_quarto].nome = nome_quarto;
-                                    this.printar_logo();
-                                    console.log("\n\x1b[38;5;208m" + "                    Nome do quarto editado com sucesso!");
-                                    break;
-                                }
+                            let nome_quarto = this.perguntar_nome_quarto(); // chama metodo para perguntar o nome
+                            if (nome_quarto == "sair"){
+                                this.printar_logo();
+                                return console.log("\n\x1b[38;5;208m" + "                    Saindo...");
                             }
+                            this.banco_dados.quartos[posicao_quarto].nome = nome_quarto; // atualiza o nome no banco de dados
+                            this.printar_logo();
+                            console.log("\n\x1b[38;5;208m" + "                    Nome do quarto editado com sucesso!");
                             break;
+
                         case "4": // opcao para alterar descricao do quarto
                             console.log("\n\x1b[38;5;208m" + "                    Aperte a tecla enter com a caixa de texto vazia se nao quiser mais alterar.\n");
-                            let descricao_quarto = requisicao.question("\x1b[38;5;208m" + "                    Digite a descricao do quarto: ")
-                            if (descricao_quarto == ""){ // volta ao menu de edicao caso o usuario nao queira mais alterar
+                            let descricao_quarto = this.perguntar_descricao(); // chama metodo para perguntar descricao
+                            if (descricao_quarto == "sair"){
                                 this.printar_logo();
-                                console.log("\n\x1b[38;5;208m" + "                    Saindo...");
-                                break;
+                                return console.log("\n\x1b[38;5;208m" + "                    Saindo...");
                             }
                             this.banco_dados.quartos[posicao_quarto].descricao = descricao_quarto;
                             this.printar_logo();
@@ -1143,15 +1057,9 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 this.printar_logo();
                 return console.log("\n\x1b[38;5;208m" + "                    Saindo...");
             }
-            let resultado = this.encontrar_quarto(escolha); // chama metodo para encotrar quarto e ver se o nome digitado existe
-            let posicao_quarto;
-            for (let i = 0; i < (this.banco_dados.quartos.length); i++){ //encontra a posicao do quarto na lista de quartos de acordo com o nome 
-                if (escolha == this.banco_dados.quartos[i].nome){
-                    posicao_quarto = i;
-                    break;
-                }
-            }
+        
             if (resultado == true){ // se o quarto for encontrado ele podera ser excluido
+                let posicao_quarto = this.encontrar_pos_quarto(escolha); // chama metodo para encontrar a posicao do quarto
                 this.banco_dados.quartos.splice(posicao_quarto,1); // exclui o quarto de acordo com a sua posicao
                 this.printar_logo();
                 return console.log("\n\x1b[38;5;208m" + "                    Quarto encontrado e removido com sucesso!");
@@ -1505,6 +1413,125 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             }
         }
     }
+    perguntar_qtd_camas(){ // metodo para perguntar quantidade de camas
+        while(true){ // loop para garantir que o usuario digite a informacao corretamente
+            let qtd_camas = requisicao.question("\x1b[38;5;208m" + "                    Digite a quantidade de camas do quarto: ");
+            if (this.sair(qtd_camas) == true){ // caso o usuario queira sair
+                return "sair"
+            }
+            if (this.validar_quantidade_inteira(qtd_camas) == true){ // chama a funcao de validar a quantidadede camas com a digitada como parametro
+                return qtd_camas; //caso a qtd de camas seja valida o loop se encerra
+            } else {
+                console.log("\x1b[38;5;208m" + "                    Quantidade invalida, por favor digite novamente.");
+            }
+        }
+    }
+
+    perguntar_preco(){
+        while(true){ // loop para garantir que o usuario digite a informacao corretamente
+            let preco_noite = requisicao.question("\x1b[38;5;208m" + "                    Digite o preco por noite (Ex: xxx.xx): ");
+            if (this.sair(preco_noite) == true){ // caso o usuario queira sair
+                return "sair"
+            }
+            if (this.validar_preco(preco_noite) == true){ // chama a funcao de validar o preco com o digitado como parametro
+                return preco_noite; //caso a senha seja valida o loop se encerra
+            } else {
+                console.log("\x1b[38;5;208m" + "                    Valor invalido, por favor digite novamente.");
+            }
+        }
+    }
+    
+    perguntar_nome_quarto(){
+        while(true){ // loop para garantir que o usuario digite a informacao corretamente
+            let nome_quarto = requisicao.question("\x1b[38;5;208m" + "                    Digite o nome do quarto: ");
+            if (this.sair(nome_quarto) == true){ // caso o usuario queira sair
+                return "sair"
+            }
+            let existe = this.encontrar_quarto(nome_quarto); // chama metodo para identificar se o nome digitado ja existe no bando de dados
+            if (existe == true){ // faz uma busca no banco de dados para ver se existe o nome de quarto digitado
+                console.log("\x1b[38;5;208m" + "                    Nome de quarto ja cadastrado, por favor tente outro.");
+            } else {
+                return nome_quarto;
+            }
+        }  
+    }
+
+    perguntar_nome_quarto_reserva(){ // metodo para perguntar nome do quarto enquanto estiver fazendo reserva
+        while(true){ // loop para garantir que o usuario digite a informacao corretamente
+            let nome_quarto = requisicao.question("\x1b[38;5;208m" + "                    Digite o nome do quarto: ");
+            if (this.sair(nome_quarto) == true){ // caso o usuario queira sair
+                return "sair"
+            }
+            let existe = this.encontrar_quarto(nome_quarto); // chama metodo para identificar se o nome digitado ja existe no bando de dados
+            if (existe == true){ // faz uma busca no banco de dados para ver se existe o nome de quarto digitado
+                return nome_quarto;
+            } else {
+                console.log("\x1b[38;5;208m" + "                    Quarto nao foi encontrado, tente novamente.");
+            }
+        }  
+    }
+
+    perguntar_descricao(){ // metodo para perguntar descricao do quarto
+        let descricao_quarto = requisicao.question("\x1b[38;5;208m" + "                    Digite a descricao do quarto: ")
+        if (descricao_quarto == ""){ // volta ao menu de edicao caso o usuario nao queira mais alterar
+            return "sair"   
+        }
+        return descricao_quarto;
+    }
+
+    perguntar_checkout_e_checkin(){ // metodo para perguntar datas de checkin e checkout
+        let data_checkin = this.perguntar_checkin();
+            if (data_checkin == "saiu"){
+                return "saiu";
+            }
+        while(true){ // loop para garantir que o usuario digite a informacao corretamente
+            let data_checkout = requisicao.question("\x1b[38;5;208m" + "                    Digite a data de Check-out: ");
+            if (data_checkout == ""){ // caso o usuario queira sair
+                return "saiu";
+            }
+            let sistema_data_checkout = this.validar_data(data_checkout);// chama a funcao de validar a data com a data digitada como parametro
+            let data_posterior = this.data_posterior(sistema_data_checkout); // chama a funcao para analisar se a data eh depois de hoje
+            // variaveis criadas para analisar se a data de checkout digitada eh depois ou antes da data de checkin
+            let comparar_data_checkout = new Date(sistema_data_checkout[3], sistema_data_checkout[2] - 1, sistema_data_checkout[1]); //variaveis para comparacao de datas
+            let comparar_data_checkin = new Date(data_checkin[1][3], data_checkin[1][2] - 1, data_checkin[1][1])
+            if (data_posterior == false){ //caso a data seja depois do dia de hoje
+                console.log("\n\x1b[38;5;208m" + "                    Data invalida (data anterior ao dia de hoje).\n");
+            } else if ( comparar_data_checkin >= comparar_data_checkout){ // caso a data do checkout seja antes da data do checkin
+                console.log("\n\x1b[38;5;208m" + "                    Data invalida (data anterior ou igual ao check-in).\n");
+            } else {
+                if (sistema_data_checkout[0] == true){ 
+                    return [data_checkin[0], data_checkout]; //caso a data seja valida o loop se encerra e retorna as datas
+                }
+            }
+        }
+    }
+
+    perguntar_checkin(){ // metodo para perguntar o checkin
+        while(true){ // loop para garantir que o usuario digite a informacao corretamente
+            let data_checkin = requisicao.question("\x1b[38;5;208m" + "                    Digite a data de Check-in: ");
+            if (data_checkin == ""){// caso o usuario queira sair
+                return "saiu"
+            }
+            let sistema_data_checkin = this.validar_data(data_checkin);// chama a funcao de validar a data com a data digitada como parametro
+            let data_posterior = this.data_posterior(sistema_data_checkin); // chama a funcao para analisar se a data eh depois de hoje
+            if (data_posterior == false){
+                console.log("\n\x1b[38;5;208m" + "                    Data invalida (data anterior ao dia de hoje)\n");
+            } else {
+                if (sistema_data_checkin[0] == true){ 
+                    return [data_checkin, sistema_data_checkin] //caso a data seja valida retorna a data e uma lista com dia mes ano
+                }
+            }
+        }
+    }
+
+    encontrar_pos_quarto(escolha){
+        for (let i = 0; i < (this.banco_dados.quartos.length); i++){ //encontra a posicao do quarto na lista de quartos de acordo com o nome 
+            if (escolha == this.banco_dados.quartos[i].nome){
+                return i
+            }
+        }
+    }
+
     sair(informacao){ // metodo para analisar se o usuario quer sair ou nao no momento da insercao de dados
         if (informacao == ""){
             console.log("\n\x1b[38;5;208m" + "                    Saindo...");
