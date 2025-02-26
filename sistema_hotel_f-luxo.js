@@ -33,6 +33,7 @@ setTimeout(() => {
 
 const requisicao = require('readline-sync'); //comando necessario para interacao em terminal em js
 const fs = require('fs');
+const { threadId } = require('worker_threads');
 const arquivo_banco = 'banco_de_dados.json'; // banco de dados
 
 class Reserva { //criando a classe Reserva
@@ -103,16 +104,16 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             switch(escolha){
                 case "1":
 
-                    let tipo_login = this.fazer_login(); //variavel que chama o metodo fazer_login() para saber qual o tipo de login do usuario (funcionario ou cliente)
+                    let login = this.fazer_login(); //variavel que chama o metodo fazer_login() para fazer login
 
-                    if (tipo_login == "saiu"){ // caso o usuario nao queira se logar mais
+                    if (login == "saiu"){ // caso o usuario nao queira se logar mais
                         console.log("\n\x1b[38;5;208m" + "                    Voltou ao menu principal.");
 
-                    } else if (tipo_login[0] == "Usuario Funcionario"){ // loga com a conta como funcionario
-                        this.funcionario_logado(tipo_login[1]);
+                    } else if (login[0] == "Funcionario"){ // loga com a conta como funcionario
+                        this.funcionario_logado(login[1]);
 
                     } else { // loga com a conta como cliente
-                        this.cliente_logado(tipo_login[1]); 
+                        this.cliente_logado(login[1]); 
                     }
                     break;
         
@@ -155,17 +156,71 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
         }
     }
 
-    fazer_login() { //metodo para fazer o login
+    tipo_login(){ // metodo para identificar se o usuario ira se logar como funcionario ou cliente
         this.printar_logo();
+        while (true) { // loop para garantir que o usuario digite uma opcao valida
+            this.printar_login();
+            console.log("\x1b[38;5;208m" + "                   1 - Logar como funcionario\n                   2 - Logar como cliente\n                   3 - Voltar ao menu principal\n");
+            let escolha = requisicao.question("\x1b[38;5;208m" + "                   Selecione uma das opcoes acima: "); //mostra as opcoes e faz o usuario escolher uma dentre elas
+            switch(escolha){
+                case "1": //caso o usuario escolha a opcao 1, o login sera do tipo funcionario
+                    this.printar_logo();
+                    return "tipo funcionario";
+        
+                case "2": //caso o usuario escolha a opcao 2, o login sera do tipo cliente
+                    this.printar_logo();
+                    return "tipo cliente";
+        
+                case "3": //encerra o loop e volta ao menu principal
+                    this.printar_logo();
+                    return "sair";
+                    
+                default: //ate o usuario inserir uma opcao valida o loop eh repetido
+                    this.printar_logo();
+                    console.log("\n\x1b[38;5;208m" + "                    Por favor, digite uma opcao valida.");
+                    break
+            }
+        }
+
+    } 
+    buscar_funcionario(conta, senha){ // metodo para buscar usuarios
+        // como nao podera ter email's iguais no banco de dados, a busca podera ser feita unificadamente 
+        let confirmacao_conta = false; // busca na parte no banco de dados de funcionarios
+        for (let i = 0; i < (this.banco_dados.funcionarios.length); i++){ //passa pela lista de funcionarios para ver se o email ou nome de usuario esta cadastrado la
+            if (conta == this.banco_dados.funcionarios[i].email || conta == this.banco_dados.funcionarios[i].nome_usuario){
+                confirmacao_conta = true; //usuario digitou um email ou nome de usuario cadastrado
+                if (senha == this.banco_dados.funcionarios[i].senha){ //caso o email ou nome de usuario esteja cadastrado, ve se a senha esta correta
+                    return [true, this.banco_dados.funcionarios[i]];//retorna um indicativo de que encontrou o funcionario e o funcionario encontradp
+                }
+            }
+        }
+        if (confirmacao_conta == false){ // caso a conta n seja encontrada
+            return "usuario nao encontrado";
+        } else { // a conta foi encontrada mas a senha estava errada
+            return "senha incorreta";
+        }
+    }
+
+    buscar_cliente(conta, senha){ // metodo para buscar clientes
+        let confirmacao_conta = false;
+        for (let i = 0; i < (this.banco_dados.clientes.length); i++){ //passa pela lista de clientes para ver se o email esta cadastrado la
+            if (conta == this.banco_dados.clientes[i].email){
+                confirmacao_conta = true; //usuario digitou um email cadastrado
+                if (senha == this.banco_dados.clientes[i].senha){ //caso o email esteja cadastrado, ve se a senha esta correta
+                    return [true, this.banco_dados.clientes[i]];//retorna um indicativo de que encontrou o cliente e o cliente encontrado
+                }
+            }
+        }
+        if (confirmacao_conta == false){ // caso a conta n seja encontrada
+            return "usuario nao encontrado";
+        } else { // a conta foi encontrada mas a senha estava errada
+            return "senha incorreta";
+        }
+    }
+
+    logar_funcionario(){ // metodo para pergunta e validacao de un login de funcionario
         while(true){  // loop para garantir que o usuario digite senhas e email ou nome de usuario validos
-            console.log("\x1b[38;5;208m" + `                                                                   
-                                     ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
-                                    █                                █
-                                    █  █     ▄▀▀▀▄  ▄▀▀▀▀  █  █▄  █  █
-                                    █  █     █   █  █ ▀▀█  █  █ █ █  █
-                                    █  ▀▀▀▀   ▀▀▀    ▀▀▀▀  ▀  ▀  ▀   █ 
-                                    ▀▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▀
-` + "\x1b[0m"); //printa uma imagem de login
+            this.printar_login();
             console.log("\x1b[38;5;208m" + "                    Digite a tecla enter com a caixa de texto vazia para sair do login.\n");
             let conta_usuario = requisicao.question("\x1b[38;5;208m" + "                    Digite seu nome de usuario ou e-mail de login: "); //pergunta o email ou o nome de usuario
             if (conta_usuario == ""){ // caso o usuario nao queira se logar mais
@@ -179,33 +234,71 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
                 this.printar_logo();
                 return "saiu"; //retorna uma indicacao de que o usuario saiu
             }
-            let confirmacao_conta = false; // variavel para identificar se o usuario digitou um email ou nome de usuario cadastrado (assume que nao digitou)
-            for (let i = 0; i < (this.banco_dados.clientes.length); i++){ //passa pela lista de clientes para ver se o email esta cadastrado la
-                if (conta_usuario == this.banco_dados.clientes[i].email){
-                    confirmacao_conta = true; // usuario digitou um email cadastrado
-                    if (senha == this.banco_dados.clientes[i].senha){ // ve se a senha esta correta
-                        console.log("\n\x1b[38;5;208m" + "                    Sua conta foi acessada com exito!");
-                        return ["Usuario Cliente", this.banco_dados.clientes[i]]; //retorna uma lista para ser utilizada em outro metodo para identificacao de usuario e utilizacao no sistema (cliente ou funconario)
-                    }
-                }
-            }
-            for (let i = 0; i < (this.banco_dados.funcionarios.length); i++){ //passa pela lista de funcionarios para ver se o email ou nome de usuario esta cadastrado la
-                if (conta_usuario == this.banco_dados.funcionarios[i].email || conta_usuario == this.banco_dados.funcionarios[i].nome_usuario){
-                    confirmacao_conta = true; //usuario digitou um email ou nome de usuario cadastrado
-                    if (senha == this.banco_dados.funcionarios[i].senha){ //caso o email ou nome de usuario esteja cadastrado, ve se a senha esta correta
-                        console.log("\n\x1b[38;5;208m" + "                    Sua conta foi acessada com exito!");
-                        return ["Usuario Funcionario", this.banco_dados.funcionarios[i]] //retorna uma lista para ser utilizada em outro metodo para identificacao de usuario ou utilizacao no sistema(cliente ou funconario)
-                    }
-                }
-            }
-            //este bloco de condicional so sera lida caso o email (ou tambem nome de usuario no caso do funcionario) nao tenha sido encontrado ou a senha esteja incorreta
-            if (confirmacao_conta == false){ //caso nao encontre nenhum email (ou nome de usuario), confirmacao_email continua false e informa que o email nao foi encontrado
+            let buscar_funcionario = this.buscar_funcionario(conta_usuario,senha);
+            if (buscar_funcionario == "usuario nao encontrado"){ // caso do usuario nao ser encontrado
                 this.printar_logo();
-                console.log("\n\x1b[38;5;208m" + "                    O e-mail ou nome de usuario digitado não esta cadastrado, tente novamente.");
-            } else { //caso o email ou nome de usuario tenha sido encontrado mas a senha esta incorreta informa ao usuario
+                console.log("\n\x1b[38;5;208m" + "                    O e-mail ou nome de usuario digitado não esta cadastrado como funcionario, tente novamente.");
+            } else if (buscar_funcionario == "senha incorreta") { // caso do usuario ser encontrado mas a senha estar errada
                 this.printar_logo();
                 console.log("\x1b[38;5;208m" + "                    Senha incorreta."); 
+            } else { // quando o login esta correto o funcionario pode entrar na conta
+                this.printar_logo();
+                console.log("\x1b[38;5;208m" + "                    Conta acessada com sucesso!"); 
+                return buscar_funcionario[1]; // retorna o funcionario
             }
+        }
+    }
+
+    logar_cliente(){  //metodo para pergunta e validacao de un login de cliente
+        while(true){  // loop para garantir que o usuario digite senhas e email ou nome de usuario validos
+            this.printar_login();
+            console.log("\x1b[38;5;208m" + "                    Digite a tecla enter com a caixa de texto vazia para sair do login.\n");
+            let conta_usuario = requisicao.question("\x1b[38;5;208m" + "                    Digite seu e-mail de login: "); //pergunta o email ou o nome de usuario
+            if (conta_usuario == ""){ // caso o usuario nao queira se logar mais
+                console.log("\n\x1b[38;5;208m" + "                    Saindo...");
+                this.printar_logo();
+                return "saiu"; //retorna uma indicacao de que o usuario saiu
+            }
+            let senha = requisicao.question("\x1b[38;5;208m" + "                    Digite sua senha: "); // pergunta a senha
+            if (senha == ""){ // caso o usuario nao queira se logar mais
+                console.log("\n\x1b[38;5;208m" + "                    Saindo...");
+                this.printar_logo();
+                return "saiu"; //retorna uma indicacao de que o usuario saiu
+            }
+            let buscar_cliente = this.buscar_cliente(conta_usuario,senha);
+            if (buscar_cliente == "usuario nao encontrado"){ // caso do usuario nao ser encontrado
+                this.printar_logo();
+                console.log("\n\x1b[38;5;208m" + "                    O e-mail ou nome de usuario digitado não esta cadastrado como cliente, tente novamente.");
+            } else if (buscar_cliente == "senha incorreta") { // caso do usuario ser encontrado mas a senha estar errada
+                this.printar_logo();
+                console.log("\x1b[38;5;208m" + "                    Senha incorreta."); 
+            } else { // quando o login esta correto o cliente pode entrar na conta
+                this.printar_logo();
+                console.log("\x1b[38;5;208m" + "                    Conta acessada com sucesso!"); 
+                return buscar_cliente[1]; // retorna o cliente
+            }
+        }
+    }
+    
+    fazer_login() { //metodo para fazer o login
+        this.printar_logo();
+        let tipo_login = this.tipo_login(); // chama metodo para encontrar o tipo de login
+        if (tipo_login == "tipo funcionario"){ // tipo login eh funcionario
+            let funcionario = this.logar_funcionario(); // chama metodo para logar o funcionario
+            if (funcionario == "saiu"){ // usuario quis sair do login
+                return "saiu";
+            } else {
+                return ["Funcionario", funcionario]; // retorna o funcionario e uma indicacao que ele logou
+            }
+        } else if (tipo_login == "tipo cliente") { // tipo login eh cliente
+            let cliente = this.logar_cliente(); // chama metodo para logar o cliente
+            if (cliente == "saiu"){ // usuario quis sair do login
+                return "saiu";
+            } else {
+                return ["Cliente", cliente]; // retorna o cliente e uma indicacao que ele logou
+            }
+        } else {
+            return "saiu";
         }
     }
 
@@ -1444,5 +1537,15 @@ class Sistema { //criando a classe Sistema, que sera a classe principal do codig
             ` + "\x1b[0m");
         console.log("\x1b[38;5;208m" + "----------------------------------------------------------------------------------------------------------------------------"+ "\x1b[0m");
         console.log("\n");
+    }
+    printar_login(){// metodo para printar imagem de login
+        console.log("\x1b[38;5;208m" + `                                                                   
+                                     ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+                                    █                                █
+                                    █  █     ▄▀▀▀▄  ▄▀▀▀▀  █  █▄  █  █
+                                    █  █     █   █  █ ▀▀█  █  █ █ █  █
+                                    █  ▀▀▀▀   ▀▀▀    ▀▀▀▀  ▀  ▀  ▀   █ 
+                                    ▀▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▀
+` + "\x1b[0m"); // printa imagem de login
     }
 }
